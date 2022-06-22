@@ -10,6 +10,12 @@ api_hash = os.environ.get("HASH", "")
 api_id = os.environ.get("ID", "")
 '''
 
+#binaries
+link = "wget https://archive.org/download/binaries/binaries.zip"
+os.system(link)
+os.system("unzip binaries.zip")
+os.remove("binaries.zip")	
+
 #bot
 api_id = 11223922
 api_hash = "ac6664c07855e0455095d970a98a082d"
