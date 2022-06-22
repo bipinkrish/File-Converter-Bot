@@ -1,2 +1,3 @@
 pyrogram
 tgcrypto
+pickle
