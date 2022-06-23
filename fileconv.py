@@ -76,7 +76,7 @@ def ffmpegcommand(input,output):
 
 #magiccmd
 def magickcommand(input,output):
-    cmd = f'{magick} "{input}" "{output}"'
+    cmd = f'{magick} --appimage-extract-and-run "{input}" "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd  
