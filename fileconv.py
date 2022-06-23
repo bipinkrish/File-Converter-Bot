@@ -4,22 +4,19 @@ import os
 import threading
 import pickle
 
-'''
+
 bot_token = os.environ.get("TOKEN", "") 
 api_hash = os.environ.get("HASH", "") 
 api_id = os.environ.get("ID", "")
-'''
+
 
 #binaries
-link = "wget https://archive.org/download/binaries/binaries.zip"
+link = "wget https://github.com/bipinkrish/file-converter-telegram-bot/releases/download/binaries/binaries.zip"
 os.system(link)
 os.system("unzip binaries.zip")
 os.remove("binaries.zip")	
 
 #bot
-api_id = 11223922
-api_hash = "ac6664c07855e0455095d970a98a082d"
-bot_token = "5358186417:AAGKQt1Xf2ps2gU0_CCkquAZRDofY7MKte8"
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 
 #setting
