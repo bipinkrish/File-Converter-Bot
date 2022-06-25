@@ -2,4 +2,4 @@
 
 In Develpment...
 
-Currently works for Image, Video/Audio, Fonts, Documents
+Currently works for Image, Video/Audio, Fonts, Documents.
