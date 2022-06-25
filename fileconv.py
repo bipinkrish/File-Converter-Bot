@@ -4,11 +4,10 @@ import os
 import threading
 import pickle
 
-
+#env
 bot_token = os.environ.get("TOKEN", "") 
 api_hash = os.environ.get("HASH", "") 
 api_id = os.environ.get("ID", "")
-
 
 #binaries
 link = "wget https://github.com/bipinkrish/file-converter-telegram-bot/releases/download/binaries/binaries.zip"
@@ -25,15 +24,21 @@ realPath = os.path.realpath(currentFile)
 dirPath = os.path.dirname(realPath)
 ffmpeg = dirPath + "/binaries" + "/ffmpeg/ffmpeg"
 magick = dirPath + "/binaries" + "/magick"
-os.system(f"chmod 777 {ffmpeg} {magick}")
+tesseract = dirPath + "/binaries" + "/tesseract"
+libreoffice = dirPath + "/binaries" + "/LibreOffice"
+fontforge = dirPath + "/binaries" + "/FontForge"
+os.system(f"chmod 777 {ffmpeg} {magick} {tesseract} {libreoffice} {fontforge}")
 
 #suporrtedextension
-VIDAUD = ("AUDIONOTE","AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV")
-IMG = ("OCR","SENDPHOTO","PDF","ICO","GIF","TIFF","TIF","BMP","WEBP","JP2","JPEG","JPG","PNG")
+VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV")
+IMG = ("OCR","ICO","GIF","TIFF","TIF","BMP","WEBP","JP2","JPEG","JPG","PNG")
+LB = ("ODT","CSV","DB","DOC","DOCX","DOTX","FODP","FODS","FODT","MML","ODB","ODF","ODG","ODM","ODP","ODS","OTG","OTP","OTS","OTT","OXT","PDF","PPTX","PSW","SDA","SDC","SDD","SDP","SDW","SLK:","SMF","STC","STD","STI","STW","SXC","SXG","SXI","SXM","SXW","UOF","UOP","UOS","UOT","VSD","VSDX","WDB","WPS","WRI","XLS","XLSX")
+FF = ("SFD","BDF","FNT","OTF","PFA","PFB","TTC","TTF","UFO","WOFF")
 
 #main
 def follow(message,input,new):
     output = updtname(input,new)
+
     if input.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
         file = app.download_media(message)
@@ -48,6 +53,30 @@ def follow(message,input,new):
         file = app.download_media(message)
         cmd = magickcommand(file,output)
         os.system(cmd)
+        app.send_document(message.chat.id,document=output)
+        os.remove(output)
+        if new == "ocr":
+            cmd = tesrctcommand(file,"ocr")
+            os.system(cmd)
+            app.send_document(message.chat.id,document="ocr.txt")
+            os.remove("ocr.txt")
+        os.remove(file)
+
+    elif input.upper().endswith(LB):
+        print("It is LibreOffice option")
+        file = app.download_media(message)
+        cmd = libreofficecommand(file,new)
+        os.system(cmd)
+        os.remove(file)
+        app.send_document(message.chat.id,document=output)
+        os.remove(output)
+
+    elif input.upper().endswith(FF):
+        print("It is FontForge option")
+        file = app.download_media(message)
+        cmd = fontforgecommand(file,output)
+        os.system(cmd)
+        os.remove("convert.pe")
         os.remove(file)
         app.send_document(message.chat.id,document=output)
         os.remove(output)
@@ -63,6 +92,33 @@ def updtname(input,new):
     print(f'New Filename will be' )
     print(output)
     return output
+
+#fontforgecmd
+def fontforgecommand(input,output):
+    des = dirPath + f"/{output}"
+    cdes = dirPath + "/convert.pe"
+    text = f'Open(\'{input}\')\nGenerate(\'{des}\')'
+    with open("convert.pe","w") as file:
+        file.write(text)
+    os.system("chmod 777 convert.pe")
+    cmd = f'{fontforge} -script "{cdes}"'
+    print("Command to be Executed is")
+    print(cmd)
+    return cmd
+
+#libreofficecmd
+def libreofficecommand(input,new):
+    cmd = f'{libreoffice} --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
+    print("Command to be Executed is")
+    print(cmd)
+    return cmd
+
+#tesseractcmd
+def tesrctcommand(input,output):
+    cmd = f'{tesseract} --appimage-extract-and-run "{input}" "{output}"'
+    print("Command to be Executed is")
+    print(cmd)
+    return cmd
 
 #ffmpegcmd
 def ffmpegcommand(input,output):
@@ -81,7 +137,7 @@ def magickcommand(input,output):
 #app
 @app.on_message(filters.command(['start']))
 def echo(client, message):
-    app.send_message(message.chat.id,f"Welcome\nSend a File first and then Extension\n\nAvailable formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}")
+    app.send_message(message.chat.id,f"Welcome\nSend a File first and then Extension\n\nAvailable formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LB}\n\nFonts: {FF}")
     
 
 @app.on_message(filters.document)
@@ -95,12 +151,23 @@ def documnet(client, message):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {IMG}')
+
+    elif message.document.file_name.upper().endswith(LB): 
+        with open(f'{message.from_user.id}.json', 'wb') as handle:
+            pickle.dump(message, handle)
+        app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {LB}')
+
+    elif message.document.file_name.upper().endswith(FF): 
+        with open(f'{message.from_user.id}.json', 'wb') as handle:
+            pickle.dump(message, handle)
+        app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {FF}')
+
     else:
-        app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}')
+        app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LB}\n\nFonts: {FF}')
 
 @app.on_message(filters.video)
 def video(client, message):
-    if message.document.file_name.upper().endswith(VIDAUD): 
+    if message.video.file_name.upper().endswith(VIDAUD): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {VIDAUD}')
