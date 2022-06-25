@@ -1,6 +1,6 @@
 # file-converter-telegram-bot
 
-In Develpment...
+In Develpment....
 
 Currently works for Image, Video/Audio, Fonts, Documents.
 
