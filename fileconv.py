@@ -14,6 +14,10 @@ link = "wget https://github.com/bipinkrish/file-converter-telegram-bot/releases/
 os.system(link)
 os.system("unzip binaries.zip")
 os.remove("binaries.zip")	
+link = "wget https://github.com/bipinkrish/file-converter-telegram-bot/releases/download/binaries/lb.zip"
+os.system(link)
+os.system("unzip lb.zip")
+os.remove("lb.zip")	
 
 #bot
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
@@ -25,7 +29,8 @@ dirPath = os.path.dirname(realPath)
 ffmpeg = dirPath + "/binaries" + "/ffmpeg/ffmpeg"
 magick = dirPath + "/binaries" + "/magick"
 tesseract = dirPath + "/binaries" + "/tesseract"
-libreoffice = dirPath + "/binaries" + "/LibreOffice"
+#libreoffice = dirPath + "/binaries" + "/LibreOffice"
+libreoffice = dirPath + "/lb" + "/AppRun"
 fontforge = dirPath + "/binaries" + "/FontForge"
 os.system(f"chmod 777 {ffmpeg} {magick} {tesseract} {libreoffice} {fontforge}")
 
@@ -108,7 +113,7 @@ def fontforgecommand(input,output):
 
 #libreofficecmd
 def libreofficecommand(input,new):
-    cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
+    cmd = f'{libreoffice} --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
