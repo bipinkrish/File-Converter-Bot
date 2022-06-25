@@ -101,14 +101,14 @@ def fontforgecommand(input,output):
     with open("convert.pe","w") as file:
         file.write(text)
     os.system("chmod 777 convert.pe")
-    cmd = f'{fontforge} -script "{cdes}"'
+    cmd = f'{fontforge} --appimage-extract-and-run -script "{cdes}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
 
 #libreofficecmd
 def libreofficecommand(input,new):
-    cmd = f'{libreoffice} --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
+    cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
