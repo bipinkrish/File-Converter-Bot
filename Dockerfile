@@ -11,9 +11,6 @@ RUN apt-get -qqy update \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
-
-RUN sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-RUN sudo apt-get update
 RUN sudo apt-get install gcc-4.9
 RUN sudo apt-get upgrade libstdc++6
 
