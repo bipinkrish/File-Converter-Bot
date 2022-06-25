@@ -12,8 +12,6 @@ RUN apt install -y wget
 RUN apt install zip unzip
 
 RUN wget https://github.com/bipinkrish/file-converter-telegram-bot/releases/download/binaries/binaries.zip
-COPY binaries.zip binaries.zip
-
 RUN unzip binaries.zip
 RUN rm binaries.zip
 COPY binaries/ binaries/
