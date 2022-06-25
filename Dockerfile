@@ -11,8 +11,8 @@ RUN apt-get -qqy update \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
-RUN sudo apt-get install gcc-4.9
-RUN sudo apt-get upgrade libstdc++6
+RUN sudo apt install gcc-4.9
+RUN sudo apt upgrade libstdc++6
 
 COPY requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
