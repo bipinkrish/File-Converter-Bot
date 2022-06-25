@@ -5,6 +5,9 @@ import threading
 import pickle
 import os.path
 
+#test
+os.system("libreoffice --help")
+
 #env
 bot_token = os.environ.get("TOKEN", "") 
 api_hash = os.environ.get("HASH", "") 
