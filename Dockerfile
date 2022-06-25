@@ -7,10 +7,19 @@ RUN apt update && apt-get upgrade -y
 RUN apt install libssl-dev
 RUN apt install python3-pip -y
 RUN apt install libreoffice -y
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt install default-jre libreoffice-java-common -y
 RUN apt install -y wget
 RUN apt install zip unzip
+
+RUN wget https://github.com/bipinkrish/file-converter-telegram-bot/releases/download/binaries/binaries.zip
+COPY binaries.zip binaries.zip
+
+RUN unzip binaries.zip
+RUN rm binaries.zip
+COPY binaries/ binaries/
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
