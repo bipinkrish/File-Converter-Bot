@@ -5,9 +5,6 @@ import threading
 import pickle
 import os.path
 
-#test
-os.system("libreoffice --help")
-
 #env
 bot_token = os.environ.get("TOKEN", "") 
 api_hash = os.environ.get("HASH", "") 
@@ -116,7 +113,8 @@ def fontforgecommand(input,output):
 
 #libreofficecmd
 def libreofficecommand(input,new):
-    cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
+    #cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
+    cmd = f'libreoffice --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
