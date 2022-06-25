@@ -14,7 +14,6 @@ RUN apt install zip unzip
 RUN wget https://github.com/bipinkrish/file-converter-telegram-bot/releases/download/binaries/binaries.zip
 RUN unzip binaries.zip
 RUN rm binaries.zip
-COPY binaries/ binaries/
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
