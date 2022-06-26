@@ -133,7 +133,7 @@ def tesrctcommand(input,output):
 #ffmpegcmd
 def ffmpegcommand(input,output):
     #cmd = f'{ffmpeg} -i "{input}" "{output}"'
-    cmd = f'ffmpeg -i "{input}" "{output}"'
+    cmd = f'ffmpeg -i "{input}" -c copy "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
