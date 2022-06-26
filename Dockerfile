@@ -12,7 +12,6 @@ RUN apt install libreoffice -y
 RUN apt install default-jre libreoffice-java-common -y
 RUN apt install imagemagick -y
 RUN apt install tesseract-ocr-all -y
-RUN apt install ttf-mscorefonts-installer --yes
 RUN apt install ffmpeg -y
 RUN apt install fontforge -y
 
