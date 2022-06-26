@@ -17,3 +17,5 @@ HASH - API Hash
 <a href="https://heroku.com/deploy?template=https://github.com/bipinkrish/file-converter-telegram-bot& env[SLACK_SUBDOMAIN]=testdomain">
   <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
 
+# Thanks
+  Thank you https://github.com/Lukasss93 for your help
