@@ -173,7 +173,7 @@ def echo(client, message):
  
 @app.on_message(filters.command(['help']))
 def echo(client, message):
-    app.send_message(message.chat.id,"/start - to check for bot status\n\help - this message\n/source - github source code\n/feedback - send feedback or report problems with the bot")
+    app.send_message(message.chat.id,"/start - to check availabe conversions\n/help - this message\n/source - github source code\n/feedback - send feedback or report problems with the bot")
 
 @app.on_message(filters.command(['source']))
 def echo(client, message):
@@ -186,7 +186,7 @@ def echo(client, message):
         app.send_message(623741973,f'from: {message.from_user.id}\n\n{text}')
         app.send_message(message.chat.id,"Thank You for your feedback")    
     except:
-        app.send_message(message.chat.id,"no message to send, usage example: /feedback Wonderfull Bot!") 
+        app.send_message(message.chat.id,"no message to send\nexample: /feedback Wonderfull Bot!") 
         
 @app.on_message(filters.document)
 def documnet(client, message):
