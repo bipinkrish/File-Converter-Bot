@@ -11,6 +11,8 @@ RUN apt install libtesseract-dev -y
 RUN apt install -y wget
 RUN apt install zip unzip -y
 
+RUN add-apt-repository ppa:libreoffice/ppa -y
+RUN apt update -y
 RUN apt install libreoffice -y
 RUN apt install default-jre libreoffice-java-common -y
 RUN apt install imagemagick -y
