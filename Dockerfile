@@ -7,9 +7,9 @@ RUN apt update && apt-get upgrade -y
 RUN apt install libssl-dev -y
 RUN apt install libicu-dev libicu-dev libcairo2-dev -y
 RUN apt install libtesseract-dev -y
-RUN apt install software-properties-common
+RUN apt install software-properties-common -y
 
-RUN apt install -y wget
+RUN apt install wget -y
 RUN apt install zip unzip -y
 
 RUN apt update -y
