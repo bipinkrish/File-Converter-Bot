@@ -49,7 +49,7 @@ def follow(message,input,new):
     if input.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
         file = app.download_media(message)
-        cmd = ffmpegcommand(file,output)
+        cmd = ffmpegcommand(file,output,new)
         os.system(cmd)
         os.remove(file)
         app.send_document(message.chat.id,document=output)
@@ -131,9 +131,12 @@ def tesrctcommand(input,output):
     return cmd
 
 #ffmpegcmd
-def ffmpegcommand(input,output):
+def ffmpegcommand(input,output,new):
     #cmd = f'{ffmpeg} -i "{input}" "{output}"'
-    cmd = f'ffmpeg -i "{input}" -c copy "{output}"'
+    if new == "mp4" or "mkv" or "mov":
+        cmd = f'ffmpeg -i "{input}" -c copy "{output}"'
+    else:
+        cmd = f'ffmpeg -i "{input}" "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
