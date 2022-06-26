@@ -47,7 +47,7 @@ EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT","ZI
 def follow(message,input,new):
     output = updtname(input,new)
 
-    if input.upper().endswith(VIDAUD):
+    if output.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
         file = app.download_media(message)
         cmd = ffmpegcommand(file,output,new)
@@ -56,7 +56,7 @@ def follow(message,input,new):
         app.send_document(message.chat.id,document=output)
         os.remove(output)
 
-    elif input.upper().endswith(IMG):
+    elif output.upper().endswith(IMG):
         print("It is IMG option")
         file = app.download_media(message)
         cmd = magickcommand(file,output)
@@ -70,7 +70,7 @@ def follow(message,input,new):
             os.remove("ocr.txt")
         os.remove(file)
 
-    elif input.upper().endswith(LB):
+    elif output.upper().endswith(LB):
         print("It is LibreOffice option")
         file = app.download_media(message)
         cmd = libreofficecommand(file,new)
@@ -79,7 +79,7 @@ def follow(message,input,new):
         app.send_document(message.chat.id,document=output)
         os.remove(output)
 
-    elif input.upper().endswith(FF):
+    elif output.upper().endswith(FF):
         print("It is FontForge option")
         file = app.download_media(message)
         cmd = fontforgecommand(file,output)
@@ -89,7 +89,7 @@ def follow(message,input,new):
         app.send_document(message.chat.id,document=output)
         os.remove(output)
 
-    elif input.upper().endswith(EB):
+    elif output.upper().endswith(EB):
         print("It is Ebook option")
         file = app.download_media(message)
         cmd = calibrecommand(file,output)
