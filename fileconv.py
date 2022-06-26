@@ -170,8 +170,24 @@ def magickcommand(input,output):
 @app.on_message(filters.command(['start']))
 def echo(client, message):
     app.send_message(message.chat.id,f"Welcome\nSend a File first and then Extension\n\nAvailable formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LB}\n\nFonts: {FF}\n\nEBooks: {EB}")
-    
+ 
+@app.on_message(filters.command(['help']))
+def echo(client, message):
+    app.send_message(message.chat.id,"/start - to check for bot status\n\help - this message\n/source - github source code\n/feedback - send feedback or report problems with the bot")
 
+@app.on_message(filters.command(['source']))
+def echo(client, message):
+    app.send_message(message.chat.id,"GITHUB - https://github.com/bipinkrish/file-converter-telegram-bot")
+    
+@app.on_message(filters.command(['feedback']))
+def echo(client, message):
+    try:
+        text = message.text.split("feedback ")[1]
+        app.send_message(623741973,f'from: {message.from_user.id}\n\n{text}')
+        app.send_message(message.chat.id,"Thank You for your feedback")    
+    except:
+        app.send_message(message.chat.id,"no message to send, usage example: /feedback Wonderfull Bot!") 
+        
 @app.on_message(filters.document)
 def documnet(client, message):
     if message.document.file_name.upper().endswith(VIDAUD): 
