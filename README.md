@@ -1,6 +1,6 @@
 # File-Converter-Telegram-Bot
 
-Can convert Image, Video/Audio, Fonts, Documents and Ebooks.
+Can convert Images, Videos, Audios, Fonts, Documents and Ebooks.
 
 # Env variables
 
