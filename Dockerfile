@@ -8,15 +8,16 @@ RUN apt install libssl-dev -y
 RUN apt install libicu-dev libicu-dev libcairo2-dev -y
 RUN apt install libtesseract-dev -y
 
+RUN apt install -y wget
+RUN apt install zip unzip -y
+
 RUN apt install libreoffice -y
 RUN apt install default-jre libreoffice-java-common -y
 RUN apt install imagemagick -y
 RUN apt install tesseract-ocr-all -y
 RUN apt install ffmpeg -y
 RUN apt install fontforge -y
-
-RUN apt install -y wget
-RUN apt install zip unzip -y
+RUN wget --no-check-certificate -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
 
 RUN apt install python3-pip -y
 COPY requirements.txt .
