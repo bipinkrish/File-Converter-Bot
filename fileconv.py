@@ -11,13 +11,14 @@ api_hash = os.environ.get("HASH", "")
 api_id = os.environ.get("ID", "")
 
 #binaries
+'''
 path = './binaries'
 isdir = os.path.isdir(path)
 if not isdir:  
     link = "wget https://github.com/bipinkrish/file-converter-telegram-bot/releases/download/binaries/binaries.zip"
     os.system(link)
     os.system("unzip binaries.zip")
-    os.remove("binaries.zip")
+    os.remove("binaries.zip")'''
 
 #bot
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
@@ -26,13 +27,14 @@ app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 currentFile = __file__
 realPath = os.path.realpath(currentFile)
 dirPath = os.path.dirname(realPath)
+'''
 ffmpeg = dirPath + "/binaries" + "/ffmpeg/ffmpeg"
 magick = dirPath + "/binaries" + "/magick"
 tesseract = dirPath + "/binaries" + "/tesseract"
 libreoffice = dirPath + "/binaries" + "/LibreOffice"
 #libreoffice = dirPath + "/lb" + "/AppRun"
 fontforge = dirPath + "/binaries" + "/FontForge"
-os.system(f"chmod 777 {ffmpeg} {magick} {tesseract} {libreoffice} {fontforge}")
+os.system(f"chmod 777 {ffmpeg} {magick} {tesseract} {libreoffice} {fontforge}")'''
 
 #suporrtedextension
 VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV")
@@ -106,7 +108,8 @@ def fontforgecommand(input,output):
     with open("convert.pe","w") as file:
         file.write(text)
     os.system("chmod 777 convert.pe")
-    cmd = f'{fontforge} --appimage-extract-and-run -script "{cdes}"'
+    #cmd = f'{fontforge} --appimage-extract-and-run -script "{cdes}"'
+    cmd = f'fontforge -script "{cdes}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
@@ -121,21 +124,24 @@ def libreofficecommand(input,new):
 
 #tesseractcmd
 def tesrctcommand(input,output):
-    cmd = f'{tesseract} --appimage-extract-and-run "{input}" "{output}"'
+    #cmd = f'{tesseract} --appimage-extract-and-run "{input}" "{output}"'
+    cmd = f'tesseract "{input}" "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
 
 #ffmpegcmd
 def ffmpegcommand(input,output):
-    cmd = f'{ffmpeg} -i "{input}" "{output}"'
+    #cmd = f'{ffmpeg} -i "{input}" "{output}"'
+    cmd = f'ffmpeg -i "{input}" "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
 
 #magiccmd
 def magickcommand(input,output):
-    cmd = f'{magick} --appimage-extract-and-run "{input}" "{output}"'
+    #cmd = f'{magick} --appimage-extract-and-run "{input}" "{output}"'
+    cmd = f'convert "{input}" "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd  
