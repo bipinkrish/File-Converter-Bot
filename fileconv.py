@@ -10,15 +10,14 @@ bot_token = os.environ.get("TOKEN", "")
 api_hash = os.environ.get("HASH", "") 
 api_id = os.environ.get("ID", "")
 
-#binaries
-'''
-path = './binaries'
-isdir = os.path.isdir(path)
-if not isdir:  
-    link = "wget https://github.com/bipinkrish/file-converter-telegram-bot/releases/download/binaries/binaries.zip"
-    os.system(link)
-    os.system("unzip binaries.zip")
-    os.remove("binaries.zip")'''
+#binaries not used
+# path = './binaries'
+# isdir = os.path.isdir(path)
+# if not isdir:  
+#     link = "wget https://github.com/bipinkrish/file-converter-telegram-bot/releases/download/binaries/binaries.zip"
+#     os.system(link)
+#     os.system("unzip binaries.zip")
+#     os.remove("binaries.zip")
 
 #bot
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
@@ -27,20 +26,22 @@ app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 currentFile = __file__
 realPath = os.path.realpath(currentFile)
 dirPath = os.path.dirname(realPath)
-'''
-ffmpeg = dirPath + "/binaries" + "/ffmpeg/ffmpeg"
-magick = dirPath + "/binaries" + "/magick"
-tesseract = dirPath + "/binaries" + "/tesseract"
-libreoffice = dirPath + "/binaries" + "/LibreOffice"
-#libreoffice = dirPath + "/lb" + "/AppRun"
-fontforge = dirPath + "/binaries" + "/FontForge"
-os.system(f"chmod 777 {ffmpeg} {magick} {tesseract} {libreoffice} {fontforge}")'''
+
+#binaries settngs not used
+# ffmpeg = dirPath + "/binaries" + "/ffmpeg/ffmpeg"
+# magick = dirPath + "/binaries" + "/magick"
+# tesseract = dirPath + "/binaries" + "/tesseract"
+# libreoffice = dirPath + "/binaries" + "/LibreOffice"
+# #libreoffice = dirPath + "/lb" + "/AppRun"
+# fontforge = dirPath + "/binaries" + "/FontForge"
+# os.system(f"chmod 777 {ffmpeg} {magick} {tesseract} {libreoffice} {fontforge}")
 
 #suporrtedextension
 VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV")
 IMG = ("OCR","ICO","GIF","TIFF","TIF","BMP","WEBP","JP2","JPEG","JPG","PNG")
 LB = ("ODT","CSV","DB","DOC","DOCX","DOTX","FODP","FODS","FODT","MML","ODB","ODF","ODG","ODM","ODP","ODS","OTG","OTP","OTS","OTT","OXT","PDF","PPTX","PSW","SDA","SDC","SDD","SDP","SDW","SLK:","SMF","STC","STD","STI","STW","SXC","SXG","SXI","SXM","SXW","UOF","UOP","UOS","UOT","VSD","VSDX","WDB","WPS","WRI","XLS","XLSX")
 FF = ("SFD","BDF","FNT","OTF","PFA","PFB","TTC","TTF","UFO","WOFF")
+EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT","ZIP")
 
 #main
 def follow(message,input,new):
@@ -88,6 +89,15 @@ def follow(message,input,new):
         app.send_document(message.chat.id,document=output)
         os.remove(output)
 
+    elif input.upper().endswith(EB):
+        print("It is Ebook option")
+        file = app.download_media(message)
+        cmd = calibrecommand(file,output)
+        os.system(cmd)
+        os.remove(file)
+        app.send_document(message.chat.id,document=output)
+        os.remove(output)
+
 #newfilename
 def updtname(input,new):
     input = input.split(".")
@@ -99,6 +109,13 @@ def updtname(input,new):
     print(f'New Filename will be' )
     print(output)
     return output
+
+#calibrecmd
+def calibrecommand(input,output):
+    cmd = f'ebook-convert "{input}" "{output}"'
+    print("Command to be Executed is")
+    print(cmd)
+    return cmd
 
 #fontforgecmd
 def fontforgecommand(input,output):
@@ -152,7 +169,7 @@ def magickcommand(input,output):
 #app
 @app.on_message(filters.command(['start']))
 def echo(client, message):
-    app.send_message(message.chat.id,f"Welcome\nSend a File first and then Extension\n\nAvailable formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LB}\n\nFonts: {FF}")
+    app.send_message(message.chat.id,f"Welcome\nSend a File first and then Extension\n\nAvailable formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LB}\n\nFonts: {FF}\n\nEBooks: {EB}")
     
 
 @app.on_message(filters.document)
@@ -177,8 +194,13 @@ def documnet(client, message):
             pickle.dump(message, handle)
         app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {FF}')
 
+    elif message.document.file_name.upper().endswith(EB): 
+        with open(f'{message.from_user.id}.json', 'wb') as handle:
+            pickle.dump(message, handle)
+        app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {EB}')
+
     else:
-        app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LB}\n\nFonts: {FF}')
+        app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LB}\n\nFonts: {FF}\n\nEBooks: {EB}')
 
 @app.on_message(filters.video)
 def video(client, message):
