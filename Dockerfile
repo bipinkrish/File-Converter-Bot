@@ -12,11 +12,16 @@ RUN apt install software-properties-common -y
 RUN apt install wget -y
 RUN apt install zip unzip -y
 
-RUN apt update -y
 RUN add-apt-repository ppa:libreoffice/ppa -y
-RUN apt update -y
+RUN apt-get install -y libreoffice-base
+RUN apt-get install -y libreoffice-calc
+RUN apt-get install -y libreoffice-draw
+RUN apt-get install -y libreoffice-math
+RUN apt-get install -y libreoffice-writer
+RUN apt-get install -y libreoffice-impress
 RUN apt install libreoffice -y
 RUN apt install default-jre libreoffice-java-common -y
+
 RUN apt install imagemagick -y
 RUN apt install tesseract-ocr-all -y
 RUN apt install ffmpeg -y
