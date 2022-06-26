@@ -17,7 +17,7 @@ RUN apt install imagemagick -y
 RUN apt install tesseract-ocr-all -y
 RUN apt install ffmpeg -y
 RUN apt install fontforge -y
-RUN wget --no-check-certificate -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin
+RUN wget --no-check-certificate -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin
 
 RUN apt install python3-pip -y
 COPY requirements.txt .
