@@ -15,9 +15,7 @@
       "description": "API HASH, get it at https://my.telegram.org/auth?to=apps"
     }
 
-  },
-  "scripts": {
-    "postdeploy": "python manage.py migrate"
-  }
+   }
+
 
 }
