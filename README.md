@@ -2,6 +2,8 @@
 
 Can convert Images, Videos, Audios, Fonts, Documents and Ebooks.
 
+see the bot in action @filesconvertrobot(https://t.me/filesconvertrobot)
+
 # Env variables
 
 TOKEN - Bot API Token
@@ -18,4 +20,4 @@ HASH - API Hash
   <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
 
 # Thanks
-  Thank you @Lukasss93 for your help
+  Thank you @Lukasss93(https://www.github.com/Lukasss93) for your help
