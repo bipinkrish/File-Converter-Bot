@@ -20,4 +20,4 @@ HASH - API Hash
   <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
 
 # Thanks
-  @Lukasss93 (https://www.github.com/Lukasss93) for your help
+  Thank you @Lukasss93 for your help
