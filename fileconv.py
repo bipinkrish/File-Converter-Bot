@@ -71,6 +71,15 @@ def follow(message,input,new):
             os.remove("ocr.txt")
         os.remove(file)
 
+    elif output.upper().endswith(EB) and input.upper().endswith(EB):
+        print("It is Ebook option")
+        file = app.download_media(message)
+        cmd = calibrecommand(file,output)
+        os.system(cmd)
+        os.remove(file)
+        app.send_document(message.chat.id,document=output)
+        os.remove(output)
+
     elif output.upper().endswith(LB):
         print("It is LibreOffice option")
         file = app.download_media(message)
@@ -86,15 +95,6 @@ def follow(message,input,new):
         cmd = fontforgecommand(file,output)
         os.system(cmd)
         os.remove("convert.pe")
-        os.remove(file)
-        app.send_document(message.chat.id,document=output)
-        os.remove(output)
-
-    elif output.upper().endswith(EB):
-        print("It is Ebook option")
-        file = app.download_media(message)
-        cmd = calibrecommand(file,output)
-        os.system(cmd)
         os.remove(file)
         app.send_document(message.chat.id,document=output)
         os.remove(output)
