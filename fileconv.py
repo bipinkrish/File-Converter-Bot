@@ -48,21 +48,27 @@ EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT","ZI
 def follow(message,input,new):
     output = updtname(input,new)
 
-    if output.upper().endswith(VIDAUD) and input.upper().endswith(VIDAUD):
+    if output.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
         file = app.download_media(message)
         cmd = ffmpegcommand(file,output,new)
         os.system(cmd)
         os.remove(file)
-        app.send_document(message.chat.id,document=output)
+        try:
+            app.send_document(message.chat.id,document=output)
+        except:
+            app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
 
-    elif output.upper().endswith(IMG) and input.upper().endswith(IMG):
+    elif output.upper().endswith(IMG):
         print("It is IMG option")
         file = app.download_media(message)
         cmd = magickcommand(file,output)
         os.system(cmd)
-        app.send_document(message.chat.id,document=output)
+         try:
+            app.send_document(message.chat.id,document=output)
+        except:
+            app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
         if new == "ocr":
             cmd = tesrctcommand(file,"ocr")
@@ -77,26 +83,35 @@ def follow(message,input,new):
         cmd = calibrecommand(file,output)
         os.system(cmd)
         os.remove(file)
-        app.send_document(message.chat.id,document=output)
+         try:
+            app.send_document(message.chat.id,document=output)
+        except:
+            app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
 
-    elif output.upper().endswith(LB) and input.upper().endswith(LB):
+    elif output.upper().endswith(LB):
         print("It is LibreOffice option")
         file = app.download_media(message)
         cmd = libreofficecommand(file,new)
         os.system(cmd)
         os.remove(file)
-        app.send_document(message.chat.id,document=output)
+         try:
+            app.send_document(message.chat.id,document=output)
+        except:
+            app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
 
-    elif output.upper().endswith(FF) and input.upper().endswith(FF):
+    elif output.upper().endswith(FF):
         print("It is FontForge option")
         file = app.download_media(message)
         cmd = fontforgecommand(file,output)
         os.system(cmd)
         os.remove("convert.pe")
         os.remove(file)
-        app.send_document(message.chat.id,document=output)
+         try:
+            app.send_document(message.chat.id,document=output)
+        except:
+            app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
 
 #newfilename
