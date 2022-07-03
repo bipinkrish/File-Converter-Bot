@@ -37,7 +37,7 @@ dirPath = os.path.dirname(realPath)
 # os.system(f"chmod 777 {ffmpeg} {magick} {tesseract} {libreoffice} {fontforge}")
 
 #suporrtedextension
-VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV","AVI","M4B")
+VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV","AVI","M4B","VOB","DTS","DVD","3GP")
 IMG = ("OCR","ICO","GIF","TIFF","TIF","BMP","WEBP","JP2","JPEG","JPG","PNG")
 #LB = ("ODT","CSV","DB","DOC","DOCX","DOTX","FODP","FODS","FODT","MML","ODB","ODF","ODG","ODM","ODP","ODS","OTG","OTP","OTS","OTT","OXT","PDF","PPTX","PSW","SDA","SDC","SDD","SDP","SDW","SLK:","SMF","STC","STD","STI","STW","SXC","SXG","SXI","SXM","SXW","UOF","UOP","UOS","UOT","VSD","VSDX","WDB","WPS","WRI","XLS","XLSX")
 LB = ("ODT","DOC","DOCX","DOTX","PDF")
@@ -48,7 +48,7 @@ EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT","ZI
 def follow(message,input,new):
     output = updtname(input,new)
 
-    if output.upper().endswith(VIDAUD):
+    if output.upper().endswith(VIDAUD) and input.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
         file = app.download_media(message)
         cmd = ffmpegcommand(file,output,new)
@@ -57,7 +57,7 @@ def follow(message,input,new):
         app.send_document(message.chat.id,document=output)
         os.remove(output)
 
-    elif output.upper().endswith(IMG):
+    elif output.upper().endswith(IMG) and input.upper().endswith(IMG):
         print("It is IMG option")
         file = app.download_media(message)
         cmd = magickcommand(file,output)
@@ -80,7 +80,7 @@ def follow(message,input,new):
         app.send_document(message.chat.id,document=output)
         os.remove(output)
 
-    elif output.upper().endswith(LB):
+    elif output.upper().endswith(LB) and input.upper().endswith(LB):
         print("It is LibreOffice option")
         file = app.download_media(message)
         cmd = libreofficecommand(file,new)
@@ -89,7 +89,7 @@ def follow(message,input,new):
         app.send_document(message.chat.id,document=output)
         os.remove(output)
 
-    elif output.upper().endswith(FF):
+    elif output.upper().endswith(FF) and input.upper().endswith(FF):
         print("It is FontForge option")
         file = app.download_media(message)
         cmd = fontforgecommand(file,output)
@@ -151,7 +151,7 @@ def tesrctcommand(input,output):
 #ffmpegcmd
 def ffmpegcommand(input,output,new):
     #cmd = f'{ffmpeg} -i "{input}" "{output}"'
-    if new in  ["mp4", "mkv", "mov"]:
+    if new in  ["mp4", "mkv", "mov", "avi", "vob", "dvd", "dts", "3gp"]:
         cmd = f'ffmpeg -i "{input}" -c copy "{output}"'
     else:
         cmd = f'ffmpeg -i "{input}" "{output}"'
