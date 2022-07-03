@@ -37,7 +37,7 @@ dirPath = os.path.dirname(realPath)
 # os.system(f"chmod 777 {ffmpeg} {magick} {tesseract} {libreoffice} {fontforge}")
 
 #suporrtedextension
-VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV","AVI","M4B","VOB","DTS","DVD","3GP")
+VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV","AVI","M4B","VOB","DVD")
 IMG = ("OCR","ICO","GIF","TIFF","TIF","BMP","WEBP","JP2","JPEG","JPG","PNG")
 #LB = ("ODT","CSV","DB","DOC","DOCX","DOTX","FODP","FODS","FODT","MML","ODB","ODF","ODG","ODM","ODP","ODS","OTG","OTP","OTS","OTT","OXT","PDF","PPTX","PSW","SDA","SDC","SDD","SDP","SDW","SLK:","SMF","STC","STD","STI","STW","SXC","SXG","SXI","SXM","SXW","UOF","UOP","UOS","UOT","VSD","VSDX","WDB","WPS","WRI","XLS","XLSX")
 LB = ("ODT","DOC","DOCX","DOTX","PDF")
