@@ -65,7 +65,7 @@ def follow(message,input,new):
         file = app.download_media(message)
         cmd = magickcommand(file,output)
         os.system(cmd)
-         try:
+        try:
             app.send_document(message.chat.id,document=output)
         except:
             app.send_message(message.chat.id,"Error while conversion")
@@ -83,7 +83,7 @@ def follow(message,input,new):
         cmd = calibrecommand(file,output)
         os.system(cmd)
         os.remove(file)
-         try:
+        try:
             app.send_document(message.chat.id,document=output)
         except:
             app.send_message(message.chat.id,"Error while conversion")
@@ -95,7 +95,7 @@ def follow(message,input,new):
         cmd = libreofficecommand(file,new)
         os.system(cmd)
         os.remove(file)
-         try:
+        try:
             app.send_document(message.chat.id,document=output)
         except:
             app.send_message(message.chat.id,"Error while conversion")
@@ -108,7 +108,7 @@ def follow(message,input,new):
         os.system(cmd)
         os.remove("convert.pe")
         os.remove(file)
-         try:
+        try:
             app.send_document(message.chat.id,document=output)
         except:
             app.send_message(message.chat.id,"Error while conversion")
