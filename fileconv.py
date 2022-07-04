@@ -76,7 +76,7 @@ def follow(message,input,new):
             app.send_document(message.chat.id,document="ocr.txt")
             os.remove("ocr.txt")
         if new == "ico":
-            slist = ["256", "128", "96", "64", "48", "32", "16"]
+            slist = ["512","256", "128", "96", "64", "48", "32", "16"]
             for ele in slist:
                 toutput = updtname(input,f"{ele}.png")
                 os.remove(toutput)
@@ -184,7 +184,7 @@ def magickcommand(input,output,new):
     #cmd = f'{magick} --appimage-extract-and-run "{input}" "{output}"'
     if new == "ico":
         cmd = "convert"
-        slist = ["256", "128", "96", "64", "48", "32", "16"]
+        slist = ["512", "256", "128", "96", "64", "48", "32", "16"]
         for ele in slist:
            toutput = updtname(input,f"{ele}.png")
            tcmd = f'convert "{input}" -resize {ele}x{ele}\! "{toutput}"'
