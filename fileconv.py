@@ -10,6 +10,7 @@ bot_token = os.environ.get("TOKEN", "")
 api_hash = os.environ.get("HASH", "") 
 api_id = os.environ.get("ID", "")
 ownerid = os.environ.get("OWNERID", "")
+
 #binaries not used
 # path = './binaries'
 # isdir = os.path.isdir(path)
@@ -56,6 +57,7 @@ def follow(message,input,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
@@ -67,6 +69,7 @@ def follow(message,input,new):
         os.system(cmd)
         try:
             app.send_document(message.chat.id,document=output)
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
@@ -90,6 +93,7 @@ def follow(message,input,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
@@ -102,6 +106,7 @@ def follow(message,input,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
@@ -115,6 +120,7 @@ def follow(message,input,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
@@ -234,27 +240,32 @@ def documnet(client, message):
     if message.document.file_name.upper().endswith(VIDAUD): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
-        app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {VIDAUD}')
+        dext = message.document.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}')   
 
     elif message.document.file_name.upper().endswith(IMG): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
-        app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {IMG}')
+        dext = message.document.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {IMG}')
 
     elif message.document.file_name.upper().endswith(LB): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
-        app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {LB}')
+        dext = message.document.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LB}')
 
     elif message.document.file_name.upper().endswith(FF): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
-        app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {FF}')
+        dext = message.document.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {FF}')
 
     elif message.document.file_name.upper().endswith(EB): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
-        app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {EB}')
+        dext = message.document.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {EB}')
 
     else:
         app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LB}\n\nFonts: {FF}\n\nEBooks: {EB}')
@@ -264,7 +275,8 @@ def video(client, message):
     if message.video.file_name.upper().endswith(VIDAUD): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
-        app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {VIDAUD}')
+        dext = message.video.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}')
     else:
         app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}')
 
@@ -273,7 +285,8 @@ def audio(client, message):
     if message.audio.file_name.upper().endswith(VIDAUD): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
-        app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {VIDAUD}')
+        dext = message.audio.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}')
     else:
         app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}')
 
@@ -282,6 +295,7 @@ def photo(client, message):
     #json.dump(json.loads(str(message)),open(f'{message.from_user.id}.json',"w"))
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
+    app.send_message(message.chat.id,f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {IMG}')
     app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {IMG}')
 
 @app.on_message(filters.text)
@@ -315,6 +329,7 @@ def text(client, message):
         if newext == "ico":
             app.send_message(message.chat.id,"Warning: for ICO, image will be resized and made multi-resolution")
         app.send_message(message.chat.id,f'Converting from {oldext.upper()} to {newext.upper()}')
+        app.send_message(ownerid,f'From: {message.from_user.id}\nTask : {nmessage.id}\n\n{input} to {newext.upper()}')
         conv = threading.Thread(target=lambda:follow(nmessage,input,newext),daemon=True)
         conv.start()
 
