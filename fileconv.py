@@ -75,6 +75,8 @@ def follow(message,input,new):
             os.system(cmd)
             app.send_document(message.chat.id,document="ocr.txt")
             os.remove("ocr.txt")
+        if new == "ico":
+            os.system(f'rm "256-{output}" "128-{output}" "96-{output}" "64-{output}" "48-{output}" "32-{output}" "16-{output}"')
         os.remove(file)
 
     elif output.upper().endswith(EB) and input.upper().endswith(EB):
@@ -177,7 +179,19 @@ def ffmpegcommand(input,output,new):
 #magiccmd
 def magickcommand(input,output):
     #cmd = f'{magick} --appimage-extract-and-run "{input}" "{output}"'
-    cmd = f'convert "{input}" "{output}"'
+    if new == "ico":
+        output = updtname(input,"png")
+        slist = ["256", "128", "96", "64", "48", "32", "16"]
+        for ele in slist:
+           cmd = f'convert "{input}" -resize {ele}x{ele}\! "{ele}-{output}"'
+           os.system(cmd)
+        output = updtname(input,"ico")
+        cmd = f'convert "256-{output}" "128-{output}" "96-{output}" "64-{output}" "48-{output}" "32-{output}" "16-{output}" "{output}"'
+        print("Command to be Executed is")
+        print(cmd)
+        return cmd  
+    else:
+        cmd = f'convert "{input}" "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd  
@@ -288,7 +302,7 @@ def text(client, message):
         newext = message.text.lower()
         oldext = input.split(".")[-1]
         if newext == "ico":
-            app.send_message(message.chat.id,"Warning: for ICO to work, make sure image is in 256x256 size")
+            app.send_message(message.chat.id,"Warning: for ICO, image will be resized and made multi-resolution")
         app.send_message(message.chat.id,f'Converting from {oldext.upper()} to {newext.upper()}')
         conv = threading.Thread(target=lambda:follow(nmessage,input,newext),daemon=True)
         conv.start()
