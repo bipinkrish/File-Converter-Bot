@@ -76,7 +76,10 @@ def follow(message,input,new):
             app.send_document(message.chat.id,document="ocr.txt")
             os.remove("ocr.txt")
         if new == "ico":
-            os.system(f'rm "256-{output}" "128-{output}" "96-{output}" "64-{output}" "48-{output}" "32-{output}" "16-{output}"')
+            slist = ["256", "128", "96", "64", "48", "32", "16"]
+            for ele in slist:
+                toutput = updtname(input,f"-{ele}.png")
+                os.system(toutput)
         os.remove(file)
 
     elif output.upper().endswith(EB) and input.upper().endswith(EB):
@@ -180,13 +183,14 @@ def ffmpegcommand(input,output,new):
 def magickcommand(input,output,new):
     #cmd = f'{magick} --appimage-extract-and-run "{input}" "{output}"'
     if new == "ico":
-        output = updtname(input,"png")
+        cmd = "convert"
         slist = ["256", "128", "96", "64", "48", "32", "16"]
         for ele in slist:
-           cmd = f'convert "{input}" -resize {ele}x{ele}\! "{ele}-{output}"'
-           os.system(cmd)
-        output = updtname(input,"ico")
-        cmd = f'convert "256-{output}" "128-{output}" "96-{output}" "64-{output}" "48-{output}" "32-{output}" "16-{output}" "{output}"'
+           toutput = updtname(input,f"-{ele}.png")
+           tcmd = f'convert "{input}" -resize {ele}x{ele}\! "{toutput}"'
+           os.system(tcmd)
+           cmd = f'{cmd} {toutput}'
+        cmd = f'{cmd} "{output}"'
         print("Command to be Executed is")
         print(cmd)
         return cmd  
