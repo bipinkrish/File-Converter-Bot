@@ -12,6 +12,8 @@ ID - API ID
 
 HASH - API Hash
 
+OWNERID - Bot Owner ID
+
 # Deploy
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/p9CtdU?referralCode=_4oAwx)
