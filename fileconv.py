@@ -226,7 +226,7 @@ def echo(client, message):
 def echo(client, message):
         text = message.text.split("sendmess ")[1]
         uid = int(text.split(" ")[0])
-        text = f'to - {text}'
+        text = text[10:]
         app.send_message(uid,text)
         
 @app.on_message(filters.document)
