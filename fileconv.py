@@ -189,7 +189,7 @@ def magickcommand(input,output,new):
            toutput = updtname(input,f"{ele}.png")
            tcmd = f'convert "{input}" -resize {ele}x{ele}\! "{toutput}"'
            os.system(tcmd)
-           cmd = f'{cmd} {toutput}'
+           cmd = f'{cmd} "{toutput}"'
         cmd = f'{cmd} "{output}"'
         print("Command to be Executed is")
         print(cmd)
