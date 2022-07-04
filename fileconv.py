@@ -57,7 +57,7 @@ def follow(message,input,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}')
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
@@ -69,7 +69,7 @@ def follow(message,input,new):
         os.system(cmd)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}')
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
@@ -93,7 +93,7 @@ def follow(message,input,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}')
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
@@ -106,7 +106,7 @@ def follow(message,input,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}')
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
@@ -120,7 +120,7 @@ def follow(message,input,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}')
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}'))
         except:
             app.send_message(message.chat.id,"Error while conversion")
         os.remove(output)
