@@ -336,6 +336,9 @@ def text(client, message):
         app.send_message(ownerid,f'From: {message.from_user.id}\nTask : {nmessage.id}\n\n{input} to {newext.upper()}')
         conv = threading.Thread(target=lambda:follow(nmessage,input,newext),daemon=True)
         conv.start()
-
+    else:
+        app.send_message(message.chat.id,"First send me a File")
+        
+        
 #apprun
 app.run()
