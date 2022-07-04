@@ -9,7 +9,7 @@ import os.path
 bot_token = os.environ.get("TOKEN", "") 
 api_hash = os.environ.get("HASH", "") 
 api_id = os.environ.get("ID", "")
-
+ownerid = os.environ.get("OWNERID", "")
 #binaries not used
 # path = './binaries'
 # isdir = os.path.isdir(path)
@@ -217,10 +217,20 @@ def echo(client, message):
 def echo(client, message):
     try:
         text = message.text.split("feedback ")[1]
-        app.send_message(623741973,f'from: {message.from_user.id}\n\n{text}')
+        app.send_message(ownerid,f'from: {message.from_user.id}\n\n{text}')
         app.send_message(message.chat.id,"Thank You for your feedback")    
     except:
-        app.send_message(message.chat.id,"no message to send\nexample: /feedback Wonderfull Bot!") 
+        app.send_message(message.chat.id,"no message to send\nexample: /feedback Wonderfull Bot!")
+        
+@app.on_message(filters.command(['sendmess']))
+def echo(client, message):
+    if message.from_user.id == ownerid:
+        text = message.text.split("sendmess ")[1]
+        uid = int(text.split(" ")[0])
+        text = f'to - {text}'
+        app.send_message(uid,text)
+    except:
+         app.send_message(message.chat.id,"not authorized")
         
 @app.on_message(filters.document)
 def documnet(client, message):
