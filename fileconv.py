@@ -78,8 +78,8 @@ def follow(message,input,new):
         if new == "ico":
             slist = ["256", "128", "96", "64", "48", "32", "16"]
             for ele in slist:
-                toutput = updtname(input,f"-{ele}.png")
-                os.system(toutput)
+                toutput = updtname(input,f"{ele}.png")
+                os.remove(toutput)
         os.remove(file)
 
     elif output.upper().endswith(EB) and input.upper().endswith(EB):
@@ -186,7 +186,7 @@ def magickcommand(input,output,new):
         cmd = "convert"
         slist = ["256", "128", "96", "64", "48", "32", "16"]
         for ele in slist:
-           toutput = updtname(input,f"-{ele}.png")
+           toutput = updtname(input,f"{ele}.png")
            tcmd = f'convert "{input}" -resize {ele}x{ele}\! "{toutput}"'
            os.system(tcmd)
            cmd = f'{cmd} {toutput}'
