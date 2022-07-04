@@ -63,7 +63,7 @@ def follow(message,input,new):
     elif output.upper().endswith(IMG):
         print("It is IMG option")
         file = app.download_media(message)
-        cmd = magickcommand(file,output)
+        cmd = magickcommand(file,output,new)
         os.system(cmd)
         try:
             app.send_document(message.chat.id,document=output)
@@ -177,7 +177,7 @@ def ffmpegcommand(input,output,new):
     return cmd
 
 #magiccmd
-def magickcommand(input,output):
+def magickcommand(input,output,new):
     #cmd = f'{magick} --appimage-extract-and-run "{input}" "{output}"'
     if new == "ico":
         output = updtname(input,"png")
@@ -192,9 +192,9 @@ def magickcommand(input,output):
         return cmd  
     else:
         cmd = f'convert "{input}" "{output}"'
-    print("Command to be Executed is")
-    print(cmd)
-    return cmd  
+        print("Command to be Executed is")
+        print(cmd)
+        return cmd  
 
 #app
 @app.on_message(filters.command(['start']))
