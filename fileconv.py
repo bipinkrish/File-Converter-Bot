@@ -60,6 +60,7 @@ def follow(message,input,new):
             app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
+            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         os.remove(output)
 
     elif output.upper().endswith(IMG):
@@ -72,6 +73,7 @@ def follow(message,input,new):
             app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
+            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         os.remove(output)
         if new == "ocr":
             cmd = tesrctcommand(file,"ocr")
@@ -96,6 +98,7 @@ def follow(message,input,new):
             app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
+            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         os.remove(output)
 
     elif output.upper().endswith(LB):
@@ -109,6 +112,7 @@ def follow(message,input,new):
             app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
+            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         os.remove(output)
 
     elif output.upper().endswith(FF):
@@ -123,6 +127,7 @@ def follow(message,input,new):
             app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
+            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         os.remove(output)
 
 #newfilename
@@ -296,7 +301,6 @@ def photo(client, message):
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {IMG}')
-    app.send_message(message.chat.id,f'Now send extension to Convert to...\n\nAvailable formats: {IMG}')
 
 @app.on_message(filters.text)
 def text(client, message):
