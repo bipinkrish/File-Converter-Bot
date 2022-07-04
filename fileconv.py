@@ -224,13 +224,10 @@ def echo(client, message):
         
 @app.on_message(filters.command(['sendmess']))
 def echo(client, message):
-    if message.from_user.id == ownerid:
         text = message.text.split("sendmess ")[1]
         uid = int(text.split(" ")[0])
         text = f'to - {text}'
         app.send_message(uid,text)
-    else:
-         app.send_message(message.chat.id,"not authorized")
         
 @app.on_message(filters.document)
 def documnet(client, message):
