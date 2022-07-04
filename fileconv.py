@@ -229,7 +229,7 @@ def echo(client, message):
         uid = int(text.split(" ")[0])
         text = f'to - {text}'
         app.send_message(uid,text)
-    except:
+    else:
          app.send_message(message.chat.id,"not authorized")
         
 @app.on_message(filters.document)
