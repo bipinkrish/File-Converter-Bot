@@ -231,7 +231,10 @@ def videoinfo(file):
     os.remove(f'{file}.json')
     info = info.replace('\\n', '<br>')
     info = info.replace('\', \'','')
-    response = telegraph.create_page(f'{file.split('/')[-1]}',html_content=f'<p>{info}</p>')
+    file = file.split("downloads")[-1]
+    if file[0] == '/'
+       file = file[1:]
+    response = telegraph.create_page(f'{file}',html_content=f'<p>{info}</p>')
     return response['url']
 	
 	# with open(f'{file}.json',"r") as infofile:
