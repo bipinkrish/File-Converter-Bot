@@ -4,6 +4,7 @@ import os
 import threading
 import pickle
 import os.path
+from telegraph import Telegraph
 
 #env
 bot_token = os.environ.get("TOKEN", "") 
@@ -22,6 +23,8 @@ ownerid = os.environ.get("OWNERID", "")
 
 #bot
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
+telegraph = Telegraph()
+telegraph.create_account(short_name='1337')
 
 #setting
 currentFile = __file__
@@ -52,9 +55,13 @@ def follow(message,input,new):
     if output.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
         file = app.download_media(message)
+        tphlink = videoinfo(file)
+        app.send_message(message.chat.id,f'Source File : {tphlink}')
         cmd = ffmpegcommand(file,output,new)
         os.system(cmd)
         os.remove(file)
+        tphlink = videoinfo(output)
+        app.send_message(message.chat.id,f'Converted File : {tphlink}')
         try:
             app.send_document(message.chat.id,document=output)
             app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
@@ -210,6 +217,25 @@ def magickcommand(input,output,new):
         print("Command to be Executed is")
         print(cmd)
         return cmd  
+
+#videoinfo
+def videoinfo(file):
+    cmd = f'ffprobe -v quiet -print_format json -show_format -show_streams {file} > {file}.json'
+    os.system(cmd)
+
+    with open(f'{file}.json',"r") as infofile:
+        info  = str(infofile.readlines())
+    os.remove(f'{file}.json')
+    info = info.replace('\\n', '<br>')
+    info = info.replace('\', \'','')
+    response = telegraph.create_page(f'{file}',html_content=f'<p>{info}</p>')
+    return response['url']
+	
+	# with open(f'{file}.json',"r") as infofile:
+	# 	info = json.load(infofile)	
+	# bit_rate = info['format']
+	# bit_rate = bit_rate['bit_rate']
+	# print(bit_rate)
 
 #app
 @app.on_message(filters.command(['start']))
