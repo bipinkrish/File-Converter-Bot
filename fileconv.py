@@ -85,8 +85,11 @@ def follow(message,input,new):
         if new == "ocr":
             cmd = tesrctcommand(file,"ocr")
             os.system(cmd)
-            app.send_document(message.chat.id,document="ocr.txt")
+            with open("ocr.txt","r") as ocr:
+                text = ocr.read()
             os.remove("ocr.txt")
+            app.send_message(message.chat.id,text)
+            
         if new == "ico":
             slist = ["256", "128", "96", "64", "48", "32", "16"]
             for ele in slist:
