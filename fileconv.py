@@ -49,8 +49,8 @@ FF = ("SFD","BDF","FNT","OTF","PFA","PFB","TTC","TTF","UFO","WOFF")
 EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT","ZIP")
 
 #main
-def follow(message,input,new):
-    output = updtname(input,new)
+def follow(message,inputt,new):
+    output = updtname(inputt,new)
 
     if output.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
@@ -64,10 +64,10 @@ def follow(message,input,new):
         app.send_message(message.chat.id,f'Converted File : {tphlink}')
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         os.remove(output)
 
     elif output.upper().endswith(IMG):
@@ -77,10 +77,10 @@ def follow(message,input,new):
         os.system(cmd)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         os.remove(output)
         if new == "ocr":
             cmd = tesrctcommand(file,"ocr")
@@ -93,11 +93,11 @@ def follow(message,input,new):
         if new == "ico":
             slist = ["256", "128", "96", "64", "48", "32", "16"]
             for ele in slist:
-                toutput = updtname(input,f"{ele}.png")
+                toutput = updtname(inputt,f"{ele}.png")
                 os.remove(toutput)
         os.remove(file)
 
-    elif output.upper().endswith(EB) and input.upper().endswith(EB):
+    elif output.upper().endswith(EB) and inputt.upper().endswith(EB):
         print("It is Ebook option")
         file = app.download_media(message)
         cmd = calibrecommand(file,output)
@@ -105,10 +105,10 @@ def follow(message,input,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         os.remove(output)
 
     elif output.upper().endswith(LB):
@@ -118,14 +118,14 @@ def follow(message,input,new):
         os.system(cmd)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
             if file.split(".")[-1] == 'pdf':
                 cmd = f'pdf2odt --pdf {file} --tesseract {output}'
                 os.system(cmd)
                 app.send_document(message.chat.id,document=output, caption="OCR")
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         os.remove(file)
         os.remove(output)
 
@@ -138,18 +138,18 @@ def follow(message,input,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         os.remove(output)
 
 #newfilename
-def updtname(input,new):
-    input = input.split(".")
-    input[-1] = new
+def updtname(inputt,new):
+    inputt = inputt.split(".")
+    inputt[-1] = new
     output = ""
-    for ele in input:
+    for ele in inputt:
         output = output+"."+ele
     output = output[1:]
     print(f'New Filename will be' )
@@ -157,17 +157,17 @@ def updtname(input,new):
     return output
 
 #calibrecmd
-def calibrecommand(input,output):
-    cmd = f'ebook-convert "{input}" "{output}"'
+def calibrecommand(inputt,output):
+    cmd = f'ebook-convert "{inputt}" "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
 
 #fontforgecmd
-def fontforgecommand(input,output):
+def fontforgecommand(inputt,output):
     des = dirPath + f"/{output}"
     cdes = dirPath + "/convert.pe"
-    text = f'Open(\'{input}\')\nGenerate(\'{des}\')'
+    text = f'Open(\'{inputt}\')\nGenerate(\'{des}\')'
     with open("convert.pe","w") as file:
         file.write(text)
     os.system("chmod 777 convert.pe")
@@ -178,54 +178,54 @@ def fontforgecommand(input,output):
     return cmd
 
 #libreofficecmd
-def libreofficecommand(input,new,output):
-    #cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
-    if input.split(".")[-1] == 'pdf':
-        os.system(f'file {input} > temp.txt')
+def libreofficecommand(inputt,new,output):
+    #cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
+    if inputt.split(".")[-1] == 'pdf':
+        os.system(f'file {inputt} > temp.txt')
         with open("temp.txt","r") as file:
             text = file.read()
         app.send_message(ownerid,text)	
-        cmd = f'pdf2odt --pdf "{input}" "{output}"'
+        cmd = f'pdf2odt --pdf "{inputt}" "{output}"'
         app.send_message(ownerid,cmd)
     else:
-        cmd = f'libreoffice --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
+        cmd = f'libreoffice --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
 
 #tesseractcmd
-def tesrctcommand(input,output):
-    #cmd = f'{tesseract} --appimage-extract-and-run "{input}" "{output}"'
-    cmd = f'tesseract "{input}" "{output}"'
+def tesrctcommand(inputt,output):
+    #cmd = f'{tesseract} --appimage-extract-and-run "{inputt}" "{output}"'
+    cmd = f'tesseract "{inputt}" "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
 
 #ffmpegcmd
-def ffmpegcommand(input,output,new):
-    #cmd = f'{ffmpeg} -i "{input}" "{output}"'
+def ffmpegcommand(inputt,output,new):
+    #cmd = f'{ffmpeg} -i "{inputt}" "{output}"'
     if new in  ["mp4", "mkv", "mov", "webm"]:
-        cmd = f'ffmpeg -i "{input}" -c copy "{output}"'
+        cmd = f'ffmpeg -i "{inputt}" -c copy "{output}"'
     else:
-        cmd = f'ffmpeg -i "{input}" "{output}"'
+        cmd = f'ffmpeg -i "{inputt}" "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
 
 #magiccmd
-def magickcommand(input,output,new):
-    #cmd = f'{magick} --appimage-extract-and-run "{input}" "{output}"'
+def magickcommand(inputt,output,new):
+    #cmd = f'{magick} --appimage-extract-and-run "{inputt}" "{output}"'
     if new == "ico":
         cmd = "convert"
         slist = ["256", "128", "96", "64", "48", "32", "16"]
         for ele in slist:
-           toutput = updtname(input,f"{ele}.png")
-           tcmd = f'convert "{input}" -resize {ele}x{ele}\! "{toutput}"'
+           toutput = updtname(inputt,f"{ele}.png")
+           tcmd = f'convert "{inputt}" -resize {ele}x{ele}\! "{toutput}"'
            os.system(tcmd)
            cmd = f'{cmd} "{toutput}"'
         cmd = f'{cmd} "{output}"'
     else:
-        cmd = f'convert "{input}" "{output}"'
+        cmd = f'convert "{inputt}" "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd  
@@ -352,30 +352,30 @@ def text(client, message):
         os.remove(f'{message.from_user.id}.json')
 
         if "document" in str(nmessage):
-            input = nmessage.document.file_name
+            inputt = nmessage.document.file_name
             print("File is a Document")
         else:
             if "audio" in str(nmessage):   
-                input = nmessage.audio.file_name
+                inputt = nmessage.audio.file_name
                 print("File is a Audio")
             else:
                 if "video" in str(nmessage): 
-                    input = nmessage.video.file_name  
+                    inputt = nmessage.video.file_name  
                     print("File is a Video")
                 else:
                     if "photo" in str(nmessage):
                         temp = app.download_media(nmessage)
-                        input = temp.split("/")[-1]
+                        inputt = temp.split("/")[-1]
                         os.remove(temp)
                         print("File is a Photo")
 
         newext = message.text.lower()
-        oldext = input.split(".")[-1]
+        oldext = inputt.split(".")[-1]
         if newext == "ico":
             app.send_message(message.chat.id,"Warning: for ICO, image will be resized and made multi-resolution")
         app.send_message(message.chat.id,f'Converting from {oldext.upper()} to {newext.upper()}')
-        app.send_message(ownerid,f'From: {message.from_user.id}\nTask : {nmessage.id}\n\n{input} to {newext.upper()}')
-        conv = threading.Thread(target=lambda:follow(nmessage,input,newext),daemon=True)
+        app.send_message(ownerid,f'From: {message.from_user.id}\nTask : {nmessage.id}\n\n{inputt} to {newext.upper()}')
+        conv = threading.Thread(target=lambda:follow(nmessage,inputt,newext),daemon=True)
         conv.start()
     else:
         app.send_message(message.chat.id,"First send me a File")
