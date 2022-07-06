@@ -3,3 +3,4 @@ tgcrypto
 pickle5
 telegraph
 pdf2odt
+pytz
