@@ -182,7 +182,7 @@ def libreofficecommand(inputt,new,output):
     #cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
     if inputt.split(".")[-1] == 'pdf':
         app.send_document(ownerid,document=inputt)
-        os.system(f'ls > temp.txt')
+        os.system(f'ls /usr/src/app/downloads/ > temp.txt')
         with open("temp.txt","r") as file:
             text = file.read()
         app.send_message(ownerid,text)	
