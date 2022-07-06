@@ -114,15 +114,11 @@ def follow(message,inputt,new):
     elif output.upper().endswith(LB):
         print("It is LibreOffice option")
         file = app.download_media(message)
-        cmd = libreofficecommand(file,new,output)
+        cmd = libreofficecommand(file,new)
         os.system(cmd)
         try:
             app.send_document(message.chat.id,document=output)
             app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
-            if file.split(".")[-1] == 'pdf':
-                cmd = f'pdf2odt --pdf {file} --tesseract {output}'
-                os.system(cmd)
-                app.send_document(message.chat.id,document=output, caption="OCR")
         except:
             app.send_message(message.chat.id,"Error while conversion")
             app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
@@ -178,18 +174,9 @@ def fontforgecommand(inputt,output):
     return cmd
 
 #libreofficecmd
-def libreofficecommand(inputt,new,output):
+def libreofficecommand(inputt,new):
     #cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
-    if inputt.split(".")[-1] == 'pdf':
-        app.send_document(ownerid,document=inputt)
-        os.system(f'ls /usr/src/app/downloads/ > temp.txt')
-        with open("temp.txt","r") as file:
-            text = file.read()
-        app.send_message(ownerid,text)	
-        cmd = f'pdf2odt --pdf "{inputt}" "{output}"'
-        app.send_message(ownerid,cmd)
-    else:
-        cmd = f'libreoffice --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
+    cmd = f'libreoffice --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
