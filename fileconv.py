@@ -119,7 +119,7 @@ def follow(message,input,new):
         try:
             app.send_document(message.chat.id,document=output)
             app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
-	    if file.split(".")[-1] == 'pdf'::
+	    if file.split(".")[-1] == 'pdf':
 		cmd = f'pdf2odt --pdf {file} --tesseract {output}'
 	    	os.system(cmd)
 	    	app.send_document(message.chat.id,document=output, caption="OCR")
