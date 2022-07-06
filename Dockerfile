@@ -25,7 +25,6 @@ RUN apt-get install -y libreoffice-writer
 RUN apt-get install -y libreoffice-math
 RUN apt install default-jre libreoffice-java-common -y
 
-RUN apt install unoconv -y
 RUN apt install imagemagick -y
 RUN apt install tesseract-ocr-all -y
 RUN apt install ffmpeg -y
