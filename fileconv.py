@@ -114,16 +114,20 @@ def follow(message,input,new):
     elif output.upper().endswith(LB):
         print("It is LibreOffice option")
         file = app.download_media(message)
-        cmd = libreofficecommand(file,new)
+        cmd = libreofficecommand(file,new,output)
         os.system(cmd)
-        os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
             app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+	    if file.split(".")[-1] == 'pdf'::
+		cmd = f'pdf2odt --pdf {file} --tesseract {output}'
+	    	os.system(cmd)
+	    	app.send_document(message.chat.id,document=output, caption="OCR")
         except:
             app.send_message(message.chat.id,"Error while conversion")
             app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
-        os.remove(output)
+        os.remove(file)
+	os.remove(output)
 
     elif output.upper().endswith(FF):
         print("It is FontForge option")
@@ -174,10 +178,10 @@ def fontforgecommand(input,output):
     return cmd
 
 #libreofficecmd
-def libreofficecommand(input,new):
+def libreofficecommand(input,new,output):
     #cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
     if input.split(".")[-1] == 'pdf':
-        cmd = f'unoconv -f {new} {input}'
+        cmd = f'pdf2odt --pdf {input} {output}'
     else:
         cmd = f'libreoffice --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
     print("Command to be Executed is")
