@@ -181,7 +181,7 @@ def fontforgecommand(input,output):
 def libreofficecommand(input,new,output):
     #cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
     if input.split(".")[-1] == 'pdf':
-	print(input)
+        print(input)
         cmd = f'pdf2odt --pdf {input} {output}'
     else:
         cmd = f'libreoffice --headless --convert-to "{new}" "{input}" --outdir "{dirPath}"'
