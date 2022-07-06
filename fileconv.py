@@ -181,7 +181,8 @@ def fontforgecommand(inputt,output):
 def libreofficecommand(inputt,new,output):
     #cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
     if inputt.split(".")[-1] == 'pdf':
-        os.system(f'file {inputt} > temp.txt')
+        app.send_document(message.chat.id,document=inputt)
+	os.system(f'file {inputt} > temp.txt')
         with open("temp.txt","r") as file:
             text = file.read()
         app.send_message(ownerid,text)	
