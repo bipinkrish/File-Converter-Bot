@@ -116,19 +116,18 @@ def follow(message,input,new):
         file = app.download_media(message)
         cmd = libreofficecommand(file,new,output)
         os.system(cmd)
-	
-	try:
-	    app.send_document(message.chat.id,document=output)
-	    app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
-	    if file.split(".")[-1] == 'pdf':
-		cmd = f'pdf2odt --pdf {file} --tesseract {output}'
-		os.system(cmd)
-		app.send_document(message.chat.id,document=output, caption="OCR")
-	except:
-	    app.send_message(message.chat.id,"Error while conversion")
-	    app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+        try:
+            app.send_document(message.chat.id,document=output)
+            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
+            if file.split(".")[-1] == 'pdf':
+                cmd = f'pdf2odt --pdf {file} --tesseract {output}'
+                os.system(cmd)
+                app.send_document(message.chat.id,document=output, caption="OCR")
+        except:
+            app.send_message(message.chat.id,"Error while conversion")
+            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{input} to {new.upper()}')
         os.remove(file)
-	os.remove(output)
+        os.remove(output)
 
     elif output.upper().endswith(FF):
         print("It is FontForge option")
