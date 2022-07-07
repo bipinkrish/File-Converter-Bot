@@ -55,15 +55,13 @@ def follow(message,inputt,new):
     if output.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
         file = app.download_media(message)
-        tphlink = videoinfo(file)
-        app.send_message(message.chat.id,f'Source File : {tphlink}')
+        srclink = videoinfo(file)
         cmd = ffmpegcommand(file,output,new)
         os.system(cmd)
         os.remove(file)
-        tphlink = videoinfo(output)
-        app.send_message(message.chat.id,f'Converted File : {tphlink}')
+        conlink = videoinfo(output)
         try:
-            app.send_document(message.chat.id,document=output)
+            app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
             app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
