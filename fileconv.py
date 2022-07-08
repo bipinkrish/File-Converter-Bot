@@ -62,7 +62,7 @@ def follow(message,inputt,new):
         conlink = videoinfo(output)
         try:
             app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
             app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
@@ -75,7 +75,7 @@ def follow(message,inputt,new):
         os.system(cmd)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
             app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
@@ -103,7 +103,7 @@ def follow(message,inputt,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
             app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
@@ -116,7 +116,7 @@ def follow(message,inputt,new):
         os.system(cmd)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
             app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
@@ -132,7 +132,7 @@ def follow(message,inputt,new):
         os.remove(file)
         try:
             app.send_document(message.chat.id,document=output)
-            app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
             app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
@@ -360,7 +360,7 @@ def text(client, message):
         if newext == "ico":
             app.send_message(message.chat.id,"Warning: for ICO, image will be resized and made multi-resolution")
         app.send_message(message.chat.id,f'Converting from {oldext.upper()} to {newext.upper()}')
-        app.send_message(ownerid,f'From: {message.from_user.id}\nTask : {nmessage.id}\n\n{inputt} to {newext.upper()}')
+        # app.send_message(ownerid,f'From: {message.from_user.id}\nTask : {nmessage.id}\n\n{inputt} to {newext.upper()}')
         conv = threading.Thread(target=lambda:follow(nmessage,inputt,newext),daemon=True)
         conv.start()
     else:
