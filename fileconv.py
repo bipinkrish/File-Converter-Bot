@@ -236,7 +236,7 @@ def magickcommand(inputt,output,new):
 
 #imageinfo
 def imageinfo(file):
-    cmd = f'magick identify -verbose {file} > {file}.txt'
+    cmd = f'identify -verbose {file} > {file}.txt'
     os.system(cmd)
 
     with open(f"{file}.txt", "r") as infofile:
