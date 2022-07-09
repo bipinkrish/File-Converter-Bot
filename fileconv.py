@@ -307,7 +307,7 @@ def echo(client, message):
 
 @app.on_message(filters.command(['restrt']))
 def rstrt(client, message):
-    shutil.rmtree("Downloads")
+    shutil.rmtree("downloads")
     app.send_message(ownerid,'Bot Restarting')
     os.execv(sys.executable, ['python3'] + sys.argv)
 
