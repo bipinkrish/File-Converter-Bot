@@ -5,6 +5,8 @@ import threading
 import pickle
 import os.path
 from telegraph import Telegraph
+import shutil
+import sys
 
 #env
 bot_token = os.environ.get("TOKEN", "") 
@@ -25,6 +27,10 @@ ownerid = os.environ.get("OWNERID", "")
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 telegraph = Telegraph()
 telegraph.create_account(short_name='1337')
+
+#global
+global task
+task = 0
 
 #setting
 currentFile = __file__
@@ -50,8 +56,9 @@ EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT","ZI
 
 #main
 def follow(message,inputt,new):
+    global task
     output = updtname(inputt,new)
-
+    task = task + 1
     if output.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
         file = app.download_media(message)
@@ -66,15 +73,18 @@ def follow(message,inputt,new):
         except:
             app.send_message(message.chat.id,"Error while conversion")
             app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+        task = task -1
         os.remove(output)
 
     elif output.upper().endswith(IMG):
         print("It is IMG option")
         file = app.download_media(message)
+        srclink = imageinfo(file)
         cmd = magickcommand(file,output,new)
         os.system(cmd)
+        conlink = imageinfo(output)
         try:
-            app.send_document(message.chat.id,document=output)
+            app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
@@ -93,6 +103,7 @@ def follow(message,inputt,new):
             for ele in slist:
                 toutput = updtname(inputt,f"{ele}.png")
                 os.remove(toutput)
+        task = task -1
         os.remove(file)
 
     elif output.upper().endswith(EB) and inputt.upper().endswith(EB):
@@ -107,6 +118,7 @@ def follow(message,inputt,new):
         except:
             app.send_message(message.chat.id,"Error while conversion")
             app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+        task = task -1
         os.remove(output)
 
     elif output.upper().endswith(LB):
@@ -120,6 +132,7 @@ def follow(message,inputt,new):
         except:
             app.send_message(message.chat.id,"Error while conversion")
             app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+        task = task -1
         os.remove(file)
         os.remove(output)
 
@@ -136,7 +149,12 @@ def follow(message,inputt,new):
         except:
             app.send_message(message.chat.id,"Error while conversion")
             app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+        task = task -1
         os.remove(output)
+
+    else:
+        app.send_message(message.chat.id,"Send me valid Extension")
+        task = task -1
 
 #newfilename
 def updtname(inputt,new):
@@ -216,6 +234,20 @@ def magickcommand(inputt,output,new):
     print(cmd)
     return cmd  
 
+#imageinfo
+def imageinfo(file):
+    cmd = f'magick identify -verbose {file} > {file}.txt'
+    os.system(cmd)
+
+    with open(f"{file}.txt", "r") as infofile:
+        info = infofile.read()
+    os.remove(f'{file}.txt')
+    file = file.split("downloads")[-1]
+    if file[0] == '/':
+       file = file[1:]
+    response = telegraph.create_page(f'{file}',html_content=f'<p>{info}</p>')
+    return response['url']
+
 #videoinfo
 def videoinfo(file):
     cmd = f'ffprobe -v quiet -print_format json -show_format -show_streams {file} > {file}.json'
@@ -266,7 +298,19 @@ def echo(client, message):
         uid = int(text.split(" ")[0])
         text = text[10:]
         app.send_message(uid,text)
-        
+        app.send_message(message.chat.id,"Message Sent")
+
+@app.on_message(filters.command(['tasks']))
+def echo(client, message):
+    global task
+    app.send_message(message.chat.id,f"Total Tasks Running : {task}")
+
+@app.on_message(filters.command(['restrt']))
+def rstrt(client, message):
+    shutil.rmtree("Downloads")
+    app.send_message(ownerid,'Bot Restarting')
+    os.execv(sys.executable, ['python3'] + sys.argv)
+
 @app.on_message(filters.document)
 def documnet(client, message):
     if message.document.file_name.upper().endswith(VIDAUD): 
