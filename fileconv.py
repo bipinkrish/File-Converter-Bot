@@ -14,15 +14,6 @@ api_hash = os.environ.get("HASH", "")
 api_id = os.environ.get("ID", "")
 ownerid = os.environ.get("OWNERID", "")
 
-#binaries not used
-# path = './binaries'
-# isdir = os.path.isdir(path)
-# if not isdir:  
-#     link = "wget https://github.com/bipinkrish/file-converter-telegram-bot/releases/download/binaries/binaries.zip"
-#     os.system(link)
-#     os.system("unzip binaries.zip")
-#     os.remove("binaries.zip")
-
 #bot
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 telegraph = Telegraph()
@@ -37,20 +28,12 @@ currentFile = __file__
 realPath = os.path.realpath(currentFile)
 dirPath = os.path.dirname(realPath)
 
-#binaries settngs not used
-# ffmpeg = dirPath + "/binaries" + "/ffmpeg/ffmpeg"
-# magick = dirPath + "/binaries" + "/magick"
-# tesseract = dirPath + "/binaries" + "/tesseract"
-# libreoffice = dirPath + "/binaries" + "/LibreOffice"
-# #libreoffice = dirPath + "/lb" + "/AppRun"
-# fontforge = dirPath + "/binaries" + "/FontForge"
-# os.system(f"chmod 777 {ffmpeg} {magick} {tesseract} {libreoffice} {fontforge}")
-
 #suporrtedextension
 VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV","AVI","M4B","VOB","DVD","WEBM","WMV")
 IMG = ("OCR","ICO","GIF","TIFF","TIF","BMP","WEBP","JP2","JPEG","JPG","PNG")
-#LB = ("ODT","CSV","DB","DOC","DOCX","DOTX","FODP","FODS","FODT","MML","ODB","ODF","ODG","ODM","ODP","ODS","OTG","OTP","OTS","OTT","OXT","PDF","PPTX","PSW","SDA","SDC","SDD","SDP","SDW","SLK:","SMF","STC","STD","STI","STW","SXC","SXG","SXI","SXM","SXW","UOF","UOP","UOS","UOT","VSD","VSDX","WDB","WPS","WRI","XLS","XLSX")
-LB = ("ODT","DOC","DOCX","DOTX","PDF")
+LBW = ("ODT","DOC","DOCX","DOTX","PDF","XML","HTML","DOTM","WPS","OTT","TXT")
+LBI = ("ODP","PPT","PPTX","PPTM","PPSX","POTM","POTX","PPS","POT","ODG","OTP","XML","PDF")
+LBC = ("ODS","XLS","HTML","XLSX","XLSM","XLTM","XLTX","OTS","XML","PDF","CSV")
 FF = ("SFD","BDF","FNT","OTF","PFA","PFB","TTC","TTF","UFO","WOFF")
 EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT","ZIP")
 
@@ -59,7 +42,7 @@ def follow(message,inputt,new):
     global task
     output = updtname(inputt,new)
     task = task + 1
-    if output.upper().endswith(VIDAUD):
+    if output.upper().endswith(VIDAUD) and inputt.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
         file = app.download_media(message)
         srclink = videoinfo(file)
@@ -76,7 +59,7 @@ def follow(message,inputt,new):
         task = task -1
         os.remove(output)
 
-    elif output.upper().endswith(IMG):
+    elif output.upper().endswith(IMG) and inputt.upper().endswith(IMG):
         print("It is IMG option")
         file = app.download_media(message)
         srclink = imageinfo(file)
@@ -121,7 +104,7 @@ def follow(message,inputt,new):
         task = task -1
         os.remove(output)
 
-    elif output.upper().endswith(LB):
+    elif (output.upper().endswith(LBW) and inputt.upper().endswith(LBW)) or (output.upper().endswith(LBI) and inputt.upper().endswith(LBI)) or (output.upper().endswith(LBC) and inputt.upper().endswith(LBC)):
         print("It is LibreOffice option")
         file = app.download_media(message)
         cmd = libreofficecommand(file,new)
@@ -136,7 +119,7 @@ def follow(message,inputt,new):
         os.remove(file)
         os.remove(output)
 
-    elif output.upper().endswith(FF):
+    elif output.upper().endswith(FF) and inputt.upper().endswith(FF):
         print("It is FontForge option")
         file = app.download_media(message)
         cmd = fontforgecommand(file,output)
@@ -273,7 +256,7 @@ def videoinfo(file):
 #app
 @app.on_message(filters.command(['start']))
 def echo(client, message):
-    app.send_message(message.chat.id,f"Welcome\nSend a File first and then Extension\n\nAvailable formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LB}\n\nFonts: {FF}\n\nEBooks: {EB}")
+    app.send_message(message.chat.id,f"Welcome\nSend a File first and then Extension\n\nAvailable formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LBW} {LBI} {LBC}\n\nFonts: {FF}\n\nEBooks: {EB}")
  
 @app.on_message(filters.command(['help']))
 def echo(client, message):
@@ -325,11 +308,23 @@ def documnet(client, message):
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {IMG}')
 
-    elif message.document.file_name.upper().endswith(LB): 
+    elif message.document.file_name.upper().endswith(LBW): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LB}')
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBW}')
+
+    elif message.document.file_name.upper().endswith(LBC): 
+        with open(f'{message.from_user.id}.json', 'wb') as handle:
+            pickle.dump(message, handle)
+        dext = message.document.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBI}')
+
+    elif message.document.file_name.upper().endswith(LBI): 
+        with open(f'{message.from_user.id}.json', 'wb') as handle:
+            pickle.dump(message, handle)
+        dext = message.document.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBI}')
 
     elif message.document.file_name.upper().endswith(FF): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
@@ -344,7 +339,7 @@ def documnet(client, message):
         app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {EB}')
 
     else:
-        app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LB}\n\nFonts: {FF}\n\nEBooks: {EB}')
+        app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LBW} {LBI} {LBC}\n\nFonts: {FF}\n\nEBooks: {EB}')
 
 @app.on_message(filters.video)
 def video(client, message):
