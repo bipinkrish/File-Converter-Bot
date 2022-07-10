@@ -318,7 +318,7 @@ def documnet(client, message):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBI}')
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBC}')
 
     elif message.document.file_name.upper().endswith(LBI): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
