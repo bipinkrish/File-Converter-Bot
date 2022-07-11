@@ -175,7 +175,10 @@ def fontforgecommand(inputt,output):
 #libreofficecmd
 def libreofficecommand(inputt,new):
     #cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
-    cmd = f'libreoffice --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
+    if inputt.split(".")[-1] == 'pdf':
+        cmd = f'libreoffice --infilter=="writer_pdf_import" --headless --convert-to "{new}":"writer_pdf_Export" "{inputt}" --outdir "{dirPath}"'
+    else:
+        cmd = f'libreoffice --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
