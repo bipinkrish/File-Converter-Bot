@@ -5,7 +5,7 @@ RUN chmod 777 /usr/src/app
 
 RUN apt update && apt-get upgrade -y
 RUN apt install libssl-dev -y
-RUN apt install libicu-dev libicu-dev libcairo2-dev -y
+RUN apt install libicu-dev libicu-dev libcairo2-dev freeglut3 freeglut3-dev libopengl0 -y
 RUN apt install libtesseract-dev -y
 
 RUN apt install wget -y
@@ -22,7 +22,6 @@ RUN wget --no-check-certificate -nv -O- https://download.calibre-ebook.com/linux
 RUN apt install python3-pip -y
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
 COPY . .
 
 CMD ["python3","fileconv.py"]
