@@ -18,7 +18,7 @@ ownerid = os.environ.get("OWNERID", "")
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 telegraph = Telegraph()
 telegraph.create_account(short_name='1337')
-os.system('export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox"')
+os.system('export QTWEBENGINE_DISABLE_SANDBOX=1')
 
 #global
 global task
