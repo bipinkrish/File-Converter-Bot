@@ -18,6 +18,7 @@ ownerid = os.environ.get("OWNERID", "")
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 telegraph = Telegraph()
 telegraph.create_account(short_name='1337')
+os.system('export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox"')
 
 #global
 global task
@@ -162,7 +163,7 @@ def updtname(inputt,new):
 
 #calibrecmd
 def calibrecommand(inputt,output):
-    cmd = f'ebook-convert "{inputt}" "{output}" --no-sandbox'
+    cmd = f'ebook-convert "{inputt}" "{output}"'
     print("Command to be Executed is")
     print(cmd)
     return cmd
