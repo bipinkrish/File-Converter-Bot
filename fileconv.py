@@ -42,7 +42,7 @@ def follow(message,inputt,new):
     global task
     output = updtname(inputt,new)
     task = task + 1
-    
+
     if output.upper().endswith(VIDAUD) and inputt.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
         file = app.download_media(message)
@@ -56,8 +56,14 @@ def follow(message,inputt,new):
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(ownerid,document=message.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
-            
+            try:
+                app.send_document(ownerid,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            except:
+                try:
+                    app.send_document(ownerid,document=message.video.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+                except:
+                    app.send_document(ownerid,document=message.audio.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+
         task = task -1
         os.remove(output)
 
@@ -73,7 +79,7 @@ def follow(message,inputt,new):
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(ownerid,document=message.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(ownerid,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         os.remove(output)
 
         if new == "ocr":
@@ -103,7 +109,7 @@ def follow(message,inputt,new):
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(ownerid,document=message.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(ownerid,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         task = task -1
         os.remove(output)
 
@@ -117,7 +123,7 @@ def follow(message,inputt,new):
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(ownerid,document=message.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(ownerid,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         task = task -1
         os.remove(file)
         os.remove(output)
@@ -134,7 +140,7 @@ def follow(message,inputt,new):
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(ownerid,document=message.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(ownerid,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         task = task -1
         os.remove(output)
 
