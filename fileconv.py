@@ -42,6 +42,7 @@ def follow(message,inputt,new):
     global task
     output = updtname(inputt,new)
     task = task + 1
+    
     if output.upper().endswith(VIDAUD) and inputt.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
         file = app.download_media(message)
@@ -55,7 +56,8 @@ def follow(message,inputt,new):
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(ownerid,document=message.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            
         task = task -1
         os.remove(output)
 
@@ -71,8 +73,9 @@ def follow(message,inputt,new):
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(ownerid,document=message.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         os.remove(output)
+
         if new == "ocr":
             cmd = tesrctcommand(file,"ocr")
             os.system(cmd)
@@ -100,7 +103,7 @@ def follow(message,inputt,new):
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(ownerid,document=message.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         task = task -1
         os.remove(output)
 
@@ -114,7 +117,7 @@ def follow(message,inputt,new):
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(ownerid,document=message.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         task = task -1
         os.remove(file)
         os.remove(output)
@@ -131,7 +134,7 @@ def follow(message,inputt,new):
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_message(ownerid,f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(ownerid,document=message.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         task = task -1
         os.remove(output)
 
@@ -260,7 +263,7 @@ def videoinfo(file):
 @app.on_message(filters.command(['start']))
 def echo(client, message):
     app.send_message(message.chat.id,f"Welcome\nSend a File first and then Extension\n\nAvailable formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LBW} {LBI} {LBC}\n\nFonts: {FF}\n\nEBooks: {EB}")
- 
+    
 @app.on_message(filters.command(['help']))
 def echo(client, message):
     app.send_message(message.chat.id,"/start - to check availabe conversions\n/help - this message\n/source - github source code\n/feedback - send feedback or report problems with the bot")
