@@ -1,6 +1,6 @@
 from pykeyboard import ReplyKeyboard, ReplyButton
 
-VAboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="extension to convert",resize_keyboard=True,selective=True)
+VAboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
 VAboard.add(
 ReplyButton('AIFF'),
 ReplyButton('AAC'),
@@ -23,7 +23,7 @@ ReplyButton('WEBM'),
 ReplyButton('WMV')
             )    
 
-IMGboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="extension to convert",resize_keyboard=True,selective=True)
+IMGboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
 IMGboard.add(
 ReplyButton('OCR'),
 ReplyButton('ICO'),
@@ -38,7 +38,7 @@ ReplyButton('JPG'),
 ReplyButton('PNG')
             )
 
-LBWboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="extension to convert",resize_keyboard=True,selective=True)
+LBWboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
 LBWboard.add(
 ReplyButton('ODT'),
 ReplyButton('DOC'),
@@ -53,7 +53,7 @@ ReplyButton('OTT'),
 ReplyButton('TXT')
             )
 
-LBIboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="extension to convert",resize_keyboard=True,selective=True)
+LBIboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
 LBIboard.add(
 ReplyButton('ODP'),
 ReplyButton('PPT'),
@@ -70,7 +70,7 @@ ReplyButton('XML'),
 ReplyButton('PDF')
             )
 
-LBCboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="extension to convert",resize_keyboard=True,selective=True)
+LBCboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
 LBCboard.add(
 ReplyButton('ODS'),
 ReplyButton('XLS'),
@@ -86,7 +86,7 @@ ReplyButton('CSV'),
 ReplyButton('XLM')
             )       
 
-FFboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="extension to convert",resize_keyboard=True,selective=True)
+FFboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
 FFboard.add(
 ReplyButton('SFD'),
 ReplyButton('BDF'),
@@ -100,7 +100,7 @@ ReplyButton('UFO'),
 ReplyButton('WOFF')
             )
 
-EBboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="extension to convert",resize_keyboard=True,selective=True)
+EBboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
 EBboard.add(           
 ReplyButton('EPUB'),
 ReplyButton('MOBI'),
