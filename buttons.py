@@ -101,7 +101,7 @@ ReplyButton('WOFF')
             )
 
 EBboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="extension to convert",resize_keyboard=True,selective=True)
-FFboard.add(           
+EBboard.add(           
 ReplyButton('EPUB'),
 ReplyButton('MOBI'),
 ReplyButton('AZW3'),
