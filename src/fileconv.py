@@ -17,7 +17,7 @@ api_hash = os.environ.get("HASH", "")
 api_id = os.environ.get("ID", "")
 owner_id = os.environ.get("OWNERID", "")
 
-app = Client("my_bot", api_id=api_id, api_hash=api_hash,bot_token=owner_id)
+app = Client("my_bot", api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 telegraph = Telegraph()
 telegraph.create_account(short_name='1337')
 
