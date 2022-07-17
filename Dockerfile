@@ -4,9 +4,7 @@ WORKDIR /usr/src/app
 RUN chmod 777 /usr/src/app
 
 RUN apt update && apt-get upgrade -y
-RUN apt install libssl-dev -y
-RUN apt install libicu-dev libicu-dev libcairo2-dev freeglut3 freeglut3-dev libopengl0 -y
-RUN apt install libtesseract-dev -y
+RUN apt install libssl-dev libtesseract-dev libicu-dev libicu-dev libcairo2-dev freeglut3 freeglut3-dev libopengl0 -y
 
 RUN apt install wget -y
 RUN apt install zip unzip -y
@@ -17,7 +15,7 @@ RUN apt install imagemagick -y
 RUN apt install tesseract-ocr-all -y
 RUN apt install ffmpeg -y
 RUN apt install fontforge -y
-RUN wget --no-check-certificate -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin
+RUN apt install calibre -y
 
 RUN apt install python3-pip -y
 COPY requirements.txt .
