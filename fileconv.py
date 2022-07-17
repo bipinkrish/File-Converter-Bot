@@ -163,7 +163,7 @@ def updtname(inputt,new):
 
 #calibrecmd
 def calibrecommand(inputt,output):
-    cmd = f'ebook-convert "{inputt}" "{output}"'
+    cmd = f'ebook-convert "{inputt}" "{output}" --enable-heuristics'
     print("Command to be Executed is")
     print(cmd)
     return cmd
