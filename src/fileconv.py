@@ -12,10 +12,10 @@ from fn import *
 from pyrogram import enums
 
 # env
-bot_token = os.getenv("TOKEN")
-api_hash = os.getenv("HASH")
-api_id = os.getenv("ID")
-owner_id = os.getenv("owner_id")
+bot_token = os.environ.get("TOKEN", "") 
+api_hash = os.environ.get("HASH", "") 
+api_id = os.environ.get("ID", "")
+owner_id = os.environ.get("OWNERID", "")
 
 app = Client("my_bot", api_id=api_id, api_hash=api_hash,bot_token=owner_id)
 telegraph = Telegraph()
