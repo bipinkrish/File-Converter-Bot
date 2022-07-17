@@ -7,6 +7,7 @@ import os.path
 from telegraph import Telegraph
 import shutil
 import sys
+from buttons import *
 
 #env
 bot_token = os.environ.get("TOKEN", "") 
@@ -18,8 +19,6 @@ ownerid = os.environ.get("OWNERID", "")
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 telegraph = Telegraph()
 telegraph.create_account(short_name='1337')
-os.system('export QTWEBENGINE_DISABLE_SANDBOX=1')
-os.system('(QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox"')
 
 #global
 global task
@@ -260,12 +259,6 @@ def videoinfo(file):
        file = file[1:]
     response = telegraph.create_page(f'{file}',html_content=f'<p>{info}</p>')
     return response['url']
-	
-	# with open(f'{file}.json',"r") as infofile:
-	# 	info = json.load(infofile)	
-	# bit_rate = info['format']
-	# bit_rate = bit_rate['bit_rate']
-	# print(bit_rate)
 
 #app
 @app.on_message(filters.command(['start']))
@@ -291,22 +284,31 @@ def echo(client, message):
         
 @app.on_message(filters.command(['sendmess']))
 def echo(client, message):
+    if int(message.from_user.id) == int(ownerid):
         text = message.text.split("sendmess ")[1]
         uid = int(text.split(" ")[0])
         text = text[10:]
         app.send_message(uid,text)
         app.send_message(message.chat.id,"Message Sent")
+    else:
+        app.send_message(message.chat.id,"Unauthorized")
 
 @app.on_message(filters.command(['tasks']))
 def echo(client, message):
     global task
-    app.send_message(message.chat.id,f"Total Tasks Running : {task}")
+    if int(message.from_user.id) == int(ownerid):
+        app.send_message(message.chat.id,f"Total Tasks Running : {task}")
+    else:
+        app.send_message(message.chat.id,"Unauthorized")
 
 @app.on_message(filters.command(['restrt']))
 def rstrt(client, message):
-    shutil.rmtree("downloads")
-    app.send_message(ownerid,'Bot Restarting')
-    os.execv(sys.executable, ['python3'] + sys.argv)
+    if int(message.from_user.id) == int(ownerid):
+        shutil.rmtree("downloads")
+        app.send_message(ownerid,'Bot Restarting')
+        os.execv(sys.executable, ['python3'] + sys.argv)
+    else:
+        app.send_message(message.chat.id,"Unauthorized")
 
 @app.on_message(filters.document)
 def documnet(client, message):
@@ -314,43 +316,43 @@ def documnet(client, message):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}')   
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n{message.from_user.mention} choose:',reply_markup=VAboard)   
 
     elif message.document.file_name.upper().endswith(IMG): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {IMG}')
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {IMG}\n{message.from_user.mention} choose:',reply_markup=IMGboard)
 
     elif message.document.file_name.upper().endswith(LBW): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBW}')
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBW}\n{message.from_user.mention} choose:',reply_markup=LBWboard)
 
     elif message.document.file_name.upper().endswith(LBC): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBC}')
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBC}\n{message.from_user.mention} choose:',reply_markup=LBCboard)
 
     elif message.document.file_name.upper().endswith(LBI): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBI}')
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBI}\n{message.from_user.mention} choose:',reply_markup=LBIboard)
 
     elif message.document.file_name.upper().endswith(FF): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {FF}')
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {FF}\n{message.from_user.mention} choose:',reply_markup=FFboard)
 
     elif message.document.file_name.upper().endswith(EB): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {EB}')
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {EB}\n{message.from_user.mention} choose:',reply_markup=EBboard)
 
     else:
         app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LBW} {LBI} {LBC}\n\nFonts: {FF}\n\nEBooks: {EB}')
@@ -361,7 +363,7 @@ def video(client, message):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.video.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}')
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n{message.from_user.mention} choose:',reply_markup=VAboard)
     else:
         app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}')
 
@@ -371,7 +373,7 @@ def audio(client, message):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.audio.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}')
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n{message.from_user.mention} choose:',reply_markup=VAboard)
     else:
         app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}')
 
@@ -380,7 +382,7 @@ def photo(client, message):
     #json.dump(json.loads(str(message)),open(f'{message.from_user.id}.json',"w"))
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
-    app.send_message(message.chat.id,f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {IMG}')
+    app.send_message(message.chat.id,f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {IMG}\n{message.from_user.mention} choose:',reply_markup=IMGboard)
 
 @app.on_message(filters.text)
 def text(client, message):
