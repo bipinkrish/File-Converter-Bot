@@ -316,43 +316,43 @@ def documnet(client, message):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n{message.from_user.mention} choose:',reply_markup=VAboard)   
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n\n{message.from_user.mention} choose:',reply_markup=VAboard)   
 
     elif message.document.file_name.upper().endswith(IMG): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {IMG}\n{message.from_user.mention} choose:',reply_markup=IMGboard)
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {IMG}\n\n{message.from_user.mention} choose:',reply_markup=IMGboard)
 
     elif message.document.file_name.upper().endswith(LBW): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBW}\n{message.from_user.mention} choose:',reply_markup=LBWboard)
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBW}\n\n{message.from_user.mention} choose:',reply_markup=LBWboard)
 
     elif message.document.file_name.upper().endswith(LBC): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBC}\n{message.from_user.mention} choose:',reply_markup=LBCboard)
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBC}\n\n{message.from_user.mention} choose:',reply_markup=LBCboard)
 
     elif message.document.file_name.upper().endswith(LBI): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBI}\n{message.from_user.mention} choose:',reply_markup=LBIboard)
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBI}\n\n{message.from_user.mention} choose:',reply_markup=LBIboard)
 
     elif message.document.file_name.upper().endswith(FF): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {FF}\n{message.from_user.mention} choose:',reply_markup=FFboard)
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {FF}\n\n{message.from_user.mention} choose:',reply_markup=FFboard)
 
     elif message.document.file_name.upper().endswith(EB): 
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {EB}\n{message.from_user.mention} choose:',reply_markup=EBboard)
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {EB}\n\n{message.from_user.mention} choose:',reply_markup=EBboard)
 
     else:
         app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LBW} {LBI} {LBC}\n\nFonts: {FF}\n\nEBooks: {EB}')
@@ -363,7 +363,7 @@ def video(client, message):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.video.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n{message.from_user.mention} choose:',reply_markup=VAboard)
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n\n{message.from_user.mention} choose:',reply_markup=VAboard)
     else:
         app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}')
 
@@ -373,7 +373,7 @@ def audio(client, message):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.audio.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n{message.from_user.mention} choose:',reply_markup=VAboard)
+        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n\n{message.from_user.mention} choose:',reply_markup=VAboard)
     else:
         app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}')
 
@@ -382,7 +382,7 @@ def photo(client, message):
     #json.dump(json.loads(str(message)),open(f'{message.from_user.id}.json',"w"))
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
-    app.send_message(message.chat.id,f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {IMG}\n{message.from_user.mention} choose:',reply_markup=IMGboard)
+    app.send_message(message.chat.id,f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {IMG}\n\n{message.from_user.mention} choose:',reply_markup=IMGboard)
 
 @app.on_message(filters.text)
 def text(client, message):
