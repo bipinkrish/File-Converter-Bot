@@ -1,5 +1,5 @@
-pyrogram
-tgcrypto
-pickle5
-telegraph
-pykeyboard
+pyrogram==2.0.33
+tgcrypto==1.2.3
+pickle5==0.0.11
+telegraph==2.1.0
+pykeyboard==0.1.5
