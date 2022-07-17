@@ -8,7 +8,7 @@ from telegraph import Telegraph
 import shutil
 import sys
 from buttons import *
-from fn import *
+from helpfns import *
 from pyrogram import enums
 
 # env
