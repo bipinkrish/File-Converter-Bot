@@ -1,3 +1,4 @@
+import pyrogram
 from pyrogram import Client
 from pyrogram import filters
 from pyrogram import enums
@@ -14,7 +15,7 @@ from buttons import *
 bot_token = os.environ.get("TOKEN", "") 
 api_hash = os.environ.get("HASH", "") 
 api_id = os.environ.get("ID", "")
-ownerid = os.environ.get("OWNERID", "")
+owner_id = os.environ.get("OWNERID", "")
 
 #bot
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
@@ -279,134 +280,176 @@ def videoinfo(file):
     )
     return response["url"]
 
-#app
+#listbeautifier
+def give_name(data: typing.Tuple):
+    name = ""
+    for i in data:
+        name += ", " + str(i)
+    return name[1:]
+
 @app.on_message(filters.command(['start']))
-def echo(client, message):
-    app.send_message(message.chat.id,f"Welcome\nSend a File first and then Extension\n\nAvailable formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LBW} {LBI} {LBC}\n\nFonts: {FF}\n\nEBooks: {EB}")
-    
+def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a File first and then Extension\n\n"
+                                      f"Available formats:\n\nIMAGES: {give_name(IMG)}\n\nVIDEOS/AUDIOS: {give_name(VIDAUD)}\n\nDocuments: {give_name(LBW)} \
+                                     {give_name(LBI)} {give_name(LBC)}\n\nFonts: {give_name(FF)}\n\nEBooks: {give_name(EB)}")
+
+
 @app.on_message(filters.command(['help']))
-def echo(client, message):
-    app.send_message(message.chat.id,"/start - to check availabe conversions\n/help - this message\n/source - github source code\n/feedback - send feedback or report problems with the bot")
+def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    app.send_message(message.chat.id,
+                     "/start - to check availabe conversions\n/help - this message\n/source - github source code\n/feedback - send feedback or report problems with the bot")
+
 
 @app.on_message(filters.command(['source']))
-def echo(client, message):
-    app.send_message(message.chat.id,"GITHUB - https://github.com/bipinkrish/file-converter-telegram-bot")
-    
+def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    app.send_message(message.chat.id, "GITHUB - https://github.com/bipinkrish/File-Converter-Bot")
+
+
 @app.on_message(filters.command(['feedback']))
-def echo(client, message):
+def feedback(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     try:
         text = message.text.split("feedback ")[1]
-        app.send_message(ownerid,f'from: {message.from_user.id}\n\n{text}')
-        app.send_message(message.chat.id,"Thank You for your feedback")    
+        app.send_message(owner_id, f'from: {message.from_user.id}\n\n{text}')
+        app.send_message(message.chat.id, "Thank You for your feedback")
     except:
-        app.send_message(message.chat.id,"no message to send\nexample: /feedback Wonderfull Bot!")
-        
+        app.send_message(message.chat.id, "no message to send\nexample: /feedback Wonderfull Bot!")
+
+
 @app.on_message(filters.command(['sendmess']))
-def echo(client, message):
-    if int(message.from_user.id) == int(ownerid):
+def echo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    if int(message.from_user.id) == int(owner_id):
         text = message.text.split("sendmess ")[1]
         uid = int(text.split(" ")[0])
         text = text[10:]
-        app.send_message(uid,text)
-        app.send_message(message.chat.id,"Message Sent")
+        app.send_message(uid, text)
+        app.send_message(message.chat.id, "Message Sent")
     else:
-        app.send_message(message.chat.id,"Unauthorized")
+        app.send_message(message.chat.id, "Unauthorized")
+
 
 @app.on_message(filters.command(['tasks']))
-def echo(client, message):
+def echo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     global task
-    if int(message.from_user.id) == int(ownerid):
-        app.send_message(message.chat.id,f"Total Tasks Running : {task}")
+    if int(message.from_user.id) == int(owner_id):
+        app.send_message(message.chat.id, f"Total Tasks Running : {task}")
     else:
-        app.send_message(message.chat.id,"Unauthorized")
+        app.send_message(message.chat.id, "Unauthorized")
+
 
 @app.on_message(filters.command(['restrt']))
-def rstrt(client, message):
-    if int(message.from_user.id) == int(ownerid):
+def rstrt(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    if int(message.from_user.id) == int(owner_id):
         shutil.rmtree("downloads")
-        app.send_message(ownerid,'Bot Restarting')
+        app.send_message(owner_id, 'Bot Restarting')
         os.execv(sys.executable, ['python3'] + sys.argv)
     else:
-        app.send_message(message.chat.id,"Unauthorized")
+        app.send_message(message.chat.id, "Unauthorized")
+
 
 @app.on_message(filters.document)
-def documnet(client, message):
-    if message.document.file_name.upper().endswith(VIDAUD): 
+def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    if message.document.file_name.upper().endswith(VIDAUD):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n\n{message.from_user.mention} choose:',reply_markup=VAboard)   
+        app.send_message(message.chat.id,
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {give_name(VIDAUD)}\n\n{message.from_user.mention} choose:',
+                         reply_markup=VAboard, reply_to_message_id=message.id)
 
-    elif message.document.file_name.upper().endswith(IMG): 
+    elif message.document.file_name.upper().endswith(IMG):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {IMG}\n\n{message.from_user.mention} choose:',reply_markup=IMGboard)
+        app.send_message(message.chat.id,
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {give_name(IMG)}\n\n{message.from_user.mention} choose:',
+                         reply_markup=IMGboard, reply_to_message_id=message.id)
 
-    elif message.document.file_name.upper().endswith(LBW): 
+    elif message.document.file_name.upper().endswith(LBW):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBW}\n\n{message.from_user.mention} choose:',reply_markup=LBWboard)
+        app.send_message(message.chat.id,
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {give_name(LBW)}\n\n{message.from_user.mention} choose:',
+                         reply_markup=LBWboard, reply_to_message_id=message.id)
 
-    elif message.document.file_name.upper().endswith(LBC): 
+    elif message.document.file_name.upper().endswith(LBC):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBC}\n\n{message.from_user.mention} choose:',reply_markup=LBCboard)
+        app.send_message(message.chat.id,
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {give_name(LBC)}\n\n{message.from_user.mention} choose:',
+                         reply_markup=LBCboard, reply_to_message_id=message.id)
 
-    elif message.document.file_name.upper().endswith(LBI): 
+    elif message.document.file_name.upper().endswith(LBI):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBI}\n\n{message.from_user.mention} choose:',reply_markup=LBIboard)
+        app.send_message(message.chat.id,
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {give_name(LBI)}\n\n{message.from_user.mention} choose:',
+                         reply_markup=LBIboard, reply_to_message_id=message.id)
 
-    elif message.document.file_name.upper().endswith(FF): 
+    elif message.document.file_name.upper().endswith(FF):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {FF}\n\n{message.from_user.mention} choose:',reply_markup=FFboard)
+        app.send_message(message.chat.id,
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {give_name(FF)}\n\n{message.from_user.mention} choose:',
+                         reply_markup=FFboard, reply_to_message_id=message.id)
 
-    elif message.document.file_name.upper().endswith(EB): 
+    elif message.document.file_name.upper().endswith(EB):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {EB}\n\n{message.from_user.mention} choose:',reply_markup=EBboard)
+        app.send_message(message.chat.id,
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {give_name(EB)}\n\n{message.from_user.mention} choose:',
+                         reply_markup=EBboard, reply_to_message_id=message.id)
 
     else:
-        app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}\n\nDocuments: {LBW} {LBI} {LBC}\n\nFonts: {FF}\n\nEBooks: {EB}')
+        app.send_message(message.chat.id,
+                         f'Available formats:\n\nIMAGES: {give_name(IMG)}\n\nVIDEOS/AUDIOS: {give_name(VIDAUD)}\n\nDocuments: {give_name(LBW)} {give_name(LBI)} {give_name(LBC)}\n\nFonts: {give_name(FF)}\n\nEBooks: {give_name(EB)}',
+                         reply_to_message_id=message.id)
+
 
 @app.on_message(filters.video)
-def video(client, message):
-    if message.video.file_name.upper().endswith(VIDAUD): 
+def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    if message.video.file_name.upper().endswith(VIDAUD):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.video.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n\n{message.from_user.mention} choose:',reply_markup=VAboard)
+        app.send_message(message.chat.id,
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {give_name(VIDAUD)}\n\n{message.from_user.mention} choose:',
+                         reply_markup=VAboard, reply_to_message_id=message.id)
     else:
-        app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}')
+        app.send_message(message.chat.id, f'Available formats:\n\nVIDEOS/AUDIOS: {give_name(VIDAUD)}',
+                         reply_to_message_id=message.id)
+
 
 @app.on_message(filters.audio)
-def audio(client, message):
-    if message.audio.file_name.upper().endswith(VIDAUD): 
+def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    if message.audio.file_name.upper().endswith(VIDAUD):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         dext = message.audio.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VIDAUD}\n\n{message.from_user.mention} choose:',reply_markup=VAboard)
+        app.send_message(message.chat.id,
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {give_name(VIDAUD)}\n\n{message.from_user.mention} choose:',
+                         reply_markup=VAboard, reply_to_message_id=message.id)
     else:
-        app.send_message(message.chat.id,f'Available formats:\n\nIMAGES: {IMG}\n\nVIDEOS/AUDIOS: {VIDAUD}')
+        app.send_message(message.chat.id, f'Available formats:\n\nVIDEOS/AUDIOS: {VIDAUD}',
+                         reply_to_message_id=message.id)
+
 
 @app.on_message(filters.photo)
-def photo(client, message):
-    #json.dump(json.loads(str(message)),open(f'{message.from_user.id}.json',"w"))
+def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
-    app.send_message(message.chat.id,f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {IMG}\n\n{message.from_user.mention} choose:',reply_markup=IMGboard)
+    app.send_message(message.chat.id,
+                     f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {give_name(IMG)}\n\n{message.from_user.mention} choose:',
+                     reply_markup=IMGboard, reply_to_message_id=message.id)
+
 
 @app.on_message(filters.text)
-def text(client, message):
+def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     if os.path.exists(f'{message.from_user.id}.json'):
-        #nmessage = json.load(open(f'{message.from_user.id}.json',"r"))
         with open(f'{message.from_user.id}.json', 'rb') as handle:
             nmessage = pickle.loads(handle.read())
         os.remove(f'{message.from_user.id}.json')
@@ -415,12 +458,12 @@ def text(client, message):
             inputt = nmessage.document.file_name
             print("File is a Document")
         else:
-            if "audio" in str(nmessage):   
+            if "audio" in str(nmessage):
                 inputt = nmessage.audio.file_name
                 print("File is a Audio")
             else:
-                if "video" in str(nmessage): 
-                    inputt = nmessage.video.file_name  
+                if "video" in str(nmessage):
+                    inputt = nmessage.video.file_name
                     print("File is a Video")
                 else:
                     if "photo" in str(nmessage):
@@ -428,17 +471,21 @@ def text(client, message):
                         inputt = temp.split("/")[-1]
                         os.remove(temp)
                         print("File is a Photo")
+                    else:
+                        inputt = ""
 
         newext = message.text.lower()
         oldext = inputt.split(".")[-1]
         if newext == "ico":
-            app.send_message(message.chat.id,"Warning: for ICO, image will be resized and made multi-resolution")
-        app.send_message(message.chat.id,f'Converting from {oldext.upper()} to {newext.upper()}')
-        # app.send_message(ownerid,f'From: {message.from_user.id}\nTask : {nmessage.id}\n\n{inputt} to {newext.upper()}')
-        conv = threading.Thread(target=lambda:follow(nmessage,inputt,newext),daemon=True)
+            app.send_message(message.chat.id, "Warning: for ICO, image will be resized and made multi-resolution",
+                             reply_to_message_id=message.id)
+        app.send_message(message.chat.id, f'Converting from {oldext.upper()} to {newext.upper()}',
+                         reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
+        conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext), daemon=True)
         conv.start()
     else:
-        app.send_message(message.chat.id,"First send me a File")
+        app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id,
+                         reply_markup=ReplyKeyboardRemove())
         
         
 #apprun
