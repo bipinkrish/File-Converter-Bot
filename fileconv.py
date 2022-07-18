@@ -1,5 +1,6 @@
 from pyrogram import Client
 from pyrogram import filters
+from pyrogram import enums
 import os
 import threading
 import pickle
@@ -53,6 +54,7 @@ def follow(message,inputt,new):
         os.remove(file)
         conlink = videoinfo(output)
         try:
+            app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
@@ -76,6 +78,7 @@ def follow(message,inputt,new):
         os.system(cmd)
         conlink = imageinfo(output)
         try:
+            app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
@@ -106,6 +109,7 @@ def follow(message,inputt,new):
         os.system(cmd)
         os.remove(file)
         try:
+            app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output)
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
@@ -120,6 +124,7 @@ def follow(message,inputt,new):
         cmd = libreofficecommand(file,new)
         os.system(cmd)
         try:
+            app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output)
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
@@ -137,6 +142,7 @@ def follow(message,inputt,new):
         os.remove("convert.pe")
         os.remove(file)
         try:
+            app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output)
             # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
