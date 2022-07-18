@@ -304,7 +304,10 @@ def echo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 @app.on_message(filters.command(['restrt']))
 def rstrt(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     if int(message.from_user.id) == int(owner_id):
-        shutil.rmtree("../downloads")
+        try:
+            shutil.rmtree("downloads")
+        expect:
+            pass
         app.send_message(owner_id, 'Bot Restarting')
         os.execv(sys.executable, ['python3'] + sys.argv)
     else:
@@ -454,5 +457,5 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
 
 # apprun
-print("BOT started Successfully 👍")
+print("BOT Starting ")
 app.run()
