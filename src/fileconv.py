@@ -306,7 +306,7 @@ def rstrt(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     if int(message.from_user.id) == int(owner_id):
         try:
             shutil.rmtree("downloads")
-        expect:
+        except:
             pass
         app.send_message(owner_id, 'Bot Restarting')
         os.execv(sys.executable, ['python3'] + sys.argv)
