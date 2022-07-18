@@ -252,19 +252,32 @@ def imageinfo(file):
 
 #videoinfo
 def videoinfo(file):
-    cmd = f'ffprobe -v quiet -print_format json -show_format -show_streams {file} > {file}.json'
+     cmd = f'ffprobe -v quiet -show_format -show_streams "{file}" > "{file}.txt"'
+    print(cmd)
     os.system(cmd)
+    with open(f"{file}.txt", "rb") as infile:
+        info = str(infile.read())
 
-    with open(f'{file}.json',"r") as infofile:
-        info  = str(infofile.readlines())
-    os.remove(f'{file}.json')
-    info = info.replace('\\n', '<br>')
-    info = info.replace('\', \'','')
+    os.remove(f"{file}.txt")
+
+    stream = info[10:].split("[/STREAM]")
+    formats = str(stream[1])[10:-12]
+    stream = stream[0]
+
+    info = formats + stream[2:]
+    info = info.replace("=", "     =        ")
+    info = info.replace("\\n", "<br>")
+    info = info.replace(":", "   ")
+    info = info.replace("./", "")
+
     file = file.split("downloads")[-1]
-    if file[0] == '/':
-       file = file[1:]
-    response = telegraph.create_page(f'{file}',html_content=f'<p>{info}</p>')
-    return response['url']
+    if file[0] == "/":
+        file = file[1:]
+    print(file)
+    response = telegraph.create_page(
+        f'{file.replace("./", "")}', html_content=f"<p>{info}</p>"
+    )
+    return response["url"]
 
 #app
 @app.on_message(filters.command(['start']))
