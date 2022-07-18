@@ -78,6 +78,8 @@ def follow(message, inputt, new):
     elif output.upper().endswith(IMG) and inputt.upper().endswith(IMG):
         print("It is IMG option")
         file = app.download_media(message)
+        os.system("ls-la)
+        os.system("cd .. && ls -la")
         srclink = imageinfo(file)
         cmd = magickcommand(file, output, new)
         os.system(cmd)
