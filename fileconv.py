@@ -291,8 +291,7 @@ def give_name(data):
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a File first and then Extension\n\n"
-                                      f"Available formats:\n\nIMAGES: {give_name(IMG)}\n\nVIDEOS/AUDIOS: {give_name(VIDAUD)}\n\nDocuments: {give_name(LBW)} \
-                                     {give_name(LBI)} {give_name(LBC)}\n\nFonts: {give_name(FF)}\n\nEBooks: {give_name(EB)}")
+                                      f"Available formats:\n\nIMAGES: {give_name(IMG)}\n\nVIDEOS/AUDIOS: {give_name(VIDAUD)}\n\nDocuments: {give_name(LBW)},{give_name(LBI)},{give_name(LBC)}\n\nFonts: {give_name(FF)}\n\nEBooks: {give_name(EB)}")
 
 
 @app.on_message(filters.command(['help']))
