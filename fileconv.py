@@ -253,7 +253,7 @@ def imageinfo(file):
 
 #videoinfo
 def videoinfo(file):
-     cmd = f'ffprobe -v quiet -show_format -show_streams "{file}" > "{file}.txt"'
+    cmd = f'ffprobe -v quiet -show_format -show_streams "{file}" > "{file}.txt"'
     print(cmd)
     os.system(cmd)
     with open(f"{file}.txt", "rb") as infile:
