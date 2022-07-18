@@ -281,12 +281,13 @@ def videoinfo(file):
     return response["url"]
 
 #listbeautifier
-def give_name(data: typing.Tuple):
+def give_name(data):
     name = ""
     for i in data:
         name += ", " + str(i)
     return name[1:]
 
+#app
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a File first and then Extension\n\n"
