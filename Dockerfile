@@ -14,7 +14,7 @@ RUN apt install zip unzip -y
 
 RUN apt install libreoffice -y
 RUN apt install default-jre libreoffice-java-common -y
-RUN apt install imagemagick --with-libtiff -y
+RUN apt install -y imagemagick --with-libtiff
 RUN apt install tesseract-ocr-all -y
 RUN apt install ffmpeg -y
 RUN apt install fontforge -y
