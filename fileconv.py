@@ -10,6 +10,8 @@ from telegraph import Telegraph
 import shutil
 import sys
 from buttons import *
+import pycolorizer
+import positive
 
 #env
 bot_token = os.environ.get("TOKEN", "") 
@@ -30,10 +32,13 @@ task = 0
 currentFile = __file__
 realPath = os.path.realpath(currentFile)
 dirPath = os.path.dirname(realPath)
+os.system("chmod 777 c41lab.py")
+os.system("chmod 777 negfix8")
+
 
 #suporrtedextension
 VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV","AVI","M4B","VOB","DVD","WEBM","WMV")
-IMG = ("OCR","ICO","GIF","TIFF","TIF","BMP","WEBP","JP2","JPEG","JPG","PNG")
+IMG = ("OCR","ICO","GIF","TIFF","TIF","BMP","WEBP","JP2","JPEG","JPG","PNG","COLORIZE","POSITIVE")
 LBW = ("ODT","DOC","DOCX","DOTX","PDF","XML","HTML","DOTM","WPS","OTT","TXT")
 LBI = ("ODP","PPT","PPTX","PPTM","PPSX","POTM","POTX","PPS","POT","ODG","OTP","XML","PDF")
 LBC = ("ODS","XLS","HTML","XLSX","XLSM","XLTM","XLTX","OTS","XML","PDF","CSV","XLM")
@@ -57,16 +62,16 @@ def follow(message,inputt,new):
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
-            # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            # app.send_message(owner_id,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
             try:
-                app.send_document(ownerid,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+                app.send_document(owner_id,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
             except:
                 try:
-                    app.send_document(ownerid,document=message.video.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+                    app.send_document(owner_id,document=message.video.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
                 except:
-                    app.send_document(ownerid,document=message.audio.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+                    app.send_document(owner_id,document=message.audio.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
 
         task = task -1
         os.remove(output)
@@ -81,10 +86,10 @@ def follow(message,inputt,new):
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
-            # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            # app.send_message(owner_id,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(ownerid,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(owner_id,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         os.remove(output)
 
         if new == "ocr":
@@ -112,10 +117,10 @@ def follow(message,inputt,new):
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output)
-            # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            # app.send_message(owner_id,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(ownerid,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(owner_id,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         task = task -1
         os.remove(output)
 
@@ -127,10 +132,10 @@ def follow(message,inputt,new):
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output)
-            # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            # app.send_message(owner_id,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(ownerid,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(owner_id,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         task = task -1
         os.remove(file)
         os.remove(output)
@@ -145,16 +150,49 @@ def follow(message,inputt,new):
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output)
-            # app.send_message(ownerid,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            # app.send_message(owner_id,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(ownerid,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            app.send_document(owner_id,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         task = task -1
         os.remove(output)
 
     else:
         app.send_message(message.chat.id,"Send me valid Extension")
         task = task -1
+
+# negative to positive
+def negetivetopostive(message):
+    file = app.download_media(message)
+    output = file.split("/")[-1]
+
+    print("using c41lab")
+    os.system(f'./c41lab.py "{file}" "{output}"')
+    app.send_document(message.chat.id,document=output,caption="used tool -> c41lab")
+    os.remove(output)
+
+    print("using negfix8")
+    os.system(f'./negfix8 "{file}" "{output}"')
+    app.send_document(message.chat.id,document=output,caption="used tool -> negfix8")
+    os.remove(output)
+
+    print("using simple tool")
+    positive.positiver(file,output)
+    app.send_document(message.chat.id,document=output,caption="used tool -> simple tool")
+    os.remove(output)
+
+    os.remove(file)
+
+# color image
+def colorizeimage(message):
+    file = app.download_media(message)
+    output = file.split("/")[-1]
+
+    pycolorizer.colorize_image(output,file)
+    app.send_document(message.chat.id,document=output)
+    os.remove(output)
+
+    os.remove(file)
 
 #newfilename
 def updtname(inputt,new):
@@ -345,6 +383,31 @@ def rstrt(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     else:
         app.send_message(message.chat.id, "Unauthorized")
 
+@app.on_message(filters.command(["color"]))
+def cdocumnet(client, message):
+    app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove())
+    if os.path.exists(f'{message.from_user.id}.json'):
+        with open(f'{message.from_user.id}.json', 'rb') as handle:
+            nmessage = pickle.loads(handle.read())
+        os.remove(f'{message.from_user.id}.json')
+    else:
+        app.send_message(message.chat.id,"First send me a File")
+
+    col = threading.Thread(target=lambda:colorizeimage(nmessage),daemon=True)
+    col.start()
+    
+@app.on_message(filters.command(["positive"]))
+def pdocumnet(client, message):
+    app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove())
+    if os.path.exists(f'{message.from_user.id}.json'):
+        with open(f'{message.from_user.id}.json', 'rb') as handle:
+            nmessage = pickle.loads(handle.read())
+        os.remove(f'{message.from_user.id}.json')
+    else:
+        app.send_message(message.chat.id,"First send me a File")
+
+    pos = threading.Thread(target=lambda:negetivetopostive(nmessage),daemon=True)
+    pos.start()   
 
 @app.on_message(filters.document)
 def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
@@ -449,6 +512,8 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 
 @app.on_message(filters.text)
 def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    if "/color" in message.text or "/positive" in message.text:
+        return
     if os.path.exists(f'{message.from_user.id}.json'):
         with open(f'{message.from_user.id}.json', 'rb') as handle:
             nmessage = pickle.loads(handle.read())

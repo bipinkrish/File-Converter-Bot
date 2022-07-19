@@ -35,7 +35,9 @@ ReplyButton('WEBP'),
 ReplyButton('JP2'),
 ReplyButton('JPEG'),
 ReplyButton('JPG'),
-ReplyButton('PNG')
+ReplyButton('PNG'),
+ReplyButton('/color'),
+ReplyButton('/positive')
             )
 
 LBWboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
