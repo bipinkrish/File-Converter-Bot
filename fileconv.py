@@ -170,15 +170,15 @@ def negetivetopostive(message):
     os.system(f'./c41lab.py "{file}" "{output}"')
     app.send_document(message.chat.id,document=output,caption="used tool -> c41lab")
     os.remove(output)
-
-    print("using negfix8")
-    os.system(f'./negfix8 "{file}" "{output}"')
-    app.send_document(message.chat.id,document=output,caption="used tool -> negfix8")
-    os.remove(output)
-
+    
     print("using simple tool")
     positive.positiver(file,output)
     app.send_document(message.chat.id,document=output,caption="used tool -> simple tool")
+    os.remove(output)
+    
+    print("using negfix8")
+    os.system(f'./negfix8 "{file}" "{output}"')
+    app.send_document(message.chat.id,document=output,caption="used tool -> negfix8")
     os.remove(output)
 
     os.remove(file)
