@@ -270,22 +270,19 @@ def imageinfo(file):
     cmd = f'identify -verbose {file} > {file}.txt'
     os.system(cmd)
 
-    with open(f"{file}.txt", "r") as infofile:
-        info = infofile.read()
+    with open(f"file", "rb") as infile:
+        info = str(infile.read())
     os.remove(f'{file}.txt')
     
-    info = info.split(" ")
-    text = ""
-    for ele in info:
-        text = f'{text} {ele}'
-        if ":" not in ele:
-            text = f'{text} <br>'
-   
+    info = info.replace("=", "     =        ")
+    info = info.replace("\\n", "<br>")
+    info = info.replace(":", "   ")
+    info = info.replace("./", "")
     
     file = file.split("downloads")[-1]
     if file[0] == '/':
        file = file[1:]
-    response = telegraph.create_page(f'{file}',html_content=f'<p>{text}</p>')
+    response = telegraph.create_page(f'{file}',html_content=f'<p>{info}</p>')
     return response['url']
 
 
@@ -454,6 +451,15 @@ def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
                          reply_to_message_id=message.id)
 
 
+@app.on_message(filters.video_note)
+def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    with open(f'{message.from_user.id}.json', 'wb') as handle:
+        pickle.dump(message, handle)
+    app.send_message(message.chat.id,
+                f'Detected Extension: MP4 \nNow send extension to Convert to...\n\nAvailable formats: {give_name(VIDAUD)}\n\n{message.from_user.mention} choose:',
+                reply_markup=VAboard, reply_to_message_id=message.id)
+
+
 @app.on_message(filters.audio)
 def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     if message.audio.file_name.upper().endswith(VIDAUD):
@@ -528,16 +534,24 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                         print("File is a Sticker")
                     else:
                         if "video" in str(nmessage):
-                            inputt = nmessage.video.file_name
-                            print("File is a Video")
+                            try:
+                                inputt = nmessage.video.file_name
+                                print("File is a Video")
+                            except:
+                                inputt = "voice_note.mp4"
+                                print("File is a Video Note")     
                         else:
-                            if "photo" in str(nmessage):
-                                temp = app.download_media(nmessage)
-                                inputt = temp.split("/")[-1]
-                                os.remove(temp)
-                                print("File is a Photo")
+                            if "video_note" in str(nmessage):
+                                inputt = "voice_note.mp4"
+                                print("File is a Video Note")   
                             else:
-                                inputt = ""
+                                if "photo" in str(nmessage):
+                                    temp = app.download_media(nmessage)
+                                    inputt = temp.split("/")[-1]
+                                    os.remove(temp)
+                                    print("File is a Photo")
+                                else:
+                                    inputt = ""
 
         newext = message.text.lower()
         oldext = inputt.split(".")[-1]
