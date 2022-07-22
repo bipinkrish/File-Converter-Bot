@@ -303,7 +303,7 @@ def videoinfo(file):
     try:
         formats = str(stream[1])[10:-12]
     except:
-        pass
+        formats = str(stream[1])
     stream = stream[0]
 
     info = formats + stream[2:]
