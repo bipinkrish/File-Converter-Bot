@@ -274,10 +274,9 @@ def imageinfo(file):
         info = str(infile.read())
     os.remove(f'{file}.txt')
     
-    info = info.replace("=", "     =        ")
     info = info.replace("\\n", "<br>")
-    info = info.replace(":", "   ")
-    info = info.replace("./", "")
+    info = info.replace(":", ": ")
+    info = info.encode('UTF-8')
     
     file = file.split("downloads")[-1]
     if file[0] == '/':
