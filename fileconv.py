@@ -276,6 +276,8 @@ def imageinfo(file):
    
     info = info.replace(":", ": ")
     info = info.replace("b'","")
+    info = info.replace("'","")
+    info = info.replace("\\n","<br>")
     
     file = file.split("downloads")[-1]
     if file[0] == '/':
