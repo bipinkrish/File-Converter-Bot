@@ -2,33 +2,31 @@ import pyrogram
 from pyrogram import Client
 from pyrogram import filters
 from pyrogram import enums
+from telegraph import Telegraph
+
 import os
 import threading
 import pickle
 import os.path
-from telegraph import Telegraph
-import shutil
-import sys
+
 from buttons import *
 import pycolorizer
 import positive
 
-#env
+
+# env
 bot_token = os.environ.get("TOKEN", "") 
 api_hash = os.environ.get("HASH", "") 
 api_id = os.environ.get("ID", "")
-owner_id = os.environ.get("OWNERID", "")
 
-#bot
+
+# bot
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 telegraph = Telegraph()
-telegraph.create_account(short_name='1337')
+telegraph.create_account(short_name='file-converter')
 
-#global
-global task
-task = 0
 
-#setting
+# setting
 currentFile = __file__
 realPath = os.path.realpath(currentFile)
 dirPath = os.path.dirname(realPath)
@@ -36,7 +34,7 @@ os.system("chmod 777 c41lab.py")
 os.system("chmod 777 negfix8")
 
 
-#suporrtedextension
+# suporrted extensions
 VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV","AVI","M4B","VOB","DVD","WEBM","WMV")
 IMG = ("OCR","ICO","GIF","TIFF","BMP","WEBP","JP2","JPEG","JPG","PNG","COLORIZE","POSITIVE")
 LBW = ("ODT","DOC","DOCX","DOTX","PDF","XML","HTML","DOTM","WPS","OTT","TXT")
@@ -45,11 +43,10 @@ LBC = ("ODS","XLS","HTML","XLSX","XLSM","XLTM","XLTX","OTS","XML","PDF","CSV","X
 FF = ("SFD","BDF","FNT","OTF","PFA","PFB","TTC","TTF","UFO","WOFF")
 EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT","ZIP")
 
-#main
+
+# main function to follow
 def follow(message,inputt,new):
-    global task
     output = updtname(inputt,new)
-    task = task + 1
 
     if output.upper().endswith(VIDAUD) and inputt.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
@@ -62,18 +59,9 @@ def follow(message,inputt,new):
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
-            # app.send_message(owner_id,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            try:
-                app.send_document(owner_id,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
-            except:
-                try:
-                    app.send_document(owner_id,document=message.video.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
-                except:
-                    app.send_document(owner_id,document=message.audio.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
-
-        task = task -1
+            
         os.remove(output)
 
     elif output.upper().endswith(IMG) and inputt.upper().endswith(IMG):
@@ -86,10 +74,9 @@ def follow(message,inputt,new):
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
-            # app.send_message(owner_id,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(owner_id,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
+            
         os.remove(output)
 
         if new == "ocr":
@@ -105,7 +92,7 @@ def follow(message,inputt,new):
             for ele in slist:
                 toutput = updtname(inputt,f"{ele}.png")
                 os.remove(toutput)
-        task = task -1
+        
         os.remove(file)
 
     elif output.upper().endswith(EB) and inputt.upper().endswith(EB):
@@ -117,11 +104,9 @@ def follow(message,inputt,new):
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output)
-            # app.send_message(owner_id,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(owner_id,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
-        task = task -1
+            
         os.remove(output)
 
     elif (output.upper().endswith(LBW) and inputt.upper().endswith(LBW)) or (output.upper().endswith(LBI) and inputt.upper().endswith(LBI)) or (output.upper().endswith(LBC) and inputt.upper().endswith(LBC)):
@@ -132,11 +117,9 @@ def follow(message,inputt,new):
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output)
-            # app.send_message(owner_id,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(owner_id,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
-        task = task -1
+            
         os.remove(file)
         os.remove(output)
 
@@ -150,16 +133,14 @@ def follow(message,inputt,new):
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output)
-            # app.send_message(owner_id,f'SUCCESS\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
-            app.send_document(owner_id,document=message.document.file_id,caption=f'FAILED\n\nFrom: {message.from_user.id}\nTask : {message.id}\n\n{inputt} to {new.upper()}')
-        task = task -1
+            
         os.remove(output)
 
     else:
         app.send_message(message.chat.id,"Send me valid Extension")
-        task = task -1
+
 
 # negative to positive
 def negetivetopostive(message):
@@ -183,6 +164,7 @@ def negetivetopostive(message):
 
     os.remove(file)
 
+
 # color image
 def colorizeimage(message):
     file = app.download_media(message)
@@ -194,7 +176,8 @@ def colorizeimage(message):
 
     os.remove(file)
 
-#newfilename
+
+# new file name
 def updtname(inputt,new):
     inputt = inputt.split(".")
     inputt[-1] = new
@@ -206,14 +189,16 @@ def updtname(inputt,new):
     print(output)
     return output
 
-#calibrecmd
+
+# calibre cmd
 def calibrecommand(inputt,output):
     cmd = f'ebook-convert "{inputt}" "{output}" --enable-heuristics'
     print("Command to be Executed is")
     print(cmd)
     return cmd
 
-#fontforgecmd
+
+# fontforge cmd
 def fontforgecommand(inputt,output):
     des = dirPath + f"/{output}"
     cdes = dirPath + "/convert.pe"
@@ -227,7 +212,8 @@ def fontforgecommand(inputt,output):
     print(cmd)
     return cmd
 
-#libreofficecmd
+
+# libreoffice cmd
 def libreofficecommand(inputt,new):
     #cmd = f'{libreoffice} --appimage-extract-and-run --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
     if inputt.split(".")[-1] == 'pdf':
@@ -238,7 +224,8 @@ def libreofficecommand(inputt,new):
     print(cmd)
     return cmd
 
-#tesseractcmd
+
+# tesseract cmd
 def tesrctcommand(inputt,output):
     #cmd = f'{tesseract} --appimage-extract-and-run "{inputt}" "{output}"'
     cmd = f'tesseract "{inputt}" "{output}"'
@@ -246,7 +233,8 @@ def tesrctcommand(inputt,output):
     print(cmd)
     return cmd
 
-#ffmpegcmd
+
+# ffmpeg cmd
 def ffmpegcommand(inputt,output,new):
     #cmd = f'{ffmpeg} -i "{inputt}" "{output}"'
     if new in  ["mp4", "mkv", "mov", "webm"]:
@@ -257,7 +245,8 @@ def ffmpegcommand(inputt,output,new):
     print(cmd)
     return cmd
 
-#magiccmd
+
+# magic cmd (imagemagic)
 def magickcommand(inputt,output,new):
     #cmd = f'{magick} --appimage-extract-and-run "{inputt}" "{output}"'
     if new == "ico":
@@ -275,7 +264,8 @@ def magickcommand(inputt,output,new):
     print(cmd)
     return cmd  
 
-#imageinfo
+
+# image info
 def imageinfo(file):
     cmd = f'identify -verbose {file} > {file}.txt'
     os.system(cmd)
@@ -289,7 +279,8 @@ def imageinfo(file):
     response = telegraph.create_page(f'{file}',html_content=f'<p>{info}</p>')
     return response['url']
 
-#videoinfo
+
+# video info
 def videoinfo(file):
     cmd = f'ffprobe -v quiet -show_format -show_streams "{file}" > "{file}.txt"'
     print(cmd)
@@ -318,14 +309,16 @@ def videoinfo(file):
     )
     return response["url"]
 
-#listbeautifier
+
+# list beautifier
 def give_name(data):
     name = ""
     for i in data:
         name += ", " + str(i)
     return name[1:]
 
-#app
+
+# app messages
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a File first and then Extension\n\n"
@@ -343,46 +336,6 @@ def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
     app.send_message(message.chat.id, "GITHUB - https://github.com/bipinkrish/File-Converter-Bot")
 
 
-@app.on_message(filters.command(['feedback']))
-def feedback(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    try:
-        text = message.text.split("feedback ")[1]
-        app.send_message(owner_id, f'from: {message.from_user.id}\n\n{text}')
-        app.send_message(message.chat.id, "Thank You for your feedback")
-    except:
-        app.send_message(message.chat.id, "no message to send\nexample: /feedback Wonderfull Bot!")
-
-
-@app.on_message(filters.command(['sendmess']))
-def echo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    if int(message.from_user.id) == int(owner_id):
-        text = message.text.split("sendmess ")[1]
-        uid = int(text.split(" ")[0])
-        text = text[10:]
-        app.send_message(uid, text)
-        app.send_message(message.chat.id, "Message Sent")
-    else:
-        app.send_message(message.chat.id, "Unauthorized")
-
-
-@app.on_message(filters.command(['tasks']))
-def echo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    global task
-    if int(message.from_user.id) == int(owner_id):
-        app.send_message(message.chat.id, f"Total Tasks Running : {task}")
-    else:
-        app.send_message(message.chat.id, "Unauthorized")
-
-
-@app.on_message(filters.command(['restrt']))
-def rstrt(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    if int(message.from_user.id) == int(owner_id):
-        shutil.rmtree("downloads")
-        app.send_message(owner_id, 'Bot Restarting')
-        os.execv(sys.executable, ['python3'] + sys.argv)
-    else:
-        app.send_message(message.chat.id, "Unauthorized")
-
 @app.on_message(filters.command(["color"]))
 def cdocumnet(client, message):
     app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove())
@@ -395,7 +348,8 @@ def cdocumnet(client, message):
 
     col = threading.Thread(target=lambda:colorizeimage(nmessage),daemon=True)
     col.start()
-    
+
+
 @app.on_message(filters.command(["positive"]))
 def pdocumnet(client, message):
     app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove())
@@ -408,6 +362,7 @@ def pdocumnet(client, message):
 
     pos = threading.Thread(target=lambda:negetivetopostive(nmessage),daemon=True)
     pos.start()   
+
 
 @app.on_message(filters.document)
 def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
@@ -501,6 +456,15 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
                          reply_to_message_id=message.id)
 
 
+@app.on_message(filters.voice)
+def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    with open(f'{message.from_user.id}.json', 'wb') as handle:
+        pickle.dump(message, handle)
+    app.send_message(message.chat.id,
+                f'Detected Extension: OGG \nNow send extension to Convert to...\n\nAvailable formats: {give_name(VIDAUD)}\n\n{message.from_user.mention} choose:',
+                reply_markup=VAboard, reply_to_message_id=message.id)
+
+
 @app.on_message(filters.photo)
 def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     with open(f'{message.from_user.id}.json', 'wb') as handle:
@@ -508,6 +472,18 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     app.send_message(message.chat.id,
                      f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {give_name(IMG)}\n\n{message.from_user.mention} choose:',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
+
+
+@app.on_message(filters.sticker)
+def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    if message.sticker.is_animated == "false" and message.sticker.is_video == "false":
+        with open(f'{message.from_user.id}.json', 'wb') as handle:
+            pickle.dump(message, handle)
+        app.send_message(message.chat.id,
+                     f'Detected Extension: WEBP \nNow send extension to Convert to...\n\nAvailable formats: {give_name(IMG)}\n\n{message.from_user.mention} choose:',
+                     reply_markup=IMGboard, reply_to_message_id=message.id)
+    else:
+        app.send_message(message.chat.id,"Animated Stickers are not Supported")
 
 
 @app.on_message(filters.text)
@@ -531,13 +507,21 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                     inputt = nmessage.video.file_name
                     print("File is a Video")
                 else:
-                    if "photo" in str(nmessage):
-                        temp = app.download_media(nmessage)
-                        inputt = temp.split("/")[-1]
-                        os.remove(temp)
-                        print("File is a Photo")
+                    if "sticker" in str(nmessage):
+                        inputt = nmessage.sticker.set_name + ".webp"
+                        print("File is a Sticker")
                     else:
-                        inputt = ""
+                        if "voice" in str(nmessage):
+                            inputt = "voice.ogg"
+                            print("File is a Voice")
+                        else:
+                            if "photo" in str(nmessage):
+                                temp = app.download_media(nmessage)
+                                inputt = temp.split("/")[-1]
+                                os.remove(temp)
+                                print("File is a Photo")
+                            else:
+                                inputt = ""
 
         newext = message.text.lower()
         oldext = inputt.split(".")[-1]
