@@ -274,7 +274,8 @@ def imageinfo(file):
         info = infofile.read()
     os.remove(f'{file}.txt')
     info = info.split(" ")
-    for ele in text:
+    text = ""
+    for ele in info:
         text = f'{text} {ele}'
         if ":" not in ele:
             text = f'{text}\n'
