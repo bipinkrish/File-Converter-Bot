@@ -476,7 +476,7 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 
 @app.on_message(filters.sticker)
 def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    if message.sticker.is_animated == "false" and message.sticker.is_video == "false":
+    if not message.sticker.is_animated and not message.sticker.is_video:
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         app.send_message(message.chat.id,
@@ -499,21 +499,21 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             inputt = nmessage.document.file_name
             print("File is a Document")
         else:
-            if "audio" in str(nmessage):
-                inputt = nmessage.audio.file_name
-                print("File is a Audio")
+            if "voice" in str(nmessage):
+                inputt = "voice.ogg"
+                print("File is a Voice")
             else:
-                if "video" in str(nmessage):
-                    inputt = nmessage.video.file_name
-                    print("File is a Video")
+                if "audio" in str(nmessage):
+                    inputt = nmessage.audio.file_name
+                    print("File is a Audio")
                 else:
                     if "sticker" in str(nmessage):
                         inputt = nmessage.sticker.set_name + ".webp"
                         print("File is a Sticker")
                     else:
-                        if "voice" in str(nmessage):
-                            inputt = "voice.ogg"
-                            print("File is a Voice")
+                        if "video" in str(nmessage):
+                            inputt = nmessage.video.file_name
+                            print("File is a Video")
                         else:
                             if "photo" in str(nmessage):
                                 temp = app.download_media(nmessage)
