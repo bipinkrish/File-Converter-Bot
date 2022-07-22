@@ -10,7 +10,6 @@ see the bot in action @filesconvertrobot (https://t.me/filesconvertrobot)
 - `HASH` Your API Hash from my.telegram.org
 - `ID` Your API ID from my.telegram.org
 - `TOKEN` Your bot token from @BotFather
-- `OWNERID` Bot Owner ID
 
 ---
 
