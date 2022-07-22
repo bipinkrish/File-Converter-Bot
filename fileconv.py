@@ -300,7 +300,10 @@ def videoinfo(file):
     os.remove(f"{file}.txt")
 
     stream = info[10:].split("[/STREAM]")
-    formats = str(stream[1])[10:-12]
+    try:
+        formats = str(stream[1])[10:-12]
+    except:
+        pass
     stream = stream[0]
 
     info = formats + stream[2:]
