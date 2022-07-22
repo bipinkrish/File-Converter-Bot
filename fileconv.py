@@ -273,10 +273,9 @@ def imageinfo(file):
     with open(f"{file}.txt", "rb") as infile:
         info = str(infile.read())
     os.remove(f'{file}.txt')
-    
-    info = info.replace("\\n", "<br>")
+   
     info = info.replace(":", ": ")
-    info = info.encode('UTF-8')
+    info = info.replace("b'","")
     
     file = file.split("downloads")[-1]
     if file[0] == '/':
