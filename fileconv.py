@@ -538,7 +538,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                                 inputt = nmessage.video.file_name
                                 print("File is a Video")
                             except:
-                                inputt = "voice_note.mp4"
+                                inputt = "video_note.mp4"
                                 print("File is a Video Note")     
                         else:
                             if "video_note" in str(nmessage):
