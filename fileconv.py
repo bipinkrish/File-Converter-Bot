@@ -511,9 +511,13 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             inputt = nmessage.document.file_name
             print("File is a Document")
         else:
-            if "audio" in str(nmessage):
-                inputt = nmessage.audio.file_name
-                print("File is a Audio")
+            if "audio" in str(nmessage) or "voice" in str(nmessage)::
+                try:
+                    inputt = nmessage.audio.file_name
+                    print("File is a Audio")
+                except:
+                    inputt = "voice.ogg"
+                    print("File is a Voice")
             else:
                 if "voice" in str(nmessage):
                     inputt = "voice.ogg"
