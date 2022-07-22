@@ -273,10 +273,16 @@ def imageinfo(file):
     with open(f"{file}.txt", "r") as infofile:
         info = infofile.read()
     os.remove(f'{file}.txt')
+    info = info.split(" ")
+    for ele in text:
+        text = f'{text} {ele}'
+        if ":" not in ele:
+            text = f'{text}\n'
+    text = text.replace("\\n", "<br>")
     file = file.split("downloads")[-1]
     if file[0] == '/':
        file = file[1:]
-    response = telegraph.create_page(f'{file}',html_content=f'<p>{info}</p>')
+    response = telegraph.create_page(f'{file}',html_content=f'<p>{text}</p>')
     return response['url']
 
 
