@@ -511,13 +511,13 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             inputt = nmessage.document.file_name
             print("File is a Document")
         else:
-            if "voice" in str(nmessage):
-                inputt = "voice.ogg"
-                print("File is a Voice")
+            if "audio" in str(nmessage):
+                inputt = nmessage.audio.file_name
+                print("File is a Audio")
             else:
-                if "audio" in str(nmessage):
-                    inputt = nmessage.audio.file_name
-                    print("File is a Audio")
+                if "voice" in str(nmessage):
+                    inputt = "voice.ogg"
+                    print("File is a Voice")
                 else:
                     if "sticker" in str(nmessage):
                         inputt = nmessage.sticker.set_name + ".webp"
