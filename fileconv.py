@@ -279,7 +279,7 @@ def imageinfo(file):
         text = f'{text} {ele}'
         if ":" not in ele:
             text = f'{text}\n'
-    text = text.replace("\n"," <br>")
+    text = text.replace("\n"," ")
     file = file.split("downloads")[-1]
     if file[0] == '/':
        file = file[1:]
