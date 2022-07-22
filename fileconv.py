@@ -270,7 +270,7 @@ def imageinfo(file):
     cmd = f'identify -verbose {file} > {file}.txt'
     os.system(cmd)
 
-    with open(f"file", "rb") as infile:
+    with open(f"{file}.txt", "rb") as infile:
         info = str(infile.read())
     os.remove(f'{file}.txt')
     
