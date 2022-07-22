@@ -273,13 +273,15 @@ def imageinfo(file):
     with open(f"{file}.txt", "r") as infofile:
         info = infofile.read()
     os.remove(f'{file}.txt')
+    
     info = info.split(" ")
     text = ""
     for ele in info:
         text = f'{text} {ele}'
         if ":" not in ele:
-            text = f'{text}\n'
-    text = text.replace("\n"," ")
+            text = f'{text} <br>'
+   
+    
     file = file.split("downloads")[-1]
     if file[0] == '/':
        file = file[1:]
