@@ -112,7 +112,7 @@ def follow(message,inputt,new):
     elif (output.upper().endswith(LBW) and inputt.upper().endswith(LBW)) or (output.upper().endswith(LBI) and inputt.upper().endswith(LBI)) or (output.upper().endswith(LBC) and inputt.upper().endswith(LBC)):
         print("It is LibreOffice option")
         file = app.download_media(message)
-        cmd = libreofficecommand(file,new,message)
+        cmd = libreofficecommand(file,new)
         os.system(cmd)
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
