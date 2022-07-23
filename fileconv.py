@@ -312,10 +312,11 @@ def videoinfo(file):
     file = file.split("downloads")[-1]
     if file[0] == "/":
         file = file[1:]
-    print(file)
-    response = telegraph.create_page(
-        f'{file.replace("./", "")}', html_content=f"<p>{info}</p>"
-    )
+    
+    try:
+        response = telegraph.create_page(f'{file.replace("./", "")}', html_content=f"<p>{info}</p>")
+    except:
+        response = telegraph.create_page(f'{file.replace("./", "")}', html_content=f"<p> error in getting file info </p>")
     return response["url"]
 
 
