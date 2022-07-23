@@ -112,7 +112,7 @@ def follow(message,inputt,new):
     elif (output.upper().endswith(LBW) and inputt.upper().endswith(LBW)) or (output.upper().endswith(LBI) and inputt.upper().endswith(LBI)) or (output.upper().endswith(LBC) and inputt.upper().endswith(LBC)):
         print("It is LibreOffice option")
         file = app.download_media(message)
-        cmd = libreofficecommand(file,new)
+        cmd = libreofficecommand(file,new,message)
         os.system(cmd)
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
@@ -128,7 +128,7 @@ def follow(message,inputt,new):
         file = app.download_media(message)
         cmd = fontforgecommand(file,output)
         os.system(cmd)
-        os.remove("convert.pe")
+        os.remove(f"{message.id}-convert.pe)
         os.remove(file)
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
@@ -199,11 +199,11 @@ def calibrecommand(inputt,output):
 
 
 # fontforge cmd
-def fontforgecommand(inputt,output):
+def fontforgecommand(inputt,output,message):
     des = dirPath + f"/{output}"
-    cdes = dirPath + "/convert.pe"
+    cdes = dirPath + f"/{message.id}-convert.pe"
     text = f'Open(\'{inputt}\')\nGenerate(\'{des}\')'
-    with open("convert.pe","w") as file:
+    with open(f"{message.id}-convert.pe","w") as file:
         file.write(text)
     os.system("chmod 777 convert.pe")
     #cmd = f'{fontforge} --appimage-extract-and-run -script "{cdes}"'
