@@ -205,7 +205,7 @@ def fontforgecommand(inputt,output,message):
     text = f'Open(\'{inputt}\')\nGenerate(\'{des}\')'
     with open(f"{message.id}-convert.pe","w") as file:
         file.write(text)
-    os.system("chmod 777 convert.pe")
+    os.system(f"chmod 777 {message.id}-convert.pe")
     #cmd = f'{fontforge} --appimage-extract-and-run -script "{cdes}"'
     cmd = f'fontforge -script "{cdes}"'
     print("Command to be Executed is")
