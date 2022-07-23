@@ -126,9 +126,9 @@ def follow(message,inputt,new):
     elif output.upper().endswith(FF) and inputt.upper().endswith(FF):
         print("It is FontForge option")
         file = app.download_media(message)
-        cmd = fontforgecommand(file,output)
+        cmd = fontforgecommand(file,output,message)
         os.system(cmd)
-        os.remove(f"{message.id}-convert.pe)
+        os.remove(f"{message.id}-convert.pe")
         os.remove(file)
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
