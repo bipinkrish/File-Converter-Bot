@@ -28,5 +28,4 @@ COPY . .
 RUN apt-get install -y python3-numpy python3-pydot python3-matplotlib python3-opencv python3-graphviz python3-toolz
 RUN wget https://github.com/bipinkrish/Colorize-Positive-Bot/releases/download/Model/model.zip && unzip model.zip && rm model.zip
 
-EXPOSE $PORT
 CMD ["python3","fileconv.py"]
