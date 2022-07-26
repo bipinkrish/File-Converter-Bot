@@ -1,37 +1,31 @@
-# <WARNING>
-# Everything within sections like <TAG> is generated and can
-# be automatically replaced on deployment. You can disable
-# this functionality by simply removing the wrapping tags.
-# </WARNING>
+FROM ubuntu:latest
 
-# <DOCKER_FROM>
-FROM divio/base:2.2-py3.9-slim-buster
-# </DOCKER_FROM>
+WORKDIR /usr/src/app
+RUN chmod 777 /usr/src/app
 
-# <NPM>
-# </NPM>
+RUN apt update && apt-get upgrade -y
+RUN apt install libssl-dev libtesseract-dev libicu-dev libicu-dev libcairo2-dev freeglut3 freeglut3-dev libopengl0 libtiff5-dev -y
 
-# <BOWER>
-# </BOWER>
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Moscow
+RUN apt-get install -y tzdata
+RUN apt install wget -y
+RUN apt install zip unzip -y
 
-# <PYTHON>
-ENV PIP_INDEX_URL=${PIP_INDEX_URL:-https://wheels.aldryn.net/v1/aldryn-extras+pypi/${WHEELS_PLATFORM:-aldryn-baseproject-py3}/+simple/} \
-    WHEELSPROXY_URL=${WHEELSPROXY_URL:-https://wheels.aldryn.net/v1/aldryn-extras+pypi/${WHEELS_PLATFORM:-aldryn-baseproject-py3}/}
-COPY requirements.* /app/
-COPY addons-dev /app/addons-dev/
-RUN pip-reqs resolve && \
-    pip install \
-        --no-index --no-deps \
-        --requirement requirements.urls
-# </PYTHON>
+RUN apt install libreoffice -y
+RUN apt install default-jre libreoffice-java-common -y
+RUN apt install imagemagick -y
+RUN apt install tesseract-ocr-all -y
+RUN apt install ffmpeg -y
+RUN apt install fontforge -y
+RUN apt install calibre -y
 
-# <SOURCE>
-COPY . /app
-# </SOURCE>
+RUN apt install python3-pip -y
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
 
-# <GULP>
-# </GULP>
+RUN apt-get install -y python3-numpy python3-pydot python3-matplotlib python3-opencv python3-graphviz python3-toolz
+RUN wget https://github.com/bipinkrish/Colorize-Positive-Bot/releases/download/Model/model.zip && unzip model.zip && rm model.zip
 
-# <STATIC>
-RUN DJANGO_MODE=build python manage.py collectstatic --noinput
-# </STATIC>
+CMD ["python3","fileconv.py"]
