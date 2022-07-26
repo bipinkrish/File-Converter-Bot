@@ -237,7 +237,7 @@ def tesrctcommand(inputt,output):
 # ffmpeg cmd
 def ffmpegcommand(inputt,output,new):
     #cmd = f'{ffmpeg} -i "{inputt}" "{output}"'
-    if new in  ["mp4", "mkv", "mov", "webm"]:
+    if new in  ["mp4", "mkv", "mov"]:
         cmd = f'ffmpeg -i "{inputt}" -c copy "{output}"'
     else:
         cmd = f'ffmpeg -i "{inputt}" "{output}"'
