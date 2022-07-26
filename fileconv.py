@@ -563,9 +563,9 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                          reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
         conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext), daemon=True)
         conv.start()
-    else:
-        app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id,
-                         reply_markup=ReplyKeyboardRemove())
+    #else:
+        #app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id,
+                         #reply_markup=ReplyKeyboardRemove())
         
         
 #apprun
