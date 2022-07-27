@@ -100,7 +100,7 @@ def follow(message,inputt,new):
             file = app.download_media(message)
             srclink = imageinfo(file)
             
-            os.system(f'./tgs2animated -i {file} -o {message.id}.webp')
+            os.system(f'./tgs2webp -i {file} -o {message.id}.webp')
             if new == "gif":
                 cmd = magickcommand(f'{message.id}.webp',output,new)
                 os.system(cmd)
