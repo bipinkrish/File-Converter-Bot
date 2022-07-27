@@ -540,7 +540,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                         if not nmessage.sticker.is_animated and not nmessage.sticker.is_video:
                             inputt = nmessage.sticker.set_name + ".webp"
                         else: # can't thread this
-                            app.send_message(message.chat.id, f'Converting from {oldext.upper()} to {newext.upper()}', reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
+                            app.send_message(message.chat.id, f'Converting from TGS to {newext.upper()}', reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
                             inputt = nmessage.sticker.set_name + ".tgs"
                             new = message.text.lower()
                             output = updtname(inputt,new)
