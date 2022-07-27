@@ -9,6 +9,7 @@ import threading
 import pickle
 import os.path
 import pylottie
+import lottie
 
 from buttons import *
 import pycolorizer
@@ -103,10 +104,10 @@ def follow(message,inputt,new):
             srclink = imageinfo(file)
 
             if new == "webp":
-                pylottie.convertLottie2Webp(file,output)
+                lottie.convertLottie2Webp(file,output)
 
             if new == "gif":
-                pylottie.convertLottie2GIF(file,output)
+                lottie.convertLottie2GIF(file,output)
 
             conlink = imageinfo(output)
             try:
