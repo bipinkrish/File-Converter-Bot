@@ -8,9 +8,7 @@ RUN apt install libssl-dev libtesseract-dev libicu-dev libicu-dev libcairo2-dev 
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Moscow
-RUN apt-get install -y tzdata
-RUN apt install wget -y
-RUN apt install zip unzip -y
+RUN apt install -y tzdata wget zip unzip
 
 RUN apt install libreoffice -y
 RUN apt install default-jre libreoffice-java-common -y
