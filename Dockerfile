@@ -7,7 +7,7 @@ RUN apt update && apt-get upgrade -y
 RUN apt install libssl-dev libtesseract-dev libicu-dev libicu-dev libcairo2-dev freeglut3 freeglut3-dev libopengl0 libtiff5-dev -y
 
 ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ=Europe/Moscow
+ENV TZ=Asia/Kolkata
 RUN apt install -y tzdata wget zip unzip
 
 RUN apt install libreoffice -y
