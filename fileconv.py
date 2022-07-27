@@ -96,31 +96,6 @@ def follow(message,inputt,new):
         
         os.remove(file)
 
-    elif output.upper().endswith(IMG) and inputt.upper().endswith("TGS"):
-        if new == "webp" or new == "gif":
-            print("It is Animated Sticker option")
-            file = app.download_media(message)
-            srclink = imageinfo(file)
-
-            if new == "webp":
-                pylottie.convertLottie2Webp(file,output)
-
-            if new == "gif":
-                pylottie.convertLottie2GIF(file,output)
-
-            conlink = imageinfo(output)
-            try:
-                app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-                app.send_document(message.chat.id,document=output, force_document=True, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
-            except:
-                app.send_message(message.chat.id,"Error while conversion")
-
-            os.remove(file)
-            os.remove(output)
-            
-        else:
-            app.send_message(message.chat.id,"Only Availble Conversions for Animated Stickers are GIF and WEBP")
-
     elif output.upper().endswith(EB) and inputt.upper().endswith(EB):
         print("It is Ebook option")
         file = app.download_media(message)
@@ -564,9 +539,30 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                     if "sticker" in str(nmessage):
                         if not nmessage.sticker.is_animated and not nmessage.sticker.is_video:
                             inputt = nmessage.sticker.set_name + ".webp"
-                        else:
+                        else: # can't thread this
+                            app.send_message(message.chat.id, f'Converting from {oldext.upper()} to {newext.upper()}', reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
                             inputt = nmessage.sticker.set_name + ".tgs"
-                        print("File is a Sticker")
+                            new = message.text.lower()
+                            output = updtname(inputt,new)
+                            if new == "webp" or new == "gif":
+                                print("It is Animated Sticker option")
+                                file = app.download_media(message)
+                                srclink = imageinfo(file)
+                                if new == "webp":
+                                    pylottie.convertLottie2Webp(file,output)
+                                if new == "gif":
+                                    pylottie.convertLottie2GIF(file,output)
+                                conlink = imageinfo(output)
+                                try:
+                                    app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
+                                    app.send_document(message.chat.id,document=output, force_document=True, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
+                                except:
+                                    app.send_message(message.chat.id,"Error while conversion")
+                                os.remove(file)
+                                os.remove(output)
+                            else:
+                                app.send_message(message.chat.id,"Only Availble Conversions for Animated Stickers are GIF and WEBP")
+                            return     
                     else:
                         if "video" in str(nmessage):
                             try:
