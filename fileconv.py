@@ -30,7 +30,7 @@ telegraph.create_account(short_name='file-converter')
 currentFile = __file__
 realPath = os.path.realpath(currentFile)
 dirPath = os.path.dirname(realPath)
-os.system("chmod 777 c41lab.py negfix8 tgs2webp")
+os.system("chmod 777 c41lab.py negfix8 tgsconverter")
 
 
 # suporrted extensions
@@ -98,16 +98,9 @@ def follow(message,inputt,new):
         if new == "webp" or new == "gif":
             print("It is Animated Sticker option")
             file = app.download_media(message)
-            srclink = imageinfo(file)
-            
-            os.system(f'./tgs2webp -i "{file}" -o "{message.id}.webp"')
-            if new == "gif":
-                cmd = magickcommand(f'{message.id}.webp',output,new)
-                os.system(cmd)
-                os.remove(f'{message.id}.webp')
-            else:
-                os.rename(f'{message.id}.webp',output)
-                
+            srclink = imageinfo(file)        
+            os.system(f'./tgsconverter "{file}" "{new}"')
+            output = updtname(file,new)
             conlink = imageinfo(output)
             try:
                 app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
