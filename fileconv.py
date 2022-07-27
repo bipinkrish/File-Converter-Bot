@@ -100,13 +100,7 @@ def follow(message,inputt,new):
             print("It is Animated Sticker option")
             file = app.download_media(message)
             srclink = imageinfo(file)
-
-            if new == "webp":
-                lottie.convertLottie2Webp(file,output)
-
-            if new == "gif":
-                lottie.convertLottie2GIF(file,output)
-
+            os.system('lottie_convert.py "{inputt}" "{output}"')
             conlink = imageinfo(output)
             try:
                 app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
