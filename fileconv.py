@@ -367,7 +367,7 @@ def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     app.send_message(message.chat.id,
-                     "/start - to check availabe conversions\n/help - this message\n/source - github source code\n/feedback - send feedback or report problems with the bot")
+                     "/start - to check availabe conversions\n/help - this message\n/source - github source code")
 
 
 @app.on_message(filters.command(['source']))
