@@ -59,7 +59,7 @@ def follow(message,inputt,new):
         conlink = videoinfo(output)
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
+            app.send_document(message.chat.id,document=output, force_document=True, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
             
@@ -74,7 +74,7 @@ def follow(message,inputt,new):
         conlink = imageinfo(output)
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
+            app.send_document(message.chat.id,document=output, force_document=True, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
         except:
             app.send_message(message.chat.id,"Error while conversion")
             
@@ -111,7 +111,7 @@ def follow(message,inputt,new):
             conlink = imageinfo(output)
             try:
                 app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-                app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
+                app.send_document(message.chat.id,document=output, force_document=True, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
             except:
                 app.send_message(message.chat.id,"Error while conversion")
 
@@ -129,7 +129,7 @@ def follow(message,inputt,new):
         os.remove(file)
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            app.send_document(message.chat.id,document=output)
+            app.send_document(message.chat.id,document=output,force_document=True)
         except:
             app.send_message(message.chat.id,"Error while conversion")
             
@@ -142,7 +142,7 @@ def follow(message,inputt,new):
         os.system(cmd)
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            app.send_document(message.chat.id,document=output)
+            app.send_document(message.chat.id,document=output, force_document=True)
         except:
             app.send_message(message.chat.id,"Error while conversion")
             
@@ -158,7 +158,7 @@ def follow(message,inputt,new):
         os.remove(file)
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            app.send_document(message.chat.id,document=output)
+            app.send_document(message.chat.id,document=output, force_document=True)
         except:
             app.send_message(message.chat.id,"Error while conversion")
             
@@ -175,17 +175,17 @@ def negetivetopostive(message):
 
     print("using c41lab")
     os.system(f'./c41lab.py "{file}" "{output}"')
-    app.send_document(message.chat.id,document=output,caption="used tool -> c41lab")
+    app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> c41lab")
     os.remove(output)
     
     print("using simple tool")
     positive.positiver(file,output)
-    app.send_document(message.chat.id,document=output,caption="used tool -> simple tool")
+    app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> simple tool")
     os.remove(output)
     
     print("using negfix8")
     os.system(f'./negfix8 "{file}" "{output}"')
-    app.send_document(message.chat.id,document=output,caption="used tool -> negfix8")
+    app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> negfix8")
     os.remove(output)
 
     os.remove(file)
@@ -197,7 +197,7 @@ def colorizeimage(message):
     output = file.split("/")[-1]
 
     pycolorizer.colorize_image(output,file)
-    app.send_document(message.chat.id,document=output)
+    app.send_document(message.chat.id,document=output, force_document=True,)
     os.remove(output)
 
     os.remove(file)
