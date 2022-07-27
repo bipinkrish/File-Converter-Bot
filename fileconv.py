@@ -8,6 +8,7 @@ import os
 import threading
 import pickle
 import os.path
+import pylottie
 
 from buttons import *
 import pycolorizer
@@ -94,6 +95,31 @@ def follow(message,inputt,new):
                 os.remove(toutput)
         
         os.remove(file)
+
+    elif output.upper().endswith(IMG) and inputt.upper().endswith("TGS"):
+        if new == "webp" or new == "gif":
+            print("It is Animated Sticker option")
+            file = app.download_media(message)
+            srclink = imageinfo(file)
+
+            if new == "webp":
+                pylottie.convertLottie2Webp(file,output)
+
+            if new == "gif":
+                pylottie.convertLottie2GIF(file,output)
+
+            conlink = imageinfo(output)
+            try:
+                app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
+                app.send_document(message.chat.id,document=output, caption=f'Source File : {srclink}\n\nConverted File : {conlink}')
+            except:
+                app.send_message(message.chat.id,"Error while conversion")
+
+            os.remove(file)
+            os.remove(output)
+            
+        else:
+            app.send_message(message.chat.id,"Only Availble Conversions for Animated Stickers are GIF and WEBP")
 
     elif output.upper().endswith(EB) and inputt.upper().endswith(EB):
         print("It is Ebook option")
@@ -498,14 +524,16 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 
 @app.on_message(filters.sticker)
 def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    if not message.sticker.is_animated and not message.sticker.is_video:
-        with open(f'{message.from_user.id}.json', 'wb') as handle:
+    with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
+    if not message.sticker.is_animated and not message.sticker.is_video:
         app.send_message(message.chat.id,
                      f'Detected Extension: WEBP \nNow send extension to Convert to...\n\nAvailable formats: {give_name(IMG)}\n\n{message.from_user.mention} choose:',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
     else:
-        app.send_message(message.chat.id,"Animated Stickers are not Supported")
+        app.send_message(message.chat.id,
+                    f'Detected Extension: TGS \nNow send extension to Convert to...\n\nAvailable formats: {give_name(IMG)}\n\n{message.from_user.mention} choose:',
+                    reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
 @app.on_message(filters.text)
@@ -534,7 +562,10 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                     print("File is a Voice")
                 else:
                     if "sticker" in str(nmessage):
-                        inputt = nmessage.sticker.set_name + ".webp"
+                        if not nmessage.sticker.is_animated and not nmessage.sticker.is_video:
+                            inputt = nmessage.sticker.set_name + ".webp"
+                        else:
+                            inputt = nmessage.sticker.set_name + ".tgs"
                         print("File is a Sticker")
                     else:
                         if "video" in str(nmessage):
@@ -559,11 +590,11 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
         newext = message.text.lower()
         oldext = inputt.split(".")[-1]
+
         if newext == "ico":
-            app.send_message(message.chat.id, "Warning: for ICO, image will be resized and made multi-resolution",
-                             reply_to_message_id=message.id)
-        app.send_message(message.chat.id, f'Converting from {oldext.upper()} to {newext.upper()}',
-                         reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
+            app.send_message(message.chat.id, "Warning: for ICO, image will be resized and made multi-resolution", reply_to_message_id=message.id)
+        app.send_message(message.chat.id, f'Converting from {oldext.upper()} to {newext.upper()}', reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
+        
         conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext), daemon=True)
         conv.start()
     else:
