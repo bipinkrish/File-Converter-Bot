@@ -546,7 +546,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                             app.send_message(message.chat.id, f'Converting from TGS to {new.upper()}', reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
                             if new == "webp" or new == "gif":
                                 print("It is Animated Sticker option")
-                                file = app.download_media(message)
+                                file = app.download_media(nmessage)
                                 srclink = imageinfo(file)
                                 if new == "webp":
                                     pylottie.convertLottie2Webp(file,output)
