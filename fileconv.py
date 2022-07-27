@@ -8,8 +8,6 @@ import os
 import threading
 import pickle
 import os.path
-import pylottie
-import lottie
 
 from buttons import *
 import pycolorizer
