@@ -100,7 +100,7 @@ def follow(message,inputt,new):
             print("It is Animated Sticker option")
             file = app.download_media(message)
             srclink = imageinfo(file)
-            os.system('lottie_convert.py "{inputt}" "{output}"')
+            os.system('lottie_convert.py {inputt} {output}')
             conlink = imageinfo(output)
             try:
                 app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
