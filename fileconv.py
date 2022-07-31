@@ -368,8 +368,7 @@ def genrateimages(message,prompt):
     
     # min dalle
     file = aifunctions.mindalle(prompt)
-    app.send_message(message.chat.id,f"MIN-DALLE : {prompt}")
-    app.send_document(message.chat.id,document=file,force_document=True)
+    app.send_document(message.chat.id,document=file,force_document=True,caption=f"MIN-DALLE : {prompt}")
     os.remove(file)
     
 
