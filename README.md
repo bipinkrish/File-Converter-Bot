@@ -1,6 +1,6 @@
 # File-Converter-Bot
 
-A telegram Bot that can convert Images, Videos, Audios, Fonts, Documents and Ebooks.
+A Telegram Bot that can convert Images, Videos, Audios, Fonts, Documents and Ebooks.
 
 see the bot in action @filesconvertrobot (https://t.me/filesconvertrobot)
 
