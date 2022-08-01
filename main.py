@@ -454,8 +454,8 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext), daemon=True)
         conv.start()
     else:
-        if filters.private:
-            app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
+        if message.from_user.id == message.chat.id:
+            app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id)
         
 
 #apprun
