@@ -13,7 +13,7 @@ see the bot in action @filesconvertrobot (https://t.me/filesconvertrobot)
 
 ---
 
-## Special Feautres
+## Special Features
 
 COLORIZE - Colorize your Old Images
 
