@@ -289,3 +289,27 @@ def colorize_image(output, image_filename=None, cv2_frame=None):
 
 
 ##############################################################################################################
+# latent diffusion
+
+
+def latentdiff(prompt):
+
+	reqUrl = "https://hf.space/embed/CompVis/text2img-latent-diffusion/api/predict"
+	headersList = {
+	"Accept": "*/*",
+	"User-Agent": "Thunder Client (https://www.thunderclient.com)",
+	"Content-Type": "application/json" 
+					}
+
+	payload = json.dumps({ "data": [ prompt, 50, 2147483647, 20 ]})
+	response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
+
+	data = response["data"][0].split(",")[1]
+	image = base64.b64decode(data)
+	with open(f"{prompt}.jpg","wb") as file:
+		file.write(image)
+
+	return f"{prompt}.jpg"
+
+
+##############################################################################################################

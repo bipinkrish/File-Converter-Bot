@@ -182,6 +182,9 @@ def colorizeimage(message):
 # dalle
 def genrateimages(message,prompt):
     
+    # min dalle requsting
+    hash = aifunctions.mindalle(prompt,AutoCall=False)
+
     # dalle mini
     filelist = aifunctions.dallemini(prompt)
     app.send_message(message.chat.id,f"DALLE-MINI : {prompt}")
@@ -189,9 +192,14 @@ def genrateimages(message,prompt):
         app.send_document(message.chat.id,document=ele,force_document=True)
         os.remove(ele)
     os.rmdir(prompt)
+
+    # latent diffusion
+    file = aifunctions.latentdiff(prompt)
+    app.send_document(message.chat.id,document=file,force_document=True,caption=f"Latent Diffusion : {prompt}")
+    os.remove(file)
     
     # min dalle
-    file = aifunctions.mindalle(prompt)
+    file = aifunctions.mindallestatus(hash,prompt)
     app.send_document(message.chat.id,document=file,force_document=True,caption=f"MIN-DALLE : {prompt}")
     os.remove(file)
     
