@@ -75,7 +75,7 @@ def follow(message,inputt,new):
         os.remove(file)
 
     elif output.upper().endswith(IMG) and inputt.upper().endswith("TGS"):
-        if new == "webp" or new == "gif":
+        if new == "webp" or new == "gif" or new == "png":
             print("It is Animated Sticker option")
             file = app.download_media(message)
             srclink = helperfunctions.imageinfo(file)        
