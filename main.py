@@ -464,8 +464,8 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         newext = message.text.lower()
         oldext = inputt.split(".")[-1]
 
-        if newext == "ico":
-            app.send_message(message.chat.id, "Warning: for ICO, image will be resized and made multi-resolution", reply_to_message_id=message.id)
+        #if newext == "ico":
+            #app.send_message(message.chat.id, "Warning: for ICO, image will be resized and made multi-resolution", reply_to_message_id=message.id)
         
         app.send_message(message.chat.id, f'Converting from {oldext.upper()} to {newext.upper()}', reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
         app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
