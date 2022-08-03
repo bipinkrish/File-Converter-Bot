@@ -228,9 +228,11 @@ def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
 
 @app.on_message(filters.command(['cancel']))
 def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    os.remove(f'{message.from_user.id}.json')
-    app.send_message(message.chat.id,"Your job was Canceled",reply_markup=ReplyKeyboardRemove())     
-
+    if os.path.exists(f'{message.from_user.id}.json'):
+        os.remove(f'{message.from_user.id}.json')
+        app.send_message(message.chat.id,"Your job was Canceled",reply_markup=ReplyKeyboardRemove())     
+    else:
+        app.send_message(message.chat.id,"No job to Cancel")     
 
 # dalle command
 @app.on_message(filters.command(["dalle"]))
