@@ -116,7 +116,7 @@ def imageinfo(file):
     try:
         response = telegraph.create_page(f'{file.replace("./", "")}', html_content=f"<p>{info}</p>")
     except:
-        return "Error in getting File Info"
+        return "Error in getting Info"
     return response['url']
 
 
@@ -150,7 +150,7 @@ def videoinfo(file):
     try:
         response = telegraph.create_page(f'{file.replace("./", "")}', html_content=f"<p>{info}</p>")
     except:
-        return "Error in getting File Info"
+        return "Error in getting Info"
     return response["url"]   
 
 
