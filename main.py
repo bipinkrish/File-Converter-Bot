@@ -24,7 +24,7 @@ os.system("chmod 777 c41lab.py negfix8 tgsconverter")
 
 
 # main function to follow
-def follow(message,inputt,new):
+def follow(message,inputt,new,oldmessage):
     output = helperfunctions.updtname(inputt,new)
 
     if output.upper().endswith(VIDAUD) and inputt.upper().endswith(VIDAUD):
@@ -136,13 +136,15 @@ def follow(message,inputt,new):
             app.send_message(message.chat.id,"Error while conversion")
             
         os.remove(output)
-
     else:
         app.send_message(message.chat.id,"Send me valid Extension")
 
+    # deleting message    
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id+1])
+
 
 # negative to positive
-def negetivetopostive(message):
+def negetivetopostive(message,oldmessage):
     file = app.download_media(message)
     output = file.split("/")[-1]
 
@@ -162,10 +164,11 @@ def negetivetopostive(message):
     os.remove(output)
 
     os.remove(file)
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
 
 
 # color image
-def colorizeimage(message):
+def colorizeimage(message,oldmessage):
     file = app.download_media(message)
     output = file.split("/")[-1]
 
@@ -178,6 +181,7 @@ def colorizeimage(message):
     os.remove(output)
 
     os.remove(file)
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
 
 # dalle
 def genrateimages(message,prompt):
@@ -202,13 +206,13 @@ def genrateimages(message,prompt):
     file = aifunctions.mindallestatus(hash,prompt)
     app.send_document(message.chat.id,document=file,force_document=True,caption=f"MIN-DALLE : {prompt}")
     os.remove(file)
-    
+    app.delete_messages(message.chat.id,message_ids=[message.id])
 
 # app messages
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a File first and then Extension\n\n"
-                                      f"Available formats:\n\nIMAGES: {helperfunctions.give_name(IMG)}\n\nVIDEOS/AUDIOS: {helperfunctions.give_name(VIDAUD)}\n\nDocuments: {helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}\n\nFonts: {helperfunctions.give_name(FF)}\n\nEBooks: {helperfunctions.give_name(EB)}")
+                                      f'Available formats:\n\nIMAGES: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\nVIDEOS/AUDIOS: {helperfunctions.give_name(VIDAUD)}\n\nDocuments: {helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}\n\nFonts: {helperfunctions.give_name(FF)}\n\nEBooks: {helperfunctions.give_name(EB)}')
 
 
 @app.on_message(filters.command(['help']))
@@ -222,32 +226,10 @@ def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
     app.send_message(message.chat.id, "GITHUB - https://github.com/bipinkrish/File-Converter-Bot")
 
 
-@app.on_message(filters.command(["color"]))
-def cdocumnet(client, message):
-    app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove())
-    if os.path.exists(f'{message.from_user.id}.json'):
-        with open(f'{message.from_user.id}.json', 'rb') as handle:
-            nmessage = pickle.loads(handle.read())
-        os.remove(f'{message.from_user.id}.json')
-    else:
-        app.send_message(message.chat.id,"First send me a File")
-
-    col = threading.Thread(target=lambda:colorizeimage(nmessage),daemon=True)
-    col.start()
-
-
-@app.on_message(filters.command(["positive"]))
-def pdocumnet(client, message):
-    app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove())
-    if os.path.exists(f'{message.from_user.id}.json'):
-        with open(f'{message.from_user.id}.json', 'rb') as handle:
-            nmessage = pickle.loads(handle.read())
-        os.remove(f'{message.from_user.id}.json')
-    else:
-        app.send_message(message.chat.id,"First send me a File")
-
-    pos = threading.Thread(target=lambda:negetivetopostive(nmessage),daemon=True)
-    pos.start()   
+@app.on_message(filters.command(['cancel']))
+def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    os.remove(f'{message.from_user.id}.json')
+    app.send_message(message.chat.id,"Your job was Canceled",reply_markup=ReplyKeyboardRemove())     
 
 
 # dalle command
@@ -282,7 +264,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\n{message.from_user.mention} choose:',
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose:',
                          reply_markup=IMGboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(LBW):
@@ -327,7 +309,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 
     else:
         app.send_message(message.chat.id,
-                         f'Available formats:\n\nIMAGES: {helperfunctions.give_name(IMG)}\n\nVIDEOS/AUDIOS: {helperfunctions.give_name(VIDAUD)}\n\nDocuments: {helperfunctions.give_name(LBW)} {helperfunctions.give_name(LBI)} {helperfunctions.give_name(LBC)}\n\nFonts: {helperfunctions.give_name(FF)}\n\nEBooks: {helperfunctions.give_name(EB)}',
+                         f'Available formats:\n\nIMAGES: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\nVIDEOS/AUDIOS: {helperfunctions.give_name(VIDAUD)}\n\nDocuments: {helperfunctions.give_name(LBW)} {helperfunctions.give_name(LBI)} {helperfunctions.give_name(LBC)}\n\nFonts: {helperfunctions.give_name(FF)}\n\nEBooks: {helperfunctions.give_name(EB)}',
                          reply_to_message_id=message.id)
 
 
@@ -382,7 +364,7 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                     f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\n{message.from_user.mention} choose:',
+                     f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose:',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
@@ -392,18 +374,40 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
             pickle.dump(message, handle)
     if not message.sticker.is_animated and not message.sticker.is_video:
         app.send_message(message.chat.id,
-                     f'Detected Extension: WEBP \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\n{message.from_user.mention} choose:',
+                     f'Detected Extension: WEBP \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose:',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
     else:
         app.send_message(message.chat.id,
-                    f'Detected Extension: TGS \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\n{message.from_user.mention} choose:',
+                    f'Detected Extension: TGS \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose:',
                     reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
 @app.on_message(filters.text)
 def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    if "/color" in message.text or "/positive" in message.text:
-        return
+
+    if "COLOR" in message.text or "POSITIVE" in message.text:
+
+        if os.path.exists(f'{message.from_user.id}.json'):
+            with open(f'{message.from_user.id}.json', 'rb') as handle:
+                nmessage = pickle.loads(handle.read())
+            os.remove(f'{message.from_user.id}.json')
+        else:
+            if message.from_user.id == message.chat.id:
+                app.send_message(message.chat.id,"First send me a File",reply_to_message_id=message.id)
+            return
+
+        app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove()) 
+        app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+
+        if "COLOR" in message.text:
+            col = threading.Thread(target=lambda:colorizeimage(nmessage,message),daemon=True)
+            col.start()
+            return
+        else:
+            pos = threading.Thread(target=lambda:negetivetopostive(nmessage,message),daemon=True)
+            pos.start() 
+            return     
+
     if os.path.exists(f'{message.from_user.id}.json'):
         with open(f'{message.from_user.id}.json', 'rb') as handle:
             nmessage = pickle.loads(handle.read())
@@ -457,10 +461,13 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
         if newext == "ico":
             app.send_message(message.chat.id, "Warning: for ICO, image will be resized and made multi-resolution", reply_to_message_id=message.id)
-        app.send_message(message.chat.id, f'Converting from {oldext.upper()} to {newext.upper()}', reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
         
-        conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext), daemon=True)
+        app.send_message(message.chat.id, f'Converting from {oldext.upper()} to {newext.upper()}', reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
+        app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+
+        conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext, message), daemon=True)
         conv.start()
+
     else:
         if message.from_user.id == message.chat.id:
             app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id)
