@@ -92,7 +92,7 @@ def follow(message,inputt,new):
             os.remove(output)
             
         else:
-            app.send_message(message.chat.id,"Only Availble Conversions for Animated Stickers are GIF and WEBP")
+            app.send_message(message.chat.id,"Only Availble Conversions for Animated Stickers are GIF, PNG and WEBP")
 
     elif output.upper().endswith(EB) and inputt.upper().endswith(EB):
         print("It is Ebook option")
