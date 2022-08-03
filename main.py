@@ -206,7 +206,7 @@ def genrateimages(message,prompt):
     file = aifunctions.mindallestatus(hash,prompt)
     app.send_document(message.chat.id,document=file,force_document=True,caption=f"MIN-DALLE : {prompt}")
     os.remove(file)
-    app.delete_messages(message.chat.id,message_ids=[message.id])
+    app.delete_messages(message.chat.id,message_ids=[message.id+1])
 
 # app messages
 @app.on_message(filters.command(['start']))
@@ -396,15 +396,15 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                 app.send_message(message.chat.id,"First send me a File",reply_to_message_id=message.id)
             return
 
-        app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove()) 
+        oldm = app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove()) 
         app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
 
         if "COLOR" in message.text:
-            col = threading.Thread(target=lambda:colorizeimage(nmessage,message),daemon=True)
+            col = threading.Thread(target=lambda:colorizeimage(nmessage,oldm),daemon=True)
             col.start()
             return
         else:
-            pos = threading.Thread(target=lambda:negetivetopostive(nmessage,message),daemon=True)
+            pos = threading.Thread(target=lambda:negetivetopostive(nmessage,oldm),daemon=True)
             pos.start() 
             return     
 
