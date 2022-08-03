@@ -1,4 +1,5 @@
 from pykeyboard import ReplyKeyboard, ReplyButton, ReplyKeyboardRemove
+import helperfunctions
 
 # suporrted extensions
 VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV","AVI","M4B","VOB","DVD","WEBM","WMV")
@@ -125,3 +126,13 @@ ReplyButton('PDF'),
 ReplyButton('TXT'),
 ReplyButton('ZIP')
             )
+
+
+START_TEXT = f'Available formats:\n\nIMAGES: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\nVIDEOS/AUDIOS: {helperfunctions.give_name(VIDAUD)}\n\nDocuments: {helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}\n\nFonts: {helperfunctions.give_name(FF)}\n\nEBooks: {helperfunctions.give_name(EB)}'
+VA_TEXT = helperfunctions.give_name(VIDAUD)
+IMG_TEXT = helperfunctions.give_name(IMG)
+LBW_TEXT = helperfunctions.give_name(LBW)
+LBC_TEXT = helperfunctions.give_name(LBC)
+LBI_TEXT = helperfunctions.give_name(LBI)
+FF_TEXT = helperfunctions.give_name(FF)
+EB_TEXT = helperfunctions.give_name(EB)

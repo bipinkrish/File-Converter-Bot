@@ -211,14 +211,13 @@ def genrateimages(message,prompt):
 # app messages
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a File first and then Extension\n\n"
-                                      f'Available formats:\n\nIMAGES: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\nVIDEOS/AUDIOS: {helperfunctions.give_name(VIDAUD)}\n\nDocuments: {helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}\n\nFonts: {helperfunctions.give_name(FF)}\n\nEBooks: {helperfunctions.give_name(EB)}')
-
+    app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a File first and then Extension\n\n{START_TEXT}")
+                                      
 
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     app.send_message(message.chat.id,
-                     "/start - to check availabe conversions\n/help - this message\n/source - github source code\n/dalle - Text to Image")
+                     "/start - To Check Availabe Conversions\n/help - This Message\n/dalle - Text to Image\n/cancel - To Cancel\n/source - Github Source Code\n")
 
 
 @app.on_message(filters.command(['source']))
@@ -261,7 +260,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(VIDAUD)}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=VAboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(IMG):
@@ -269,7 +268,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {IMG_TEXT}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=IMGboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(LBW):
@@ -277,7 +276,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(LBW)}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBW_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=LBWboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(LBC):
@@ -285,7 +284,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(LBC)}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBC_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=LBCboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(LBI):
@@ -293,7 +292,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(LBI)}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {LBI_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=LBIboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(FF):
@@ -301,7 +300,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(FF)}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {FF_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=FFboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(EB):
@@ -309,13 +308,11 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(EB)}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {EB_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=EBboard, reply_to_message_id=message.id)
 
     else:
-        app.send_message(message.chat.id,
-                         f'Available formats:\n\nIMAGES: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\nVIDEOS/AUDIOS: {helperfunctions.give_name(VIDAUD)}\n\nDocuments: {helperfunctions.give_name(LBW)} {helperfunctions.give_name(LBI)} {helperfunctions.give_name(LBC)}\n\nFonts: {helperfunctions.give_name(FF)}\n\nEBooks: {helperfunctions.give_name(EB)}',
-                         reply_to_message_id=message.id)
+        app.send_message(message.chat.id,f'Available formats:\n\n{START_TEXT}',reply_to_message_id=message.id)
 
 
 @app.on_message(filters.video)
@@ -325,10 +322,10 @@ def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
             pickle.dump(message, handle)
         dext = message.video.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(VIDAUD)}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=VAboard, reply_to_message_id=message.id)
     else:
-        app.send_message(message.chat.id, f'Available formats:\n\nVIDEOS/AUDIOS: {helperfunctions.give_name(VIDAUD)}',
+        app.send_message(message.chat.id, f'Available formats:\n\nVIDEOS/AUDIOS: {VA_TEXT}',
                          reply_to_message_id=message.id)
 
 
@@ -337,7 +334,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                f'Detected Extension: MP4 \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(VIDAUD)}\n\n{message.from_user.mention} choose or click /cancel',
+                f'Detected Extension: MP4 \nNow send extension to Convert to...\n\nAvailable formats: {VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                 reply_markup=VAboard, reply_to_message_id=message.id)
 
 
@@ -348,7 +345,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
             pickle.dump(message, handle)
         dext = message.audio.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(VIDAUD)}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: {dext} \nNow send extension to Convert to...\n\nAvailable formats: {VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=VAboard, reply_to_message_id=message.id)
     else:
         app.send_message(message.chat.id, f'Available formats:\n\nVIDEOS/AUDIOS: {VIDAUD}',
@@ -360,7 +357,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                f'Detected Extension: OGG \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(VIDAUD)}\n\n{message.from_user.mention} choose or click /cancel',
+                f'Detected Extension: OGG \nNow send extension to Convert to...\n\nAvailable formats: {VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                 reply_markup=VAboard, reply_to_message_id=message.id)
 
 
@@ -369,7 +366,7 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                     f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose or click /cancel',
+                     f'Detected Extension: JPG \nNow send extension to Convert to...\n\nAvailable formats: {IMG_TEXT}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose or click /cancel',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
@@ -379,11 +376,11 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
             pickle.dump(message, handle)
     if not message.sticker.is_animated and not message.sticker.is_video:
         app.send_message(message.chat.id,
-                     f'Detected Extension: WEBP \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose or click /cancel',
+                     f'Detected Extension: WEBP \nNow send extension to Convert to...\n\nAvailable formats: {IMG_TEXT}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose or click /cancel',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
     else:
         app.send_message(message.chat.id,
-                    f'Detected Extension: TGS \nNow send extension to Convert to...\n\nAvailable formats: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose or click /cancel',
+                    f'Detected Extension: TGS \nNow send extension to Convert to...\n\nAvailable formats: {IMG_TEXT}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\n{message.from_user.mention} choose or click /cancel',
                     reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
