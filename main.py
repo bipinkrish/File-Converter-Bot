@@ -222,10 +222,13 @@ def readf(message,oldmessage):
     file = app.download_media(message)
     with open(file,"r") as rf:
         txt = rf.read()
-    #try:
-    app.send_message(message.chat.id,txt)    
-    #except:
-        #app.send_message(message.chat.id,"Error in Reading File")   
+    try:
+        n = 4096
+        split = [txt[i:i+n] for i in range(0, len(txt), n)]
+        for ele in split:
+            app.send_message(message.chat.id,ele)   
+    except:
+        app.send_message(message.chat.id,"Error in Reading File")   
 
     os.remove(file)
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
