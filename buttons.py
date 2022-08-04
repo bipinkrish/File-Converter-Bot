@@ -134,7 +134,7 @@ ReplyButton('ZIP')
 
 
 # texts
-START_TEXT = f'Available formats:\n\n**IMAGES** 📷 \n{helperfunctions.give_name(IMG)}\n\n**SPECIAL**: COLORIZE & POSITIVE\n\n**VIDEOS/AUDIOS 🔊 / 📹 \n{helperfunctions.give_name(VIDAUD)}\n\n**Documents** 💼 \n{helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}\n\n**Fonts** 🔤 \n{helperfunctions.give_name(FF)}\n\n**EBooks** 📚 \n{helperfunctions.give_name(EB)}'
+START_TEXT = f'Available formats:\n\n**IMAGES** 📷 \n{helperfunctions.give_name(IMG)}\n\n**SPECIAL** \nCOLORIZE & POSITIVE\n\n**VIDEOS/AUDIOS** 🔊 / 📹 \n{helperfunctions.give_name(VIDAUD)}\n\n**Documents** 💼 \n{helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}\n\n**Fonts** 🔤 \n{helperfunctions.give_name(FF)}\n\n**EBooks** 📚 \n{helperfunctions.give_name(EB)}'
 VA_TEXT = helperfunctions.give_name(VIDAUD)
 IMG_TEXT = helperfunctions.give_name(IMG)
 LBW_TEXT = helperfunctions.give_name(LBW)
