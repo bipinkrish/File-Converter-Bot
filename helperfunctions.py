@@ -159,4 +159,4 @@ def give_name(data):
     name = ""
     for i in data:
         name += ", " + str(i)
-    return name[1:]
+    return name[2:]

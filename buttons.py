@@ -1,5 +1,6 @@
 from pykeyboard import ReplyKeyboard, ReplyButton, ReplyKeyboardRemove
 import helperfunctions
+from pyrogram import enums
 
 # suporrted extensions
 VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV","AVI","M4B","VOB","DVD","WEBM","WMV")
@@ -133,7 +134,7 @@ ReplyButton('ZIP')
 
 
 # texts
-START_TEXT = f'Available formats:\n\nIMAGES 📷 \n{helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\nVIDEOS/AUDIOS 🔊/📹 \n{helperfunctions.give_name(VIDAUD)}\n\nDocuments 💼 \n{helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}\n\nFonts 🔤 \n{helperfunctions.give_name(FF)}\n\nEBooks 📚 \n{helperfunctions.give_name(EB)}'
+START_TEXT = f'Available formats:\n\n**IMAGES** 📷 \n{helperfunctions.give_name(IMG)}\n\n**SPECIAL**: COLORIZE & POSITIVE\n\n**VIDEOS/AUDIOS 🔊 / 📹 \n{helperfunctions.give_name(VIDAUD)}\n\n**Documents** 💼 \n{helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}\n\n**Fonts** 🔤 \n{helperfunctions.give_name(FF)}\n\n**EBooks** 📚 \n{helperfunctions.give_name(EB)}'
 VA_TEXT = helperfunctions.give_name(VIDAUD)
 IMG_TEXT = helperfunctions.give_name(IMG)
 LBW_TEXT = helperfunctions.give_name(LBW)

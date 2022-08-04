@@ -212,9 +212,9 @@ def genrateimages(message,prompt):
 
 
 # delete msg
-def dltmsg(message):
-    time.sleep(15)
-    app.delete_messages(message.chat.id,message_ids=[message.id])
+def dltmsg(message,sec=15):
+    time.sleep(sec)
+    app.delete_messages(message.chat.id,message_ids=[message.id,message.id-1])
 
 
 # read file
@@ -222,11 +222,12 @@ def readf(message,oldmessage):
     file = app.download_media(message)
     with open(file,"r") as rf:
         txt = rf.read()
-    try:
-        app.send_message(message.chat.id,txt)    
-    except:
-        app.send_message(message.chat.id,"Error in Reading File")   
+    #try:
+    app.send_message(message.chat.id,txt)    
+    #except:
+        #app.send_message(message.chat.id,"Error in Reading File")   
 
+    os.remove(file)
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
 
 # send video
@@ -257,7 +258,7 @@ def sendphoto(message,oldmessage):
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a File first and then Extension\n\n{START_TEXT}")
-    dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
+    dm = threading.Thread(target=lambda:dltmsg(oldm,30),daemon=True)
     dm.start()                        
 
 @app.on_message(filters.command(['help']))
