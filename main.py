@@ -523,5 +523,5 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         
 
 #apprun
-printf("Bot Started")
+print("Bot Started")
 app.run()
