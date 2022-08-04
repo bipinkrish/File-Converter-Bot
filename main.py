@@ -6,6 +6,7 @@ from pyrogram import enums
 import os
 import threading
 import pickle
+import time
 
 from buttons import *
 import aifunctions
@@ -210,6 +211,11 @@ def genrateimages(message,prompt):
     app.delete_messages(message.chat.id,message_ids=[message.id+1])
 
 
+# delete msg
+def dltmsg(message):
+    time.sleep(15)
+    app.delete_messages(message.chat.id,message_ids=[message.id])
+
 # send video
 def sendvideo(message,oldmessage):
     file = app.download_media(message)
@@ -237,19 +243,22 @@ def sendphoto(message,oldmessage):
 # app messages
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a File first and then Extension\n\n{START_TEXT}")
-                                      
+    oldm = app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a File first and then Extension\n\n{START_TEXT}")
+    dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
+    dm.start()                        
 
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    app.send_message(message.chat.id,
+    oldm = app.send_message(message.chat.id,
                      "/start - To Check Availabe Conversions\n/help - This Message\n/dalle - Text to Image\n/cancel - To Cancel\n/source - Github Source Code\n")
-
+    dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
+    dm.start() 
 
 @app.on_message(filters.command(['source']))
 def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    app.send_message(message.chat.id, "GITHUB - https://github.com/bipinkrish/File-Converter-Bot")
-
+    oldm = app.send_message(message.chat.id, "GITHUB - https://github.com/bipinkrish/File-Converter-Bot")
+    dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
+    dm.start() 
 
 @app.on_message(filters.command(['cancel']))
 def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
@@ -514,4 +523,5 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         
 
 #apprun
+printf("Bot Started")
 app.run()
