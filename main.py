@@ -183,6 +183,7 @@ def colorizeimage(message,oldmessage):
     os.remove(file)
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
 
+
 # dalle
 def genrateimages(message,prompt):
     
@@ -207,6 +208,31 @@ def genrateimages(message,prompt):
     app.send_document(message.chat.id,document=file,force_document=True,caption=f"MIN-DALLE : {prompt}")
     os.remove(file)
     app.delete_messages(message.chat.id,message_ids=[message.id+1])
+
+
+# send video
+def sendvideo(message,oldmessage):
+    file = app.download_media(message)
+    app.send_video(message.chat.id,video=file)
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    os.remove(file)
+
+
+# send document
+def senddoc(message,oldmessage):
+    file = app.download_media(message)
+    app.send_document(message.chat.id,document=file,force_document=True)
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    os.remove(file)
+
+
+# send photo
+def sendphoto(message,oldmessage):
+    file = app.download_media(message)
+    app.send_photo(message.chat.id,photo=file)
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    os.remove(file)
+
 
 # app messages
 @app.on_message(filters.command(['start']))
@@ -385,35 +411,47 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 
 
 @app.on_message(filters.text)
-def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-
-    if "COLOR" in message.text or "POSITIVE" in message.text:
-
-        if os.path.exists(f'{message.from_user.id}.json'):
-            with open(f'{message.from_user.id}.json', 'rb') as handle:
-                nmessage = pickle.loads(handle.read())
-            os.remove(f'{message.from_user.id}.json')
-        else:
-            if message.from_user.id == message.chat.id:
-                app.send_message(message.chat.id,"First send me a File",reply_to_message_id=message.id)
-            return
-
-        oldm = app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove()) 
-        app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-
-        if "COLOR" in message.text:
-            col = threading.Thread(target=lambda:colorizeimage(nmessage,oldm),daemon=True)
-            col.start()
-            return
-        else:
-            pos = threading.Thread(target=lambda:negetivetopostive(nmessage,oldm),daemon=True)
-            pos.start() 
-            return     
+def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):  
 
     if os.path.exists(f'{message.from_user.id}.json'):
         with open(f'{message.from_user.id}.json', 'rb') as handle:
             nmessage = pickle.loads(handle.read())
         os.remove(f'{message.from_user.id}.json')
+
+        if "COLOR" in message.text or "POSITIVE" in message.text:
+
+            oldm = app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove()) 
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+
+            if "COLOR" in message.text:
+                col = threading.Thread(target=lambda:colorizeimage(nmessage,oldm),daemon=True)
+                col.start()
+                return
+            else:
+                pos = threading.Thread(target=lambda:negetivetopostive(nmessage,oldm),daemon=True)
+                pos.start() 
+                return
+
+        if "SENDPHOTO" in message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'Sending Photo',reply_markup=ReplyKeyboardRemove())
+            sp = threading.Thread(target=lambda:sendphoto(nmessage,oldm),daemon=True)
+            sp.start()
+            return
+
+        if "SENDDOC" in message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'Sending Document',reply_markup=ReplyKeyboardRemove())
+            sd = threading.Thread(target=lambda:senddoc(nmessage,oldm),daemon=True)
+            sd.start()
+            return    
+
+        if "SENDVID" in message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'Sending Video',reply_markup=ReplyKeyboardRemove())
+            sv = threading.Thread(target=lambda:sendvideo(nmessage,oldm),daemon=True)
+            sv.start()
+            return
 
         if "document" in str(nmessage):
             inputt = nmessage.document.file_name

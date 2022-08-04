@@ -31,7 +31,9 @@ ReplyButton('M4B'),
 ReplyButton('VOB'),
 ReplyButton('DVD'),
 ReplyButton('WEBM'),
-ReplyButton('WMV')
+ReplyButton('WMV'),
+ReplyButton('SENDVID'),
+ReplyButton('SENDDOC')
             )    
 
 IMGboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
@@ -46,7 +48,8 @@ ReplyButton('JPEG'),
 ReplyButton('JPG'),
 ReplyButton('PNG'),
 ReplyButton('COLOR'),
-ReplyButton('POSITIVE')
+ReplyButton('POSITIVE'),
+ReplyButton('SENDPHOTO')
             )
 
 LBWboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
@@ -128,7 +131,8 @@ ReplyButton('ZIP')
             )
 
 
-START_TEXT = f'Available formats:\n\nIMAGES: {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\nVIDEOS/AUDIOS: {helperfunctions.give_name(VIDAUD)}\n\nDocuments: {helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}\n\nFonts: {helperfunctions.give_name(FF)}\n\nEBooks: {helperfunctions.give_name(EB)}'
+# texts
+START_TEXT = f'Available formats:\n\nIMAGES 📷 \n {helperfunctions.give_name(IMG)}\n\nSPECIAL: "COLORIZE" & "POSITIVE"\n\nVIDEOS/AUDIOS 🔊 📹 \n {helperfunctions.give_name(VIDAUD)}\n\nDocuments 💼 \n {helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}\n\nFonts 🔤 \n {helperfunctions.give_name(FF)}\n\nEBooks 📚 \n {helperfunctions.give_name(EB)}'
 VA_TEXT = helperfunctions.give_name(VIDAUD)
 IMG_TEXT = helperfunctions.give_name(IMG)
 LBW_TEXT = helperfunctions.give_name(LBW)
