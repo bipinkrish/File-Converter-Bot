@@ -216,6 +216,19 @@ def dltmsg(message):
     time.sleep(15)
     app.delete_messages(message.chat.id,message_ids=[message.id])
 
+
+# read file
+def readf(message,oldmessage):
+    file = app.download_media(message)
+    with open(file,"r") as rf:
+        txt = rf.read()
+    try:
+        app.send_message(message.chat.id,txt)    
+    except:
+        app.send_message(message.chat.id,"Error in Reading File")   
+
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+
 # send video
 def sendvideo(message,oldmessage):
     file = app.download_media(message)
@@ -440,6 +453,13 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                 pos = threading.Thread(target=lambda:negetivetopostive(nmessage,oldm),daemon=True)
                 pos.start() 
                 return
+
+        if "READ" in message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'Reading File',reply_markup=ReplyKeyboardRemove())
+            rf = threading.Thread(target=lambda:readf(nmessage,oldm),daemon=True)
+            rf.start()
+            return
 
         if "SENDPHOTO" in message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
