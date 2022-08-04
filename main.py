@@ -364,7 +364,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          reply_markup=EBboard, reply_to_message_id=message.id)
 
     else:
-        app.send_message(message.chat.id,f'Available formats:\n\n{START_TEXT}',reply_to_message_id=message.id)
+        app.send_message(message.chat.id,f'{START_TEXT}',reply_to_message_id=message.id)
 
 
 @app.on_message(filters.video)
@@ -386,7 +386,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                f'Detected Extension: MP4 \nNow send extension to Convert to...\n\n**Available formats** \n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                f'Detected Extension: **MP4** \nNow send extension to Convert to...\n\n**Available formats** \n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                 reply_markup=VAboard, reply_to_message_id=message.id)
 
 
@@ -409,7 +409,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                f'Detected Extension: OGG \nNow send extension to Convert to...\n\n**Available formats** \n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                f'Detected Extension: **OGG** \nNow send extension to Convert to...\n\n**Available formats** \n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                 reply_markup=VAboard, reply_to_message_id=message.id)
 
 
@@ -418,7 +418,7 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                     f'Detected Extension: JPG \nNow send extension to Convert to...\n\n**Available formats** \n{IMG_TEXT}\n\n**SPECIAL** \n COLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
+                     f'Detected Extension: **JPG** \nNow send extension to Convert to...\n\n**Available formats** \n{IMG_TEXT}\n\n**SPECIAL** \n COLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
@@ -428,11 +428,11 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
             pickle.dump(message, handle)
     if not message.sticker.is_animated and not message.sticker.is_video:
         app.send_message(message.chat.id,
-                     f'Detected Extension: WEBP \nNow send extension to Convert to...\n\n**Available formats** \n{IMG_TEXT}\n\n**SPECIAL** \n COLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
+                     f'Detected Extension: **WEBP** \nNow send extension to Convert to...\n\n**Available formats** \n{IMG_TEXT}\n\n**SPECIAL** \n COLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
     else:
         app.send_message(message.chat.id,
-                    f'Detected Extension: TGS \nNow send extension to Convert to...\n\n**Available formats** \n{IMG_TEXT}\n\n**SPECIAL** \n COLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
+                    f'Detected Extension: **TGS** \nNow send extension to Convert to...\n\n**Available formats** \n{IMG_TEXT}\n\n**SPECIAL** \n COLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
                     reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
