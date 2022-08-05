@@ -280,7 +280,7 @@ def transcript(message,oldmessage):
     file = app.download_media(message)
     inputt = file.split("/")[-1]
     output = helperfunctions.updtname(inputt,"wav")
-    temp = output = helperfunctions.updtname(inputt,"txt")
+    temp = helperfunctions.updtname(inputt,"txt")
 
     if file.endswith("wav"):
         aifunctions.splitfn(file,message,temp)
