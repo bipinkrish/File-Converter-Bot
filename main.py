@@ -331,7 +331,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n**Available formats** \n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n--**Available formats**-- 📹 / 🔊\n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=VAboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(IMG):
@@ -339,7 +339,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n**Available formats** \n{IMG_TEXT}\n\n**SPECIAL** \nCOLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n--**Available formats**-- 📷\n{IMG_TEXT}\n\n**SPECIAL** 🎁\nCOLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=IMGboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(LBW):
@@ -347,7 +347,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n**Available formats** \n{LBW_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n--**Available formats**-- 💼\n{LBW_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=LBWboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(LBC):
@@ -355,7 +355,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n**Available formats** \n{LBC_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n--**Available formats**-- 💼\n{LBC_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=LBCboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(LBI):
@@ -363,7 +363,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n**Available formats** \n{LBI_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n--**Available formats**-- 💼\n{LBI_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=LBIboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(FF):
@@ -371,7 +371,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n**Available formats** \n{FF_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n--**Available formats**-- 🔤\n{FF_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=FFboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(EB):
@@ -379,7 +379,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n**Available formats** \n{EB_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n--**Available formats**-- 📚\n{EB_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=EBboard, reply_to_message_id=message.id)
 
     else:
@@ -396,10 +396,10 @@ def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
             pickle.dump(message, handle)
         dext = message.video.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n**Available formats** \n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n--**Available formats**-- 📹 / 🔊\n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=VAboard, reply_to_message_id=message.id)
     else:
-        app.send_message(message.chat.id, f'Available formats:\n\nVIDEOS/AUDIOS: {VA_TEXT}',
+        app.send_message(message.chat.id, f'--**Available formats**--:\n\n**VIDEOS/AUDIOS** 📹 / 🔊 \n{VA_TEXT}',
                          reply_to_message_id=message.id)
 
 
@@ -408,7 +408,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                f'Detected Extension: **MP4** \nNow send extension to Convert to...\n\n**Available formats** \n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                f'Detected Extension: **MP4** \nNow send extension to Convert to...\n\n--**Available formats**-- 📹 / 🔊\n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                 reply_markup=VAboard, reply_to_message_id=message.id)
 
 
@@ -419,10 +419,10 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
             pickle.dump(message, handle)
         dext = message.audio.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n**Available formats** \n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                         f'Detected Extension: **{dext}** \nNow send extension to Convert to...\n\n--**Available formats**-- 📹 / 🔊\n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                          reply_markup=VAboard, reply_to_message_id=message.id)
     else:
-        app.send_message(message.chat.id, f'Available formats:\n\nVIDEOS/AUDIOS: {VIDAUD}',
+        app.send_message(message.chat.id, f'--**Available formats**--:\n\n**VIDEOS/AUDIOS** 📹 / 🔊 \n{VIDAUD}',
                          reply_to_message_id=message.id)
 
 
@@ -431,7 +431,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                f'Detected Extension: **OGG** \nNow send extension to Convert to...\n\n**Available formats** \n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                f'Detected Extension: **OGG** \nNow send extension to Convert to...\n\n--**Available formats**-- 📹 / 🔊\n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
                 reply_markup=VAboard, reply_to_message_id=message.id)
 
 
@@ -440,7 +440,7 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                     f'Detected Extension: **JPG** \nNow send extension to Convert to...\n\n**Available formats** \n{IMG_TEXT}\n\n**SPECIAL** \nCOLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
+                     f'Detected Extension: **JPG** \nNow send extension to Convert to...\n\n--**Available formats**-- 📷\n{IMG_TEXT}\n\n**SPECIAL** 🎁\nCOLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
@@ -450,11 +450,11 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
             pickle.dump(message, handle)
     if not message.sticker.is_animated and not message.sticker.is_video:
         app.send_message(message.chat.id,
-                     f'Detected Extension: **WEBP** \nNow send extension to Convert to...\n\n**Available formats** \n{IMG_TEXT}\n\n**SPECIAL** \nCOLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
+                     f'Detected Extension: **WEBP** \nNow send extension to Convert to...\n\n--**Available formats**-- 📷\n{IMG_TEXT}\n\n**SPECIAL** 🎁\nCOLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
     else:
         app.send_message(message.chat.id,
-                    f'Detected Extension: **TGS** \nNow send extension to Convert to...\n\n**Available formats** \n{IMG_TEXT}\n\n**SPECIAL** \nCOLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
+                    f'Detected Extension: **TGS** \nNow send extension to Convert to...\n\n--**Available formats**-- 📷\n{IMG_TEXT}\n\n**SPECIAL** 🎁\nCOLORIZE & POSITIVE\n\n{message.from_user.mention} choose or click /cancel',
                     reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
@@ -557,7 +557,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         #if newext == "ico":
             #app.send_message(message.chat.id, "Warning: for ICO, image will be resized and made multi-resolution", reply_to_message_id=message.id)
         
-        app.send_message(message.chat.id, f'Converting from {oldext.upper()} to {newext.upper()}', reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
+        app.send_message(message.chat.id, f'Converting from **{oldext.upper()}** to **{newext.upper()}**', reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
         app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
 
         conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext, message), daemon=True)
@@ -570,8 +570,6 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             mf = threading.Thread(target=lambda:makefile(message,oldm),daemon=True)
             mf.start()
             
-            
-        
 
 #apprun
 print("Bot Started")
