@@ -257,6 +257,25 @@ def sendphoto(message,oldmessage):
     os.remove(file)
 
 
+# make file
+def makefile(message,oldmessage):
+	text = message.text.split("\n")
+	firstline = text[0]
+	text.remove(text[0])
+
+	message.text = "" 
+	for ele in text: 
+		message.text = message.text + f"{ele}\n"  
+
+	with open(firstline,"w") as file:
+		file.write(message.text)  
+
+	app.send_document(message.chat.id, document=firstline)
+	app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+	os.remove(firstline)      	    
+
+
+
 # app messages
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
@@ -364,7 +383,10 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          reply_markup=EBboard, reply_to_message_id=message.id)
 
     else:
-        app.send_message(message.chat.id,f'{START_TEXT}',reply_to_message_id=message.id)
+        #app.send_message(message.chat.id,f'{START_TEXT}',reply_to_message_id=message.id)
+        oldm = app.send_message(message.chat.id,'No Available Conversions Found, Reading File',reply_markup=ReplyKeyboardRemove())
+        rf = threading.Thread(target=lambda:readf(nmessage,oldm),daemon=True)
+        rf.start()
 
 
 @app.on_message(filters.video)
@@ -543,7 +565,12 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
     else:
         if message.from_user.id == message.chat.id:
-            app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id)
+            #app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id)
+            oldm = app.send_message(message.chat.id,'MAking File',reply_markup=ReplyKeyboardRemove())
+            mf = threading.Thread(target=lambda:makefile(nmessage,oldm),daemon=True)
+            mf.start()
+            
+            
         
 
 #apprun
