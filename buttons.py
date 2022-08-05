@@ -1,6 +1,6 @@
 from pykeyboard import ReplyKeyboard, ReplyButton, ReplyKeyboardRemove
 import helperfunctions
-from pyrogram import enums
+
 
 # suporrted extensions
 VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV","AVI","M4B","VOB","DVD","WEBM","WMV")
@@ -34,7 +34,8 @@ ReplyButton('DVD'),
 ReplyButton('WEBM'),
 ReplyButton('WMV'),
 ReplyButton('SENDVID'),
-ReplyButton('SENDDOC')
+ReplyButton('SENDDOC'),
+ReplyButton('SpeechToText')
             )    
 
 IMGboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)

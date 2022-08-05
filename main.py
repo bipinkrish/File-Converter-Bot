@@ -275,6 +275,28 @@ def makefile(message,oldmessage):
 	os.remove(firstline)      	    
 
 
+# transcript
+def transcript(message,oldmessage):
+    file = app.download_media(message)
+    inputt = file.split("/")[-1]
+    output = helperfunctions.updtname(inputt,"wav")
+    temp = output = helperfunctions.updtname(inputt,"txt")
+    name = message.document.file_name
+
+    if file.endswith("wav"):
+        aifunctions.splitfn(file,message,temp)
+    else:
+        cmd = helperfunctions.ffmpegcommand(file,output,"wav")
+        os.system(cmd)
+        aifunctions.splitfn(name,message,temp)
+        os.remove(output)
+        
+    app.send_document(message.chat.id, document=temp)
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    os.remove(file)
+    os.remove(temp)
+    
+
 
 # app messages
 @app.on_message(filters.command(['start']))
@@ -506,6 +528,13 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             oldm = app.send_message(message.chat.id,'Sending Video',reply_markup=ReplyKeyboardRemove())
             sv = threading.Thread(target=lambda:sendvideo(nmessage,oldm),daemon=True)
             sv.start()
+            return
+
+        if "SpeechToText" in message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'Transcripting',reply_markup=ReplyKeyboardRemove())
+            stt = threading.Thread(target=lambda:transcript(nmessage,oldm),daemon=True)
+            stt.start()
             return
 
         if "document" in str(nmessage):
