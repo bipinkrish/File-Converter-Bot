@@ -98,10 +98,10 @@ def updtname(inputt,new):
 
 # image info
 def imageinfo(file):
-    cmd = f'identify -verbose {file} > {file}.txt'
+    cmd = f'identify -verbose {file} > "{file}.txt"'
     os.system(cmd)
 
-    with open(f"{file}.txt", "rb") as infile:
+    with open(f'{file}.txt', "rb") as infile:
         info = str(infile.read())
     os.remove(f'{file}.txt')
    
@@ -125,10 +125,10 @@ def videoinfo(file):
     cmd = f'ffprobe -v quiet -show_format -show_streams "{file}" > "{file}.txt"'
     print(cmd)
     os.system(cmd)
-    with open(f"{file}.txt", "rb") as infile:
+    with open(f'{file}.txt', "rb") as infile:
         info = str(infile.read())
 
-    os.remove(f"{file}.txt")
+    os.remove(f'{file}.txt')
 
     stream = info[10:].split("[/STREAM]")
     try:
