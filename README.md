@@ -21,6 +21,8 @@ TEXT-to-IMAGE - Get AI created Images from your Prompt
 
 POSITIVE - Convert your Negetive Images to Positive
 
+SPEECH-to-TEXT - Transcrpting from a Audio
+
 ---
 
 ## Supported Formats
