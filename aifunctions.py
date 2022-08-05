@@ -323,7 +323,7 @@ from pydub.silence import split_on_silence
 r = sr.Recognizer()
 
 def get_large_audio_transcription(path,message):
-    id = message.message_id
+    id = message.id
     sound = AudioSegment.from_wav(path)  
     chunks = split_on_silence(sound,
         min_silence_len = 500,
