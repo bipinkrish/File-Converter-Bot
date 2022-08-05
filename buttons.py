@@ -50,7 +50,8 @@ ReplyButton('JPG'),
 ReplyButton('PNG'),
 ReplyButton('COLOR'),
 ReplyButton('POSITIVE'),
-ReplyButton('SENDPHOTO')
+ReplyButton('SENDPHOTO'),
+ReplyButton('SENDDOC')
             )
 
 LBWboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
