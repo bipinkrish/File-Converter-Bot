@@ -60,11 +60,11 @@ def follow(message,inputt,new,oldmessage):
         os.remove(output)
 
         if new == "ocr":
-            cmd = helperfunctions.tesrctcommand(file,"ocr")
+            cmd = helperfunctions.tesrctcommand(file,message.id)
             os.system(cmd)
-            with open("ocr.txt","r") as ocr:
+            with open(f"{message.id}.txt","r") as ocr:
                 text = ocr.read()
-            os.remove("ocr.txt")
+            os.remove(f"{message.id}.txt")
             app.send_message(message.chat.id,text)
             
         if new == "ico":
@@ -259,20 +259,23 @@ def sendphoto(message,oldmessage):
 
 # make file
 def makefile(message,oldmessage):
-	text = message.text.split("\n")
-	firstline = text[0]
-	text.remove(text[0])
+    text = message.text.split("\n")
+    firstline = text[0]
+    text.remove(text[0])
+    
+    message.text = ""
+    for ele in text: 
+        message.text = message.text + f"{ele}\n"
+    
+    with open(firstline,"w") as file:
+        file.write(message.text)
+    try:
+        app.send_document(message.chat.id, document=firstline)
+    except:
+        app.send_message(message.chat.id, "Makefile takes first line of your Text ad Filename and File content will start from Second line")
 
-	message.text = "" 
-	for ele in text: 
-		message.text = message.text + f"{ele}\n"  
-
-	with open(firstline,"w") as file:
-		file.write(message.text)  
-
-	app.send_document(message.chat.id, document=firstline)
-	app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
-	os.remove(firstline)      	    
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    os.remove(firstline)      	    
 
 
 # transcript speech to text
@@ -531,7 +534,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
         if "SpeechToText" in message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Transcripting',reply_markup=ReplyKeyboardRemove())
+            oldm = app.send_message(message.chat.id,'Transcripting, takes long time for Big Files',reply_markup=ReplyKeyboardRemove())
             stt = threading.Thread(target=lambda:transcript(nmessage,oldm),daemon=True)
             stt.start()
             return

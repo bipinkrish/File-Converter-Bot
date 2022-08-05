@@ -45,9 +45,9 @@ def libreofficecommand(inputt,new):
 
 
 # tesseract cmd
-def tesrctcommand(inputt,output):
+def tesrctcommand(inputt,out):
     #cmd = f'{tesseract} --appimage-extract-and-run "{inputt}" "{output}"'
-    cmd = f'tesseract "{inputt}" "{output}"'
+    cmd = f'tesseract "{inputt}" {out}'
     print("Command to be Executed is")
     print(cmd)
     return cmd
