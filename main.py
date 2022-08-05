@@ -385,7 +385,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
     else:
         #app.send_message(message.chat.id,f'{START_TEXT}',reply_to_message_id=message.id)
         oldm = app.send_message(message.chat.id,'No Available Conversions Found, Reading File',reply_markup=ReplyKeyboardRemove())
-        rf = threading.Thread(target=lambda:readf(nmessage,oldm),daemon=True)
+        rf = threading.Thread(target=lambda:readf(message,oldm),daemon=True)
         rf.start()
 
 
@@ -567,7 +567,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         if message.from_user.id == message.chat.id:
             #app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id)
             oldm = app.send_message(message.chat.id,'MAking File',reply_markup=ReplyKeyboardRemove())
-            mf = threading.Thread(target=lambda:makefile(nmessage,oldm),daemon=True)
+            mf = threading.Thread(target=lambda:makefile(message,oldm),daemon=True)
             mf.start()
             
             
