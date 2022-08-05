@@ -275,13 +275,19 @@ def makefile(message,oldmessage):
 	os.remove(firstline)      	    
 
 
-# transcript
+# transcript speech to text
 def transcript(message,oldmessage):
     file = app.download_media(message)
     inputt = file.split("/")[-1]
     output = helperfunctions.updtname(inputt,"wav")
     temp = output = helperfunctions.updtname(inputt,"txt")
-    name = message.document.file_name
+    try:
+        name = message.document.file_name
+    except:
+        try:
+            name = message.audio.file_name    
+        except:
+            name = "voice.ogg"
 
     if file.endswith("wav"):
         aifunctions.splitfn(file,message,temp)

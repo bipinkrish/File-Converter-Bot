@@ -35,7 +35,7 @@ ReplyButton('WEBM'),
 ReplyButton('WMV'),
 ReplyButton('SENDVID'),
 ReplyButton('SENDDOC'),
-ReplyButton('SpeechToText')
+ReplyButton('Speech to Text')
             )    
 
 IMGboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
