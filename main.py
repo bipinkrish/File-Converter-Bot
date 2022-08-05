@@ -566,7 +566,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
     else:
         if message.from_user.id == message.chat.id:
             #app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id)
-            oldm = app.send_message(message.chat.id,'MAking File',reply_markup=ReplyKeyboardRemove())
+            oldm = app.send_message(message.chat.id,'Making File',reply_markup=ReplyKeyboardRemove())
             mf = threading.Thread(target=lambda:makefile(message,oldm),daemon=True)
             mf.start()
             
