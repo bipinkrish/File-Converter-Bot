@@ -363,14 +363,14 @@ def get_large_audio_transcription(path,message):
     return whole_text
 
 
-def splitfn(name,message,output):
-	path = f"./{name}"
-	converted = get_large_audio_transcription(path,message)
+def splitfn(file,message,output):
+	
+	converted = get_large_audio_transcription(file,message)
 	
 	with open(output,"w") as file:
 		file.write(converted)
 	
-	shutil.rmtree(f"audio-chunks-{message.message_id}", ignore_errors=True)
+	shutil.rmtree(f"audio-chunks-{message.id}", ignore_errors=True)
 	return output
 
 

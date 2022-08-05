@@ -281,20 +281,13 @@ def transcript(message,oldmessage):
     inputt = file.split("/")[-1]
     output = helperfunctions.updtname(inputt,"wav")
     temp = output = helperfunctions.updtname(inputt,"txt")
-    try:
-        name = message.document.file_name
-    except:
-        try:
-            name = message.audio.file_name    
-        except:
-            name = "voice.ogg"
 
     if file.endswith("wav"):
         aifunctions.splitfn(file,message,temp)
     else:
         cmd = helperfunctions.ffmpegcommand(file,output,"wav")
         os.system(cmd)
-        aifunctions.splitfn(name,message,temp)
+        aifunctions.splitfn(output,message,temp)
         os.remove(output)
         
     app.send_document(message.chat.id, document=temp)
