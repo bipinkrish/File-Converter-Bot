@@ -393,4 +393,44 @@ def texttospeech(file,output):
 	return output
 
 
-######################################################################################################################################################
+#######################################################################################################################################################
+# zyro ai upscaller
+
+
+def upscale(file,output):
+	reqUrl = "https://upscaler.zyro.com/v1/ai/image-upscaler"
+
+	headersList = {
+	"authority": "upscaler.zyro.com",
+	"accept": "application/json, text/plain, */*",
+	"accept-language": "en-US,en;q=0.9",
+	"cache-control": "no-cache",
+	"content-type": "application/json",
+	"dnt": "1",
+	"origin": "https://zyro.com",
+	"pragma": "no-cache",
+	"referer": "https://zyro.com/",
+	"sec-ch-ua-mobile": "?0",
+	"sec-ch-ua-platform": "Linux",
+	"sec-fetch-dest": "empty",
+	"sec-fetch-mode": "cors",
+	"sec-fetch-site": "same-site",
+	"user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" 
+				}
+
+	with open(file,"rb") as byte:
+			rdata = base64.b64encode(byte.read()).decode('utf-8')
+
+	payload = json.dumps({"image_data": rdata})
+	response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
+
+	data = response["upscaled"].split(",")[1]
+	image = base64.b64decode(data)
+
+	with open(output,"wb") as file:
+		file.write(image)
+
+	return output
+
+
+#######################################################################################################################################################	

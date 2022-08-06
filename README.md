@@ -25,6 +25,8 @@ SPEECH-to-TEXT - Transcrpting from a Audio
 
 TEXT-to-SPEECH - Generate Speech from a Text File
 
+UPSCALE - Increase Resolution of a Image
+
 ---
 
 ## Supported Formats

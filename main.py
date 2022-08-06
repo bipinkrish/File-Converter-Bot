@@ -313,6 +313,19 @@ def speak(message,oldmessage):
     os.remove(output)
 
 
+# upscaling
+def increaseres(message,oldmessage):
+    file = app.download_media(message)
+    inputt = file.split("/")[-1]
+   
+    aifunctions.upscale(file,inputt)
+    os.remove(file)
+
+    app.send_document(message.chat.id, document=inputt)
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    os.remove(input)
+
+
 # app messages
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
@@ -557,6 +570,13 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             oldm = app.send_message(message.chat.id,'Speech Generating',reply_markup=ReplyKeyboardRemove())
             tts = threading.Thread(target=lambda:speak(nmessage,oldm),daemon=True)
             tts.start()
+            return
+
+        if "UPSCALE" == message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'Upscaling Your Image',reply_markup=ReplyKeyboardRemove())
+            upscl = threading.Thread(target=lambda:increaseres(nmessage,oldm),daemon=True)
+            upscl.start()
             return
 
         if "document" in str(nmessage):

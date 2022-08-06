@@ -51,6 +51,7 @@ ReplyButton('JPG'),
 ReplyButton('PNG'),
 ReplyButton('COLOR'),
 ReplyButton('POSITIVE'),
+ReplyButton('UPSCALE'),
 ReplyButton('SENDPHOTO'),
 ReplyButton('SENDDOC')
             )
