@@ -23,6 +23,8 @@ POSITIVE - Convert your Negetive Images to Positive
 
 SPEECH-to-TEXT - Transcrpting from a Audio
 
+TEXT-to-SPEECH - Generate Speech from a Text File
+
 ---
 
 ## Supported Formats
