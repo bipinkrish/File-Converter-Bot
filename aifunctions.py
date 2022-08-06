@@ -323,6 +323,7 @@ from pydub.silence import split_on_silence
 r = sr.Recognizer()
 
 def get_large_audio_transcription(path,message):
+
     id = message.id
     sound = AudioSegment.from_wav(path)  
     chunks = split_on_silence(sound,
@@ -375,4 +376,21 @@ def splitfn(file,message,output):
 
 
 
-####################################################################################################################################
+#######################################################################################################################################################
+# text to speech
+
+
+from gtts import gTTS
+
+def texttospeech(file,output):
+	''' Takes Text File and Output FileName ( Text 2 Speech ) '''
+
+	with open(file,"r") as readfile:
+		spctext = readfile.read()
+
+	myobj = gTTS(text=spctext, lang='en', slow=False)
+	myobj.save(output)
+	return output
+
+
+######################################################################################################################################################

@@ -68,7 +68,8 @@ ReplyButton('DOTM'),
 ReplyButton('WPS'),
 ReplyButton('OTT'),
 ReplyButton('TXT'),
-ReplyButton('READ')
+ReplyButton('READ'),
+ReplyButton('TextToSpeech')
             )
 
 LBIboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)

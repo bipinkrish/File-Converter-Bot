@@ -272,7 +272,7 @@ def makefile(message,oldmessage):
     try:
         app.send_document(message.chat.id, document=firstline)
     except:
-        app.send_message(message.chat.id, "Makefile takes first line of your Text ad Filename and File content will start from Second line")
+        app.send_message(message.chat.id, "Makefile takes first line of your Text as Filename and File content will start from Second line")
 
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
     os.remove(firstline)      	    
@@ -298,6 +298,19 @@ def transcript(message,oldmessage):
     os.remove(file)
     os.remove(temp)
     
+
+# text to speech 
+def speak(message,oldmessage):
+    file = app.download_media(message)
+    inputt = file.split("/")[-1]
+    output = helperfunctions.updtname(inputt,"mp3")
+   
+    aifunctions.texttospeech(file,output)
+    os.remove(file)
+
+    app.send_document(message.chat.id, document=output)
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    os.remove(output)
 
 
 # app messages
@@ -490,7 +503,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             nmessage = pickle.loads(handle.read())
         os.remove(f'{message.from_user.id}.json')
 
-        if "COLOR" in message.text or "POSITIVE" in message.text:
+        if "COLOR" == message.text or "POSITIVE" == message.text:
 
             oldm = app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove()) 
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
@@ -504,39 +517,46 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                 pos.start() 
                 return
 
-        if "READ" in message.text:
+        if "READ" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'Reading File',reply_markup=ReplyKeyboardRemove())
             rf = threading.Thread(target=lambda:readf(nmessage,oldm),daemon=True)
             rf.start()
             return
 
-        if "SENDPHOTO" in message.text:
+        if "SENDPHOTO" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'Sending Photo',reply_markup=ReplyKeyboardRemove())
             sp = threading.Thread(target=lambda:sendphoto(nmessage,oldm),daemon=True)
             sp.start()
             return
 
-        if "SENDDOC" in message.text:
+        if "SENDDOC" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'Sending Document',reply_markup=ReplyKeyboardRemove())
             sd = threading.Thread(target=lambda:senddoc(nmessage,oldm),daemon=True)
             sd.start()
             return    
 
-        if "SENDVID" in message.text:
+        if "SENDVID" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'Sending Video',reply_markup=ReplyKeyboardRemove())
             sv = threading.Thread(target=lambda:sendvideo(nmessage,oldm),daemon=True)
             sv.start()
             return
 
-        if "SpeechToText" in message.text:
+        if "SpeechToText" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Transcripting, takes long time for Big Files',reply_markup=ReplyKeyboardRemove())
+            oldm = app.send_message(message.chat.id,'Transcripting, takes long time for Long Files',reply_markup=ReplyKeyboardRemove())
             stt = threading.Thread(target=lambda:transcript(nmessage,oldm),daemon=True)
             stt.start()
+            return
+
+        if "TextToSpeech" == message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'Speech Generating',reply_markup=ReplyKeyboardRemove())
+            tts = threading.Thread(target=lambda:speak(nmessage,oldm),daemon=True)
+            tts.start()
             return
 
         if "document" in str(nmessage):
