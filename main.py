@@ -188,11 +188,15 @@ def colorizeimage(message,oldmessage):
 # dalle
 def genrateimages(message,prompt):
     
-    # min dalle requsting
-    hash = aifunctions.mindalle(prompt,AutoCall=False)
+    # requsting
+    mdhash = aifunctions.mindalle(prompt,AutoCall=False) # min dalle
+    ldhash = aifunctions.latdif(prompt,AutoCall=False) # latent 
+    filelist = aifunctions.dallemini(prompt) # dalle mini
+    latfile = aifunctions.latentdiff(prompt) # latent direct
+    imagelist = aifunctions.latdifstatus(ldhash,prompt) # latent get
+    mdfile = aifunctions.mindallestatus(mdhash,prompt) # min dalle get
 
     # dalle mini
-    filelist = aifunctions.dallemini(prompt)
     app.send_message(message.chat.id,f"DALLE-MINI : {prompt}")
     for ele in filelist:
         app.send_document(message.chat.id,document=ele,force_document=True)
@@ -200,15 +204,31 @@ def genrateimages(message,prompt):
     os.rmdir(prompt)
 
     # latent diffusion
-    file = aifunctions.latentdiff(prompt)
-    app.send_document(message.chat.id,document=file,force_document=True,caption=f"Latent Diffusion : {prompt}")
-    os.remove(file)
-    
+    app.send_message(message.chat.id,f"LATENT DIFFUSION : {prompt}")
+    app.send_document(message.chat.id,document=latfile,force_document=True)
+    os.remove(latfile)
+    for ele in imagelist:
+        app.send_document(message.chat.id,document=ele,force_document=True)
+        os.remove(ele)
+        
     # min dalle
-    file = aifunctions.mindallestatus(hash,prompt)
-    app.send_document(message.chat.id,document=file,force_document=True,caption=f"MIN-DALLE : {prompt}")
-    os.remove(file)
+    app.send_document(message.chat.id,document=mdfile,force_document=True,caption=f"MIN-DALLE : {prompt}")
+    os.remove(mdfile)
+
+    # delete msg
     app.delete_messages(message.chat.id,message_ids=[message.id+1])
+
+
+# cog video
+def genratevideos(message,prompt):
+
+    hash, queuepos = aifunctions.cogvideo(prompt,AutoCall=False)
+    msg = app.send_message(message.chat.id,f"Prompt received and Request is sent. Expected waiting time is {queuepos*1.5} mins")
+
+    file = aifunctions.cogvideostatus(hash,prompt)
+    app.send_video(message.chat.id, video=file, force_document=False)#,caption=f"COGVIDEO : {prompt}")
+    os.remove(file)
+    app.delete_messages(message.chat.id,message_ids=[msg.id])
 
 
 # delete msg
@@ -336,7 +356,7 @@ def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id,
-                     "/start - To Check Availabe Conversions\n/help - This Message\n/dalle - Text to Image\n/cancel - To Cancel\n/source - Github Source Code\n")
+                     "/start - To Check Availabe Conversions\n/help - This Message\n/dalle - Text to Image\n/cogvideo - Text to Video\n/cancel - To Cancel\n/source - Github Source Code\n")
     dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
     dm.start() 
 
@@ -373,6 +393,22 @@ def getpompt(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 	ai = threading.Thread(target=lambda:genrateimages(message,prompt),daemon=True)
 	ai.start()
 
+
+# cog video
+@app.on_message(filters.command(["cogvideo"]))
+def videocog(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+
+	# getting prompt from the text
+	try:
+		prompt = message.text.split("/cogvideo ")[1]
+	except:
+		app.send_message(message.chat.id,'Send Prompt with Command,\nUssage : "/cogvideo a man climbing up a mountain"')
+		return	
+
+	# threding	
+	vi = threading.Thread(target=lambda:genratevideos(message,prompt),daemon=True)
+	vi.start()
+    
 
 @app.on_message(filters.document)
 def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):

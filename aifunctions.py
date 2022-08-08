@@ -1,12 +1,21 @@
-
-##############################################################################################################
-# dalle
-
 import requests
 import json
 import time
 import base64
 import os
+import cv2
+import copy
+import numpy as np
+import os.path
+import shutil
+import speech_recognition as sr 
+from pydub import AudioSegment
+from pydub.silence import split_on_silence
+from gtts import gTTS
+
+
+##############################################################################################################
+# dalle
 
 
 def mindalle(prompt,AutoCall=True):
@@ -141,13 +150,6 @@ def dallemini(prompt):
 # deolidfy
 
 
-import requests
-import json
-import time
-import base64
-import os
-
-
 def deoldifyurl(url):
 	'''Takes Image URL and Returns Deoldified Image URL'''
 
@@ -197,10 +199,6 @@ def deoldify(file,fileto="colored.jpeg"):
 # negative to positive
 
 
-import cv2
-import copy
-
-
 def reverse_rgb(image):
     return 255 - image
 
@@ -243,12 +241,7 @@ def positiver(filepath, output):
 # image colorizer
 
 
-import numpy as np
-import cv2
-import os.path
-
 version = '7 June 2020'
-
 prototxt = r'model/colorization_deploy_v2.prototxt'
 model = r'model/colorization_release_v2.caffemodel'
 points = r'model/pts_in_hull.npy'
@@ -312,13 +305,107 @@ def latentdiff(prompt):
 	return f"{prompt}.jpg"
 
 
+def latdif(prompt, AutoCall=True):
+
+	reqUrl = "https://hf.space/embed/multimodalart/latentdiffusion/api/queue/push/"
+	headersList = {
+	"authority": "hf.space",
+	"accept": "*/*",
+	"accept-language": "en-US,en;q=0.9",
+	"cache-control": "no-cache",
+	"content-type": "application/json",
+	"dnt": "1",
+	"origin": "https://hf.space",
+	"pragma": "no-cache",
+	"referer": "https://hf.space/embed/multimodalart/latentdiffusion/+",
+	"sec-ch-ua-mobile": "?0",
+	"sec-ch-ua-platform": "Linux",
+	"sec-fetch-dest": "empty",
+	"sec-fetch-mode": "cors",
+	"sec-fetch-site": "same-origin",
+	"user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" 
+	}
+
+	payload = json.dumps({
+							"data": [ prompt, 45, 256, 256, 4, 5 ],
+							"cleared": "false",
+							"example_id": "null",
+							"session_hash": "nothing",
+							"action": "predict"
+						})
+
+	response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
+
+	hash = response["hash"]
+	queue_position = str(response["queue_position"])
+	
+	#print("Hash : " + hash)
+	#print("Queue Postion : " + queue_position)
+	if AutoCall:
+		filepath = latdifstatus(hash,prompt)
+		return filepath
+	else:
+		return hash
+
+
+def latdifstatus(hash, prompt="latentdiffusion"):
+
+	reqUrl = "https://hf.space/embed/multimodalart/latentdiffusion/api/queue/status/"
+	headersList = {
+	"authority": "hf.space",
+	"accept": "*/*",
+	"accept-language": "en-US,en;q=0.9",
+	"cache-control": "no-cache",
+	"content-type": "application/json",
+	"dnt": "1",
+	"origin": "https://hf.space",
+	"pragma": "no-cache",
+	"referer": "https://hf.space/embed/multimodalart/latentdiffusion/+",
+	"sec-ch-ua-mobile": "?0",
+	"sec-ch-ua-platform": "Linux",
+	"sec-fetch-dest": "empty",
+	"sec-fetch-mode": "cors",
+	"sec-fetch-site": "same-origin",
+	"user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" 
+	}
+
+	payload = json.dumps({ "hash": hash })
+	response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
+
+	status = response["status"]
+	print("Status : " + status)
+
+	while status != "COMPLETE":
+
+		if status == "QUEUED":
+			queue_position = str(response["data"])
+			print("Queue Position : " + queue_position)
+
+		if status == "PENDING":
+			print("Your job is processing")
+
+		time.sleep(10)
+
+		response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
+		status = response["status"]
+		#print("Status : " + status)
+
+	imagelist = []
+	for i in range(4):
+		data = response["data"]["data"][1][i][0].split(",")[1]
+		image = base64.b64decode(data)
+
+		with open(f"{i+1}-{prompt}.png","wb") as file:
+			file.write(image)
+
+		imagelist.append(f"{i+1}-{prompt}.png")
+
+	return imagelist
+
+
 ##############################################################################################################
 # speech to text
 
-import shutil
-import speech_recognition as sr 
-from pydub import AudioSegment
-from pydub.silence import split_on_silence
 
 r = sr.Recognizer()
 
@@ -380,8 +467,6 @@ def splitfn(file,message,output):
 # text to speech
 
 
-from gtts import gTTS
-
 def texttospeech(file,output):
 	''' Takes Text File and Output FileName ( Text 2 Speech ) '''
 
@@ -433,4 +518,99 @@ def upscale(file,output):
 	return output
 
 
-#######################################################################################################################################################	
+#######################################################################################################################################################
+# cog video ( text to video )
+
+
+def cogvideo(prompt,AutoCall=True):
+
+	reqUrl = "https://hf.space/embed/THUDM/CogVideo/api/queue/push/"
+	headersList = {
+	"authority": "hf.space",
+	"accept": "*/*",
+	"accept-language": "en-US,en;q=0.9",
+	"cache-control": "no-cache",
+	"content-type": "application/json",
+	"dnt": "1",
+	"origin": "https://hf.space",
+	"pragma": "no-cache",
+	"referer": "https://hf.space/embed/THUDM/CogVideo/+?__theme=light",
+	"sec-ch-ua-mobile": "?0",
+	"sec-ch-ua-platform": "Linux",
+	"sec-fetch-dest": "empty",
+	"sec-fetch-mode": "cors",
+	"sec-fetch-site": "same-origin",
+	"user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" 
+				}
+
+	payload = json.dumps({
+							"fn_index": 1,
+							"data": [ prompt, "true", 1234, "true", "null" ],
+							"action": "predict",
+							"session_hash": "nothing"
+						})
+
+	response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
+	hash = response["hash"]
+	queue_position = str(response["queue_position"])
+	
+	#print("Hash : " + hash)
+	#print("Queue Postion : " + queue_position)
+	if AutoCall:
+		filepath = cogvideostatus(hash,prompt)
+		return filepath
+	else:
+		return hash, int(queue_position)
+
+
+def cogvideostatus(hash,prompt="cogvideo"):
+
+	reqUrl = "https://hf.space/embed/THUDM/CogVideo/api/queue/status/"
+	headersList = {
+	"authority": "hf.space",
+	"accept": "*/*",
+	"accept-language": "en-US,en;q=0.9",
+	"cache-control": "no-cache",
+	"content-type": "application/json",
+	"dnt": "1",
+	"origin": "https://hf.space",
+	"pragma": "no-cache",
+	"referer": "https://hf.space/embed/THUDM/CogVideo/+?__theme=light",
+	"sec-ch-ua-mobile": "?0",
+	"sec-ch-ua-platform": "Linux",
+	"sec-fetch-dest": "empty",
+	"sec-fetch-mode": "cors",
+	"sec-fetch-site": "same-origin",
+	"user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" 
+	}
+
+	payload = json.dumps({ "hash": hash })
+	response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
+
+	status = response["status"]
+	print("Status : " + status)
+
+	while status != "COMPLETE":
+
+		if status == "QUEUED":
+			queue_position = str(response["data"])
+			print("Queue Position : " + queue_position)
+
+		if status == "PENDING":
+			print("Your job is processing")
+
+		time.sleep(20)
+
+		response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
+		status = response["status"]
+		#print("Status : " + status)
+
+	data = response["data"]["data"][1]["data"].split(",")[1]
+	image = base64.b64decode(data)
+	with open(f"{prompt}.mp4","wb") as file:
+		file.write(image)
+
+	return f"{prompt}.mp4"
+
+
+########################################################################################################################################################	
