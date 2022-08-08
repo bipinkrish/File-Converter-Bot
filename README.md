@@ -27,6 +27,8 @@ TEXT-to-SPEECH - Generate Speech from a Text File
 
 UPSCALE - Increase Resolution of a Image
 
+TEXT-to-VIDEO - Get AI created Videos from your Prompt
+
 ---
 
 ## Supported Formats
