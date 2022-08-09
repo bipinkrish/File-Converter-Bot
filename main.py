@@ -227,7 +227,7 @@ def genratevideos(message,prompt):
     msg = app.send_message(message.chat.id,f"Prompt received and Request is sent. Expected waiting time is {(queuepos+1)*1.5} mins")
 
     file = aifunctions.cogvideostatus(hash,prompt)
-    app.send_video(message.chat.id, video=file, force_document=False)#,caption=f"COGVIDEO : {prompt}")
+    app.send_video(message.chat.id, video=file)#,caption=f"COGVIDEO : {prompt}")
     os.remove(file)
     app.delete_messages(message.chat.id,message_ids=[msg.id])
 
