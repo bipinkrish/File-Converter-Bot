@@ -411,6 +411,7 @@ def videocog(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 	vi.start()
     
 
+@app.on_message(filters.animation)
 @app.on_message(filters.document)
 def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     if message.document.file_name.upper().endswith(VIDAUD):
@@ -478,16 +479,21 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 
 @app.on_message(filters.video)
 def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    if message.video.file_name.upper().endswith(VIDAUD):
-        with open(f'{message.from_user.id}.json', 'wb') as handle:
-            pickle.dump(message, handle)
-        dext = message.video.file_name.split(".")[-1].upper()
-        app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** 📹 / 🔊\nNow send extension to Convert to...\n\n--**Available formats**-- \n\n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
-                         reply_markup=VAboard, reply_to_message_id=message.id)
-    else:
-        app.send_message(message.chat.id, f'--**Available formats**--:\n\n**VIDEOS/AUDIOS** 📹 / 🔊\n{VA_TEXT}',
-                         reply_to_message_id=message.id)
+    try:
+        if message.video.file_name.upper().endswith(VIDAUD):
+            with open(f'{message.from_user.id}.json', 'wb') as handle:
+                pickle.dump(message, handle)
+            dext = message.video.file_name.split(".")[-1].upper()
+            app.send_message(message.chat.id,
+                            f'Detected Extension: **{dext}** 📹 / 🔊\nNow send extension to Convert to...\n\n--**Available formats**-- \n\n{VA_TEXT}\n\n{message.from_user.mention} choose or click /cancel',
+                            reply_markup=VAboard, reply_to_message_id=message.id)
+        else:
+            app.send_message(message.chat.id, f'--**Available formats**--:\n\n**VIDEOS/AUDIOS** 📹 / 🔊\n{VA_TEXT}',
+                            reply_to_message_id=message.id)
+    except:
+        oldm = app.send_message(message.chat.id,'Can\'t get the name of the File, turning it into Document then you can use that to Convert',reply_markup=ReplyKeyboardRemove())
+        sd = threading.Thread(target=lambda:senddoc(message,oldm),daemon=True)
+        sd.start()
 
 
 @app.on_message(filters.video_note)
