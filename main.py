@@ -224,7 +224,7 @@ def genrateimages(message,prompt):
 def genratevideos(message,prompt):
 
     hash, queuepos = aifunctions.cogvideo(prompt,AutoCall=False)
-    msg = app.send_message(message.chat.id,f"Prompt received and Request is sent. Expected waiting time is {(queuepos+1)*1.5} mins")
+    msg = app.send_message(message.chat.id,f"Prompt received and Request is sent. Expected waiting time is {(queuepos+1)*3} mins")
 
     file = aifunctions.cogvideostatus(hash,prompt)
     app.send_video(message.chat.id, video=file)#,caption=f"COGVIDEO : {prompt}")
