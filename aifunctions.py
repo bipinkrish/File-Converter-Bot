@@ -543,14 +543,7 @@ def cogvideo(prompt,AutoCall=True):
 	"user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" 
 				}
 
-	payload = """
-			{
-				"fn_index": 1,
-				"data": [ "a man climbing mountain", 1, 1234, 1, null ],
-				"action": "predict",
-				"session_hash": "nothing"
-			}
-			  """
+	payload = '{ "fn_index": 1, "data": [ '+str(prompt)+', 1, 1234, 1, null ], "action": "predict", "session_hash": "nothing" }'
 
 	response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
 	hash = response["hash"]
