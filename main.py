@@ -411,7 +411,7 @@ def videocog(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 	vi.start()
     
 
-@app.on_message(filters.animation)
+
 @app.on_message(filters.document)
 def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     if message.document.file_name.upper().endswith(VIDAUD):
@@ -477,6 +477,13 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
         rf.start()
 
 
+@app.on_message(filters.animation)
+def annimations(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    oldm = app.send_message(message.chat.id,'Turning it into Document then you can use that to Convert',reply_markup=ReplyKeyboardRemove())
+    sd = threading.Thread(target=lambda:senddoc(message,oldm),daemon=True)
+    sd.start()
+
+
 @app.on_message(filters.video)
 def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     try:
@@ -491,7 +498,7 @@ def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
             app.send_message(message.chat.id, f'--**Available formats**--:\n\n**VIDEOS/AUDIOS** 📹 / 🔊\n{VA_TEXT}',
                             reply_to_message_id=message.id)
     except:
-        oldm = app.send_message(message.chat.id,'Can\'t get the name of the File, turning it into Document then you can use that to Convert',reply_markup=ReplyKeyboardRemove())
+        oldm = app.send_message(message.chat.id,'Turning it into Document then you can use that to Convert',reply_markup=ReplyKeyboardRemove())
         sd = threading.Thread(target=lambda:senddoc(message,oldm),daemon=True)
         sd.start()
 
