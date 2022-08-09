@@ -212,7 +212,8 @@ def genrateimages(message,prompt):
         os.remove(ele)
         
     # min dalle
-    app.send_document(message.chat.id,document=mdfile,force_document=True,caption=f"MIN-DALLE : {prompt}")
+    app.send_message(message.chat.id,f"MIN-DALLE : {prompt}")
+    app.send_document(message.chat.id,document=mdfile,force_document=True)
     os.remove(mdfile)
 
     # delete msg
@@ -223,7 +224,7 @@ def genrateimages(message,prompt):
 def genratevideos(message,prompt):
 
     hash, queuepos = aifunctions.cogvideo(prompt,AutoCall=False)
-    msg = app.send_message(message.chat.id,f"Prompt received and Request is sent. Expected waiting time is {queuepos*1.5} mins")
+    msg = app.send_message(message.chat.id,f"Prompt received and Request is sent. Expected waiting time is {(queuepos+1)*1.5} mins")
 
     file = aifunctions.cogvideostatus(hash,prompt)
     app.send_video(message.chat.id, video=file, force_document=False)#,caption=f"COGVIDEO : {prompt}")
@@ -603,7 +604,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
         if "TextToSpeech" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Speech Generating',reply_markup=ReplyKeyboardRemove())
+            oldm = app.send_message(message.chat.id,'Generating Speech',reply_markup=ReplyKeyboardRemove())
             tts = threading.Thread(target=lambda:speak(nmessage,oldm),daemon=True)
             tts.start()
             return
