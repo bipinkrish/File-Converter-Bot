@@ -267,9 +267,10 @@ def dltmsg(message,sec=15):
 # read file
 def readf(message,oldmessage,allowrename=False):
     file = app.download_media(message)
-    with open(file,"r") as rf:
-        txt = rf.read()
+    
     try:
+        with open(file,"r") as rf:
+            txt = rf.read()
         n = 4096
         split = [txt[i:i+n] for i in range(0, len(txt), n)]
         for ele in split:
