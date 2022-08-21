@@ -24,18 +24,6 @@ app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
 os.system("chmod 777 c41lab.py negfix8 tgsconverter")
 
 
-# up progress
-def uprogress(current, total, message):
-    with open(f'{message.id}upstatus.txt',"w") as fileup:
-        fileup.write(f"{current * 100 / total:.1f}%")
-
-
-# down progress
-def dprogress(current, total, message):
-    with open(f'{message.id}downstatus.txt',"w") as fileup:
-        fileup.write(f"{current * 100 / total:.1f}%")
-
-
 # main function to follow
 def follow(message,inputt,new,oldmessage):
     output = helperfunctions.updtname(inputt,new)
@@ -43,12 +31,7 @@ def follow(message,inputt,new,oldmessage):
     if output.upper().endswith(VIDAUD) and inputt.upper().endswith(VIDAUD):
         print("It is VID/AUD option")
 
-        msg = app.send_message(message.chat.id, 'Downloading...', reply_to_message_id=message.id)
-        dosta = threading.Thread(target=lambda:downstatus(f'{message.id}downstatus.txt',msg),daemon=True)
-        dosta.start()
-        file = app.download_media(message,progress=dprogress, progress_args=[message])
-        os.remove(f'{message.id}downstatus.txt')
-
+        file,msg = down(message)
         srclink = helperfunctions.videoinfo(file)
         cmd = helperfunctions.ffmpegcommand(file,output,new)
         app.edit_message_text(message.chat.id, msg.id, 'Converting...')
@@ -57,13 +40,8 @@ def follow(message,inputt,new,oldmessage):
         conlink = helperfunctions.videoinfo(output)
 
         try:
-            #app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            app.edit_message_text(message.chat.id, msg.id, 'Uploading...')
-            upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt',msg),daemon=True)
-            upsta.start()
-            app.send_document(message.chat.id,document=output, force_document=True, caption=f'Source File : {srclink}\n\nConverted File : {conlink}',reply_to_message_id=message.id, progress=uprogress, progress_args=[message])
-            os.remove(f'{message.id}upstatus.txt')
-            app.delete_messages(message.chat.id,message_ids=[msg.id])
+            app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
+            up(message,file,msg)
         except:
             app.delete_messages(message.chat.id,message_ids=[msg.id])
             app.send_message(message.chat.id,"Error while conversion", reply_to_message_id=message.id)
@@ -289,20 +267,10 @@ def readf(message,oldmessage,allowrename=False):
 
 # send video
 def sendvideo(message,oldmessage):
-    msg = app.send_message(message.chat.id, 'Downloading...', reply_to_message_id=message.id)
-    dosta = threading.Thread(target=lambda:downstatus(f'{message.id}downstatus.txt',msg),daemon=True)
-    dosta.start()
-    file = app.download_media(message,progress=dprogress, progress_args=[message])
-    os.remove(f'{message.id}downstatus.txt')
-    
+    file,msg = down(message)
+    up(message,file,msg)
 
-    app.edit_message_text(message.chat.id, msg.id, 'Uploading...')
-    upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt',msg),daemon=True)
-    upsta.start()
-    app.send_video(message.chat.id, video=file, reply_to_message_id=message.id, progress=uprogress, progress_args=[message])
-    os.remove(f'{message.id}upstatus.txt')
-
-    app.delete_messages(message.chat.id, message_ids=[oldmessage.id,msg.id])
+    app.delete_messages(message.chat.id, message_ids=[oldmessage.id])
     os.remove(file)
 
 
@@ -401,6 +369,47 @@ def rname(message,newname,oldm):
     os.remove(newname)
 
 
+# download with progress
+def down(message):
+
+    if int(str(message).split('"file_size":')[1].split("}")[0]) > 25000000:
+        msg = app.send_message(message.chat.id, 'Downloading...', reply_to_message_id=message.id)
+        dosta = threading.Thread(target=lambda:downstatus(f'{message.id}downstatus.txt',msg),daemon=True)
+        dosta.start()
+    else:
+        msg = None
+
+    file = app.download_media(message,progress=dprogress, progress_args=[message])
+    os.remove(f'{message.id}downstatus.txt')
+    return file,msg
+
+
+# uploading with progress
+def up(message,file,msg):
+
+    if int(str(message).split('"file_size":')[1].split("}")[0]) > 25000000:
+        app.edit_message_text(message.chat.id, msg.id, 'Uploading...')
+        upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt',msg),daemon=True)
+        upsta.start()
+
+    app.send_video(message.chat.id, video=file, reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
+    os.remove(f'{message.id}upstatus.txt')
+    if msg != None:
+        app.delete_messages(message.chat.id,message_ids=[msg.id])
+
+
+# up progress
+def uprogress(current, total, message):
+    with open(f'{message.id}upstatus.txt',"w") as fileup:
+        fileup.write(f"{current * 100 / total:.1f}%")
+
+
+# down progress
+def dprogress(current, total, message):
+    with open(f'{message.id}downstatus.txt',"w") as fileup:
+        fileup.write(f"{current * 100 / total:.1f}%")
+
+
 # upload status
 def upstatus(statusfile,message):
 
@@ -408,12 +417,16 @@ def upstatus(statusfile,message):
         if os.path.exists(statusfile):
             break
         
-    txt = "0%"    
+    #time.sleep(5)
     while os.path.exists(statusfile):
         with open(statusfile,"r") as upread:
             txt = upread.read()
+        if "%" not in txt:
+                txt = "0.0%"
         try:
             app.edit_message_text(message.chat.id, message.id, f"Uploaded : {txt}")
+            if txt == "100.0%":
+                break
             time.sleep(10)
         except:
             time.sleep(5)
@@ -426,12 +439,16 @@ def downstatus(statusfile,message):
         if os.path.exists(statusfile):
             break
         
-    txt = "0%"    
+    #time.sleep(5)  
     while os.path.exists(statusfile):
         with open(statusfile,"r") as upread:
             txt = upread.read()
+        if "%" not in txt:
+                txt = "0.0%"
         try:
             app.edit_message_text(message.chat.id, message.id, f"Downloaded : {txt}")
+            if txt == "100.0%":
+                break
             time.sleep(10)
         except:
             time.sleep(5)
@@ -479,7 +496,7 @@ def rename(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
         rn.start() 
         os.remove(f'{message.from_user.id}.json')
     else:
-        app.send_message(message.chat.id, "You need to send me a File firts", reply_to_message_id=message.id)   
+        app.send_message(message.chat.id, "You need to send me a File first", reply_to_message_id=message.id)   
 
 
 
@@ -497,14 +514,14 @@ def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
 
 
 # dalle command
-@app.on_message(filters.command(["dalle"]))
+@app.on_message(filters.command(["imagegen"]))
 def getpompt(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
 
 	# getting prompt from the text
 	try:
-		prompt = message.text.split("/dalle ")[1]
+		prompt = message.text.split("/imagegen ")[1]
 	except:
-		app.send_message(message.chat.id,'Send Prompt with Command,\nUssage : "**/dalle high defination studio image of pokemon**"', reply_to_message_id=message.id)
+		app.send_message(message.chat.id,'Send Prompt with Command,\nUssage : **/imagegen high defination studio image of pokemon**', reply_to_message_id=message.id)
 		return	
 
 	# threding	
@@ -514,19 +531,21 @@ def getpompt(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 
 
 # cog video
-@app.on_message(filters.command(["cogvideo"]))
+@app.on_message(filters.command(["videogen"]))
 def videocog(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    
+    app.send_message(message.chat.id,'Currently Not Working', reply_to_message_id=message.id)
+    return
+    
+    try:
+        prompt = message.text.split("/videogen ")[1]    
+    except:
+        app.send_message(message.chat.id,'Send Prompt with Command,\nUssage : **/videogen a man climbing up a mountain**', reply_to_message_id=message.id)
+        return	
 
-	# getting prompt from the text
-	try:
-		prompt = message.text.split("/cogvideo ")[1]
-	except:
-		app.send_message(message.chat.id,'Send Prompt with Command,\nUssage : "/cogvideo a man climbing up a mountain"', reply_to_message_id=message.id)
-		return	
-
-	# threding	
-	vi = threading.Thread(target=lambda:genratevideos(message,prompt),daemon=True)
-	vi.start()
+	# threding
+    vi = threading.Thread(target=lambda:genratevideos(message,prompt),daemon=True)
+    vi.start()
     
 
 
@@ -589,7 +608,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          reply_markup=EBboard, reply_to_message_id=message.id)
 
     else:
-        oldm = app.send_message(message.chat.id,'No Available Conversions Found, Reading File',reply_markup=ReplyKeyboardRemove())
+        oldm = app.send_message(message.chat.id,'No Available Conversions Found, Trying to Read File',reply_markup=ReplyKeyboardRemove())
         rf = threading.Thread(target=lambda:readf(message,oldm,allowrename=True),daemon=True)
         rf.start()
 
