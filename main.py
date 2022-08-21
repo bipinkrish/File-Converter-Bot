@@ -281,7 +281,7 @@ def readf(message,oldmessage,allowrename=False):
             app.send_message(message.chat.id, "Use /rename new-filename to Rename", reply_to_message_id=message.id)
         else:
             app.send_message(message.chat.id, "Error in Reading File", reply_to_message_id=message.id)
-            
+
     os.remove(file)
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
 
@@ -473,11 +473,13 @@ def rename(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
     if os.path.exists(f'{message.from_user.id}.json'):
         with open(f'{message.from_user.id}.json', 'rb') as handle:
             nmessage = pickle.loads(handle.read())
-        oldm = app.send_message(message.chat.id, "Renaming", reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+        oldm = app.send_message(message.chat.id, "Renaming", reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
         rn = threading.Thread(target=lambda:rname(nmessage,newname,oldm),daemon=True)
         rn.start() 
+        os.remove(f'{message.from_user.id}.json')
     else:
         app.send_message(message.chat.id, "You need to send me a File firts", reply_to_message_id=message.id)   
+
 
 
 # cancel
