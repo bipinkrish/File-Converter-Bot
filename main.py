@@ -215,12 +215,12 @@ def colorizeimage(message,oldmessage):
 def genrateimages(message,prompt):
     
     # requsting
-    mdhash = aifunctions.mindalle(prompt,AutoCall=False) # min dalle
+    # mdhash = aifunctions.mindalle(prompt,AutoCall=False) # min dalle
     ldhash = aifunctions.latdif(prompt,AutoCall=False) # latent 
     filelist = aifunctions.dallemini(prompt) # dalle mini
     latfile = aifunctions.latentdiff(prompt) # latent direct
     imagelist = aifunctions.latdifstatus(ldhash,prompt) # latent get
-    mdfile = aifunctions.mindallestatus(mdhash,prompt) # min dalle get
+    # mdfile = aifunctions.mindallestatus(mdhash,prompt) # min dalle get
 
     # dalle mini
     app.send_message(message.chat.id,f"__DALLE-MINI :_ **{prompt}**", reply_to_message_id=message.id)
@@ -238,9 +238,9 @@ def genrateimages(message,prompt):
         os.remove(ele)
         
     # min dalle
-    app.send_message(message.chat.id,f"__MIN-DALLE :__ **{prompt}**", reply_to_message_id=message.id)
-    app.send_document(message.chat.id,document=mdfile,force_document=True)
-    os.remove(mdfile)
+    # app.send_message(message.chat.id,f"__MIN-DALLE :__ **{prompt}**", reply_to_message_id=message.id)
+    # app.send_document(message.chat.id,document=mdfile,force_document=True)
+    # os.remove(mdfile)
 
     # delete msg
     app.delete_messages(message.chat.id,message_ids=[message.id+1])
