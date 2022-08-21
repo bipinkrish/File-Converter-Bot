@@ -223,7 +223,7 @@ def genrateimages(message,prompt):
     # mdfile = aifunctions.mindallestatus(mdhash,prompt) # min dalle get
 
     # dalle mini
-    app.send_message(message.chat.id,f"__DALLE-MINI :_ **{prompt}**", reply_to_message_id=message.id)
+    app.send_message(message.chat.id,"**DALLE MINI**", reply_to_message_id=message.id)
     for ele in filelist:
         app.send_document(message.chat.id,document=ele,force_document=True)
         os.remove(ele)
