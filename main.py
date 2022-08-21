@@ -37,16 +37,15 @@ def follow(message,inputt,new,oldmessage):
 
         if msg != None:
             app.edit_message_text(message.chat.id, msg.id, 'Converting...')
-            
+
         os.system(cmd)
         os.remove(file)
         conlink = helperfunctions.videoinfo(output)
 
         try:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            up(message,file,msg)
+            up(message,output,msg)
         except:
-            app.delete_messages(message.chat.id,message_ids=[msg.id])
             app.send_message(message.chat.id,"Error while conversion", reply_to_message_id=message.id)
             
         os.remove(output)
@@ -270,8 +269,8 @@ def readf(message,oldmessage,allowrename=False):
 
 # send video
 def sendvideo(message,oldmessage):
-    file,msg = down(message)
-    up(message,file,msg)
+    file, msg = down(message)
+    up(message, file, msg, video=True)
 
     app.delete_messages(message.chat.id, message_ids=[oldmessage.id])
     os.remove(file)
@@ -396,14 +395,18 @@ def down(message):
 
 
 # uploading with progress
-def up(message,file,msg):
+def up(message,file,msg,video=False):
 
     if msg != None:
         app.edit_message_text(message.chat.id, msg.id, 'Uploading...')
         upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt',msg),daemon=True)
         upsta.start()
 
-    app.send_video(message.chat.id, video=file, reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
+    if not video:
+        app.send_document(message.chat.id, document=file, force_document=True ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
+    else:
+        app.send_document(message.chat.id, video=file ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
+
     os.remove(f'{message.id}upstatus.txt')
 
     if msg != None:
