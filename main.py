@@ -44,7 +44,7 @@ def follow(message,inputt,new,oldmessage):
         print("It is VID/AUD option")
 
         msg = app.send_message(message.chat.id, 'Downloading...', reply_to_message_id=message.id)
-        dosta = threading.Thread(target=lambda:upstatus(f'{message.id}downstatus.txt',msg),daemon=True)
+        dosta = threading.Thread(target=lambda:downstatus(f'{message.id}downstatus.txt',msg),daemon=True)
         dosta.start()
         file = app.download_media(message,progress=dprogress, progress_args=[message])
         os.remove(f'{message.id}downstatus.txt')
@@ -265,7 +265,7 @@ def dltmsg(message,sec=15):
 
 
 # read file
-def readf(message,oldmessage):
+def readf(message,oldmessage,allowrename=False):
     file = app.download_media(message)
     with open(file,"r") as rf:
         txt = rf.read()
@@ -275,24 +275,32 @@ def readf(message,oldmessage):
         for ele in split:
             app.send_message(message.chat.id, ele, reply_to_message_id=message.id)   
     except:
-        app.send_message(message.chat.id, "Error in Reading File", reply_to_message_id=message.id)   
-
+        if allowrename:
+            with open(f'{message.from_user.id}.json', 'wb') as handle:
+                pickle.dump(message, handle)
+            app.send_message(message.chat.id, "Use /rename new-filename to Rename", reply_to_message_id=message.id)
+        else:
+            app.send_message(message.chat.id, "Error in Reading File", reply_to_message_id=message.id)
+            
     os.remove(file)
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+
 
 # send video
 def sendvideo(message,oldmessage):
     msg = app.send_message(message.chat.id, 'Downloading...', reply_to_message_id=message.id)
-    dosta = threading.Thread(target=lambda:upstatus(f'{message.id}downstatus.txt',msg),daemon=True)
+    dosta = threading.Thread(target=lambda:downstatus(f'{message.id}downstatus.txt',msg),daemon=True)
     dosta.start()
     file = app.download_media(message,progress=dprogress, progress_args=[message])
-    os.remove(f'{message.id}upstatus.txt')
+    os.remove(f'{message.id}downstatus.txt')
+    
 
     app.edit_message_text(message.chat.id, msg.id, 'Uploading...')
     upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt',msg),daemon=True)
     upsta.start()
     app.send_video(message.chat.id, video=file, reply_to_message_id=message.id, progress=uprogress, progress_args=[message])
-    os.remove(f'{message.id}downstatus.txt')
+    os.remove(f'{message.id}upstatus.txt')
+
     app.delete_messages(message.chat.id, message_ids=[oldmessage.id,msg.id])
     os.remove(file)
 
@@ -384,6 +392,7 @@ def increaseres(message,oldmessage):
 
 # renaming
 def rname(message,newname,oldm):
+    app.delete_messages(message.chat.id,message_ids=[message.id+1])
     file = app.download_media(message)
     os.rename(file,newname)
     app.send_document(message.chat.id, document=newname, reply_to_message_id=message.id)
@@ -426,6 +435,7 @@ def downstatus(statusfile,message):
         except:
             time.sleep(5)
 
+
 # app messages
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
@@ -433,6 +443,8 @@ def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     dm = threading.Thread(target=lambda:dltmsg(oldm,30),daemon=True)
     dm.start()                        
 
+
+# help
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id,
@@ -440,12 +452,16 @@ def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
     dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
     dm.start() 
 
+
+#source
 @app.on_message(filters.command(['source']))
 def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id, "**GITHUB - https://github.com/bipinkrish/File-Converter-Bot**", disable_web_page_preview=True, reply_to_message_id=message.id)
     dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
     dm.start() 
 
+
+# rename
 @app.on_message(filters.command(['rename']))
 def rename(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     try:
@@ -463,6 +479,8 @@ def rename(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
     else:
         app.send_message(message.chat.id, "You need to send me a File firts", reply_to_message_id=message.id)   
 
+
+# cancel
 @app.on_message(filters.command(['cancel']))
 def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     if os.path.exists(f'{message.from_user.id}.json'):
@@ -473,6 +491,7 @@ def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
         app.send_message(message.chat.id,"Your job was **Canceled**",reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
     else:
         app.send_message(message.chat.id,"No job to Cancel", reply_to_message_id=message.id)     
+
 
 # dalle command
 @app.on_message(filters.command(["dalle"]))
@@ -568,7 +587,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 
     else:
         oldm = app.send_message(message.chat.id,'No Available Conversions Found, Reading File',reply_markup=ReplyKeyboardRemove())
-        rf = threading.Thread(target=lambda:readf(message,oldm),daemon=True)
+        rf = threading.Thread(target=lambda:readf(message,oldm,allowrename=True),daemon=True)
         rf.start()
 
 
@@ -663,7 +682,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
         if "COLOR" == message.text or "POSITIVE" == message.text:
 
-            oldm = app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id) 
+            oldm = app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id) 
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
 
             if "COLOR" in message.text:
@@ -677,49 +696,49 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
         if "READ" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Reading File',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+            oldm = app.send_message(message.chat.id,'Reading File',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             rf = threading.Thread(target=lambda:readf(nmessage,oldm),daemon=True)
             rf.start()
             return
 
         if "SENDPHOTO" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Sending Photo',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+            oldm = app.send_message(message.chat.id,'Sending Photo',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             sp = threading.Thread(target=lambda:sendphoto(nmessage,oldm),daemon=True)
             sp.start()
             return
 
         if "SENDDOC" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Sending Document',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+            oldm = app.send_message(message.chat.id,'Sending Document',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             sd = threading.Thread(target=lambda:senddoc(nmessage,oldm),daemon=True)
             sd.start()
             return    
 
         if "SENDVID" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Sending Video',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+            oldm = app.send_message(message.chat.id,'Sending Video',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             sv = threading.Thread(target=lambda:sendvideo(nmessage,oldm),daemon=True)
             sv.start()
             return
 
         if "SpeechToText" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Transcripting, takes long time for Long Files',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+            oldm = app.send_message(message.chat.id,'Transcripting, takes long time for Long Files',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             stt = threading.Thread(target=lambda:transcript(nmessage,oldm),daemon=True)
             stt.start()
             return
 
         if "TextToSpeech" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Generating Speech',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+            oldm = app.send_message(message.chat.id,'Generating Speech',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             tts = threading.Thread(target=lambda:speak(nmessage,oldm),daemon=True)
             tts.start()
             return
 
         if "UPSCALE" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Upscaling Your Image',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+            oldm = app.send_message(message.chat.id,'Upscaling Your Image',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             upscl = threading.Thread(target=lambda:increaseres(nmessage,oldm),daemon=True)
             upscl.start()
             return
@@ -773,7 +792,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         #if newext == "ico":
             #app.send_message(message.chat.id, "Warning: for ICO, image will be resized and made multi-resolution", reply_to_message_id=message.id)
         
-        app.send_message(message.chat.id, f'Converting from **{oldext.upper()}** to **{newext.upper()}**', reply_to_message_id=message.id, reply_markup=ReplyKeyboardRemove())
+        app.send_message(message.chat.id, f'Converting from **{oldext.upper()}** to **{newext.upper()}**', reply_to_message_id=nmessage.id, reply_markup=ReplyKeyboardRemove())
         app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
 
         conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext, message), daemon=True)
@@ -782,7 +801,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
     else:
         if message.from_user.id == message.chat.id:
             #app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id)
-            oldm = app.send_message(message.chat.id,'Making File',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+            oldm = app.send_message(message.chat.id,'Making File',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             mf = threading.Thread(target=lambda:makefile(message,oldm),daemon=True)
             mf.start()
             
