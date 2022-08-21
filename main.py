@@ -34,7 +34,10 @@ def follow(message,inputt,new,oldmessage):
         file,msg = down(message)
         srclink = helperfunctions.videoinfo(file)
         cmd = helperfunctions.ffmpegcommand(file,output,new)
-        app.edit_message_text(message.chat.id, msg.id, 'Converting...')
+
+        if msg != None:
+            app.edit_message_text(message.chat.id, msg.id, 'Converting...')
+            
         os.system(cmd)
         os.remove(file)
         conlink = helperfunctions.videoinfo(output)
@@ -402,7 +405,7 @@ def up(message,file,msg):
 
     app.send_video(message.chat.id, video=file, reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
     os.remove(f'{message.id}upstatus.txt')
-    
+
     if msg != None:
         app.delete_messages(message.chat.id,message_ids=[msg.id])
 
