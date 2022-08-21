@@ -279,7 +279,7 @@ def readf(message,oldmessage,allowrename=False):
         if allowrename:
             with open(f'{message.from_user.id}.json', 'wb') as handle:
                 pickle.dump(message, handle)
-            app.send_message(message.chat.id, "Use /rename new-filename to Rename", reply_to_message_id=message.id)
+            app.send_message(message.chat.id, "Error in Reading File/nUse **/rename new-filename** to Rename", reply_to_message_id=message.id)
         else:
             app.send_message(message.chat.id, "Error in Reading File", reply_to_message_id=message.id)
 
