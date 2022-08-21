@@ -405,7 +405,7 @@ def up(message,file,msg,video=False):
     if not video:
         app.send_document(message.chat.id, document=file, force_document=True ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
     else:
-        app.send_document(message.chat.id, video=file ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
+        app.send_video(message.chat.id, video=file ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
 
     os.remove(f'{message.id}upstatus.txt')
 
