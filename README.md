@@ -15,25 +15,25 @@ see the bot in action @filesconvertrobot (https://t.me/filesconvertrobot)
 
 ## Special Features
 
-**COLORIZE** - __Colorize your Old Images__
+**COLORIZE** - Colorize your Old Images
 
-**TEXT-to-IMAGE** - __Get AI created Images from your Prompt__
+**TEXT-to-IMAGE** - Get AI created Images from your Prompt
 
-**POSITIVE** - __Convert your Negetive Images to Positive__
+**POSITIVE** - Convert your Negetive Images to Positive
 
-**SPEECH-to-TEXT** - __Transcrpting from a Audio__
+**SPEECH-to-TEXT** - Transcrpting from a Audio
 
-**TEXT-to-SPEECH** - __Generate Speech from a Text File__
+**TEXT-to-SPEECH** - Generate Speech from a Text File
 
-**UPSCALE** - __Increase Resolution of a Image__
+**UPSCALE** - Increase Resolution of a Image
 
-**TEXT-to-VIDEO** - __Get AI created Videos from your Prompt__
+**TEXT-to-VIDEO** - Get AI created Videos from your Prompt
 
 ---
 
 ## Supported Formats
 
-__**IMAGES**:  OCR, ICO, GIF, TIFF, BMP, WEBP, JP2, JPEG, JPG, PNG
+**IMAGES**:  OCR, ICO, GIF, TIFF, BMP, WEBP, JP2, JPEG, JPG, PNG
 
 **VIDEOS/AUDIOS**:  AIFF, AAC, M4A, OGA, WMA, FLAC, WAV, OPUS, OGG, MP3, MKV, MP4, MOV, AVI, M4B, VOB, DVD, WEBM, WMV
 
@@ -41,7 +41,7 @@ __**IMAGES**:  OCR, ICO, GIF, TIFF, BMP, WEBP, JP2, JPEG, JPG, PNG
 
 **Fonts**:  SFD, BDF, FNT, OTF, PFA, PFB, TTC, TTF, UFO, WOFF
 
-**EBooks**:  EPUB, MOBI, AZW3, KFX, FB2, HTMLZ, LIT, LRF, PDB, PDF, TXT, ZIP__
+**EBooks**:  EPUB, MOBI, AZW3, KFX, FB2, HTMLZ, LIT, LRF, PDB, PDF, TXT, ZIP
 
 ---
 
