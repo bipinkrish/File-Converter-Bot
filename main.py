@@ -448,7 +448,7 @@ def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id,
-                     "**/start - To Check Availabe Conversions\n/help - This Message\n/dalle - Text to Image\n/cogvideo - Text to Video\n/cancel - To Cancel\n/source - Github Source Code\n**", reply_to_message_id=message.id)
+                     "**/start - To Check Availabe Conversions\n/help - This Message\n/dalle - Text to Image\n/cogvideo - Text to Video\n/cancel - To Cancel\n/rename - To Rename\n/source - Github Source Code\n**", reply_to_message_id=message.id)
     dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
     dm.start() 
 
