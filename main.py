@@ -216,10 +216,10 @@ def genrateimages(message,prompt):
     
     # requsting
     # mdhash = aifunctions.mindalle(prompt,AutoCall=False) # min dalle
-    ldhash = aifunctions.latdif(prompt,AutoCall=False) # latent 
+    # ldhash = aifunctions.latdif(prompt,AutoCall=False) # latent 
     filelist = aifunctions.dallemini(prompt) # dalle mini
-    latfile = aifunctions.latentdiff(prompt) # latent direct
-    imagelist = aifunctions.latdifstatus(ldhash,prompt) # latent get
+    # latfile = aifunctions.latentdiff(prompt) # latent direct
+    # imagelist = aifunctions.latdifstatus(ldhash,prompt) # latent get
     # mdfile = aifunctions.mindallestatus(mdhash,prompt) # min dalle get
 
     # dalle mini
@@ -230,12 +230,12 @@ def genrateimages(message,prompt):
     os.rmdir(prompt)
 
     # latent diffusion
-    app.send_message(message.chat.id,f"__LATENT DIFFUSION :__ **{prompt}**", reply_to_message_id=message.id)
-    app.send_document(message.chat.id,document=latfile,force_document=True)
-    os.remove(latfile)
-    for ele in imagelist:
-        app.send_document(message.chat.id,document=ele,force_document=True)
-        os.remove(ele)
+    # app.send_message(message.chat.id,f"__LATENT DIFFUSION :__ **{prompt}**", reply_to_message_id=message.id)
+    # app.send_document(message.chat.id,document=latfile,force_document=True)
+    # os.remove(latfile)
+    # for ele in imagelist:
+        # app.send_document(message.chat.id,document=ele,force_document=True)
+        # os.remove(ele)
         
     # min dalle
     # app.send_message(message.chat.id,f"__MIN-DALLE :__ **{prompt}**", reply_to_message_id=message.id)
