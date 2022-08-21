@@ -372,7 +372,15 @@ def rname(message,newname,oldm):
 # download with progress
 def down(message):
 
-    if int(str(message).split('"file_size":')[1].split("}")[0]) > 25000000:
+    try:
+        size = int(message.document.file_size)
+    except:
+        try:
+            size = int(message.video.file_size)
+        except:
+            size = int(message.audio.file_size)
+
+    if size > 25000000:
         msg = app.send_message(message.chat.id, 'Downloading...', reply_to_message_id=message.id)
         dosta = threading.Thread(target=lambda:downstatus(f'{message.id}downstatus.txt',msg),daemon=True)
         dosta.start()
@@ -387,13 +395,14 @@ def down(message):
 # uploading with progress
 def up(message,file,msg):
 
-    if int(str(message).split('"file_size":')[1].split("}")[0]) > 25000000:
+    if msg != None:
         app.edit_message_text(message.chat.id, msg.id, 'Uploading...')
         upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt',msg),daemon=True)
         upsta.start()
 
     app.send_video(message.chat.id, video=file, reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
     os.remove(f'{message.id}upstatus.txt')
+    
     if msg != None:
         app.delete_messages(message.chat.id,message_ids=[msg.id])
 
