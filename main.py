@@ -37,7 +37,7 @@ def follow(message,inputt,new,oldmessage):
         cmd = helperfunctions.ffmpegcommand(file,output,new)
 
         if msg != None:
-            app.edit_message_text(message.chat.id, msg.id, 'Converting...')
+            app.edit_message_text(message.chat.id, msg.id, '__Converting__')
 
         os.system(cmd)
         os.remove(file)
@@ -396,7 +396,7 @@ def down(message):
             size = int(message.audio.file_size)
 
     if size > 25000000:
-        msg = app.send_message(message.chat.id, 'Downloading...', reply_to_message_id=message.id)
+        msg = app.send_message(message.chat.id, '__Downloading__', reply_to_message_id=message.id)
         dosta = threading.Thread(target=lambda:downstatus(f'{message.id}downstatus.txt',msg),daemon=True)
         dosta.start()
     else:
@@ -411,7 +411,7 @@ def down(message):
 def up(message,file,msg,video=False,capt=None):
 
     if msg != None:
-        app.edit_message_text(message.chat.id, msg.id, 'Uploading...')
+        app.edit_message_text(message.chat.id, msg.id, '__Uploading__')
 
     if os.path.getsize(file) > 25000000:
         upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt',msg),daemon=True)
@@ -464,7 +464,7 @@ def upstatus(statusfile,message):
                 #txt = "0.0%"
 
         try:
-            app.edit_message_text(message.chat.id, message.id, f"Uploaded : {txt}")
+            app.edit_message_text(message.chat.id, message.id, f"__Uploaded__ : **{txt}**")
             #if txt == "100.0%":
                 #break
             time.sleep(10)
@@ -489,7 +489,7 @@ def downstatus(statusfile,message):
                 #txt = "0.0%"
 
         try:
-            app.edit_message_text(message.chat.id, message.id, f"Downloaded : {txt}")
+            app.edit_message_text(message.chat.id, message.id, f"__Downloaded__ : **{txt}**")
             #if txt == "100.0%":
                 #break
             time.sleep(10)
