@@ -29,6 +29,7 @@ def follow(message,inputt,new,oldmessage):
     output = helperfunctions.updtname(inputt,new)
 
     if output.upper().endswith(VIDAUD) and inputt.upper().endswith(VIDAUD):
+
         print("It is VID/AUD option")
 
         file,msg = down(message)
@@ -42,25 +43,28 @@ def follow(message,inputt,new,oldmessage):
         os.remove(file)
         conlink = helperfunctions.videoinfo(output)
 
-        try:
+        if os.path.exists(output):
+            caption=f'**Source File** : __{srclink}\n\n**Converted File** : __{conlink}__'
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            up(message,output,msg)
-        except:
+            up(message,output,msg,capt=caption)
+        else:
             app.send_message(message.chat.id,"Error while conversion", reply_to_message_id=message.id)
             
         os.remove(output)
 
     elif output.upper().endswith(IMG) and inputt.upper().endswith(IMG):
+
         print("It is IMG option")
         file = app.download_media(message)
         srclink = helperfunctions.imageinfo(file)
         cmd = helperfunctions.magickcommand(file,output,new)
         os.system(cmd)
         conlink = helperfunctions.imageinfo(output)
-        try:
+
+        if os.path.exists(output):
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            app.send_document(message.chat.id,document=output, force_document=True, caption=f'Source File : {srclink}\n\nConverted File : {conlink}', reply_to_message_id=message.id)
-        except:
+            app.send_document(message.chat.id,document=output, force_document=True, caption=f'**Source File** : __{srclink}\n\n**Converted File** : __{conlink}__', reply_to_message_id=message.id)
+        else:
             app.send_message(message.chat.id,"Error while conversion", reply_to_message_id=message.id)
             
         os.remove(output)
@@ -82,17 +86,20 @@ def follow(message,inputt,new,oldmessage):
         os.remove(file)
 
     elif output.upper().endswith(IMG) and inputt.upper().endswith("TGS"):
+
         if new == "webp" or new == "gif" or new == "png":
+
             print("It is Animated Sticker option")
             file = app.download_media(message)
             srclink = helperfunctions.imageinfo(file)        
             os.system(f'./tgsconverter "{file}" "{new}"')
             output = helperfunctions.updtname(file,new)
             conlink = helperfunctions.imageinfo(output)
-            try:
+
+            if os.path.exists(output):
                 app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-                app.send_document(message.chat.id,document=output, force_document=True, caption=f'Source File : {srclink}\n\nConverted File : {conlink}', reply_to_message_id=message.id)
-            except:
+                app.send_document(message.chat.id,document=output, force_document=True, caption=f'**Source File** : __{srclink}\n\n**Converted File** : __{conlink}__', reply_to_message_id=message.id)
+            else:
                 app.send_message(message.chat.id,"Error while conversion", reply_to_message_id=message.id)
 
             os.remove(file)
@@ -102,44 +109,50 @@ def follow(message,inputt,new,oldmessage):
             app.send_message(message.chat.id,"Only Availble Conversions for Animated Stickers are GIF, PNG and WEBP", reply_to_message_id=message.id)
 
     elif output.upper().endswith(EB) and inputt.upper().endswith(EB):
+
         print("It is Ebook option")
         file = app.download_media(message)
         cmd = helperfunctions.calibrecommand(file,output)
         os.system(cmd)
         os.remove(file)
-        try:
+
+        if os.path.exists(output):
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id, document=output, force_document=True, reply_to_message_id=message.id)
-        except:
+        else:
             app.send_message(message.chat.id,"Error while conversion", reply_to_message_id=message.id)
             
         os.remove(output)
 
     elif (output.upper().endswith(LBW) and inputt.upper().endswith(LBW)) or (output.upper().endswith(LBI) and inputt.upper().endswith(LBI)) or (output.upper().endswith(LBC) and inputt.upper().endswith(LBC)):
+        
         print("It is LibreOffice option")
         file = app.download_media(message)
         cmd = helperfunctions.libreofficecommand(file,new)
         os.system(cmd)
-        try:
+
+        if os.path.exists(output):
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, force_document=True, reply_to_message_id=message.id)
-        except:
+        else:
             app.send_message(message.chat.id,"Error while conversion", reply_to_message_id=message.id)
             
         os.remove(file)
         os.remove(output)
 
     elif output.upper().endswith(FF) and inputt.upper().endswith(FF):
+        
         print("It is FontForge option")
         file = app.download_media(message)
         cmd = helperfunctions.fontforgecommand(file,output,message)
         os.system(cmd)
         os.remove(f"{message.id}-convert.pe")
         os.remove(file)
-        try:
+
+        if os.path.exists(output):
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, force_document=True, reply_to_message_id=message.id)
-        except:
+        else:
             app.send_message(message.chat.id,"Error while conversion", reply_to_message_id=message.id)
             
         os.remove(output)
@@ -395,17 +408,26 @@ def down(message):
 
 
 # uploading with progress
-def up(message,file,msg,video=False):
+def up(message,file,msg,video=False,capt=None):
 
     if msg != None:
         app.edit_message_text(message.chat.id, msg.id, 'Uploading...')
+
+    if os.path.getsize(file) > 25000000:
         upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt',msg),daemon=True)
         upsta.start()
 
-    if not video:
-        app.send_document(message.chat.id, document=file, force_document=True ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
+    if capt == None:
+        if not video:
+            app.send_document(message.chat.id, document=file, force_document=True ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
+        else:
+            app.send_video(message.chat.id, video=file ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
     else:
-        app.send_video(message.chat.id, video=file ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
+        if not video:
+            app.send_document(message.chat.id, document=file, caption=capt, force_document=True ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
+        else:
+            app.send_video(message.chat.id, video=file, caption=capt, reply_to_message_id=message.id, progress=uprogress, progress_args=[message]) 
+
 
     os.remove(f'{message.id}upstatus.txt')
 
@@ -432,16 +454,19 @@ def upstatus(statusfile,message):
         if os.path.exists(statusfile):
             break
         
-    #time.sleep(5)
+    time.sleep(5)
     while os.path.exists(statusfile):
+
         with open(statusfile,"r") as upread:
             txt = upread.read()
-        if "%" not in txt:
-                txt = "0.0%"
+
+        #if "%" not in txt:
+                #txt = "0.0%"
+
         try:
             app.edit_message_text(message.chat.id, message.id, f"Uploaded : {txt}")
-            if txt == "100.0%":
-                break
+            #if txt == "100.0%":
+                #break
             time.sleep(10)
         except:
             time.sleep(5)
@@ -454,16 +479,19 @@ def downstatus(statusfile,message):
         if os.path.exists(statusfile):
             break
         
-    #time.sleep(5)  
+    time.sleep(5)
     while os.path.exists(statusfile):
+
         with open(statusfile,"r") as upread:
             txt = upread.read()
-        if "%" not in txt:
-                txt = "0.0%"
+        
+        #if "%" not in txt:
+                #txt = "0.0%"
+
         try:
             app.edit_message_text(message.chat.id, message.id, f"Downloaded : {txt}")
-            if txt == "100.0%":
-                break
+            #if txt == "100.0%":
+                #break
             time.sleep(10)
         except:
             time.sleep(5)
@@ -637,6 +665,7 @@ def annimations(client: pyrogram.client.Client, message: pyrogram.types.messages
 
 @app.on_message(filters.video)
 def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    
     try:
         if message.video.file_name.upper().endswith(VIDAUD):
             with open(f'{message.from_user.id}.json', 'wb') as handle:
@@ -648,6 +677,7 @@ def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
         else:
             app.send_message(message.chat.id, f'--**Available formats**--:\n\n**VIDEOS/AUDIOS** 📹 / 🔊\n{VA_TEXT}',
                             reply_to_message_id=message.id)
+   
     except:
         oldm = app.send_message(message.chat.id,'Turning it into Document then you can use that to Convert',reply_markup=ReplyKeyboardRemove())
         sd = threading.Thread(target=lambda:senddoc(message,oldm),daemon=True)
