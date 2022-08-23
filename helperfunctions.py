@@ -56,7 +56,7 @@ def tesrctcommand(inputt,out):
 # ffmpeg cmd
 def ffmpegcommand(inputt,output,new):
     #cmd = f'{ffmpeg} -i "{inputt}" "{output}"'
-    if new in  ["mp4", "mkv", "mov"] and not ".webm" in [inputt,output]:
+    if new in  ["mp4", "mkv", "mov"] and not (new == "mov" and ".webm" in inputt):
         cmd = f'ffmpeg -i "{inputt}" -c copy "{output}"'
     else:
         cmd = f'ffmpeg -i "{inputt}" "{output}"'
