@@ -43,7 +43,7 @@ def follow(message,inputt,new,oldmessage):
         os.remove(file)
         conlink = helperfunctions.videoinfo(output)
 
-        if os.path.exists(output):
+        if os.path.exists(output) and os.path.getsize(output) > 0:
             caption=f'**Source File** : __{srclink}\n\n**Converted File** : __{conlink}__'
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             up(message,output,msg,capt=caption)
@@ -61,7 +61,7 @@ def follow(message,inputt,new,oldmessage):
         os.system(cmd)
         conlink = helperfunctions.imageinfo(output)
 
-        if os.path.exists(output):
+        if os.path.exists(output) and os.path.getsize(output) > 0:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, force_document=True, caption=f'**Source File** : __{srclink}\n\n**Converted File** : __{conlink}__', reply_to_message_id=message.id)
         else:
@@ -96,7 +96,7 @@ def follow(message,inputt,new,oldmessage):
             output = helperfunctions.updtname(file,new)
             conlink = helperfunctions.imageinfo(output)
 
-            if os.path.exists(output):
+            if os.path.exists(output) and os.path.getsize(output) > 0:
                 app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
                 app.send_document(message.chat.id,document=output, force_document=True, caption=f'**Source File** : __{srclink}\n\n**Converted File** : __{conlink}__', reply_to_message_id=message.id)
             else:
@@ -116,7 +116,7 @@ def follow(message,inputt,new,oldmessage):
         os.system(cmd)
         os.remove(file)
 
-        if os.path.exists(output):
+        if os.path.exists(output) and os.path.getsize(output) > 0:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id, document=output, force_document=True, reply_to_message_id=message.id)
         else:
@@ -131,7 +131,7 @@ def follow(message,inputt,new,oldmessage):
         cmd = helperfunctions.libreofficecommand(file,new)
         os.system(cmd)
 
-        if os.path.exists(output):
+        if os.path.exists(output) and os.path.getsize(output) > 0:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, force_document=True, reply_to_message_id=message.id)
         else:
@@ -149,7 +149,7 @@ def follow(message,inputt,new,oldmessage):
         os.remove(f"{message.id}-convert.pe")
         os.remove(file)
 
-        if os.path.exists(output):
+        if os.path.exists(output) and os.path.getsize(output) > 0:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, force_document=True, reply_to_message_id=message.id)
         else:
