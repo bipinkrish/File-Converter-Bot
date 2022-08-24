@@ -8,7 +8,7 @@ RUN apt install libssl-dev libtesseract-dev libicu-dev libicu-dev libcairo2-dev 
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Kolkata
-RUN apt install -y tzdata wget zip unzip p7zip-full
+RUN apt install -y tzdata wget p7zip-full
 
 RUN apt install libreoffice -y
 RUN apt install default-jre libreoffice-java-common -y
@@ -24,6 +24,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 RUN apt-get install -y python3-numpy python3-pydot python3-matplotlib python3-opencv python3-graphviz python3-toolz
-RUN wget https://github.com/bipinkrish/Colorize-Positive-Bot/releases/download/Model/model.zip && unzip model.zip && rm model.zip
+RUN wget https://github.com/bipinkrish/Colorize-Positive-Bot/releases/download/Model/model.zip && 7z x model.zip && rm model.zip
 
 CMD ["python3","main.py"]
