@@ -1,15 +1,15 @@
 # File-Converter-Bot
 
-A Telegram Bot that can convert Images, Videos, Audios, Fonts, Documents and Ebooks.
+**A Telegram Bot that can convert Images, Videos, Audios, Fonts, Documents and Ebooks.**
 
-see the bot in action [@FilesConvertRobot](https://t.me/filesconvertrobot)
+**_see the bot in action [@FilesConvertRobot](https://t.me/filesconvertrobot)_**
 
 ---
 
 ## Variables
-- `HASH` **Your API Hash from my.telegram.org**
-- `ID` **Your API ID from my.telegram.org**
-- `TOKEN` **Your bot token from @BotFather**
+- `HASH` **_Your API Hash from my.telegram.org_**
+- `ID` **_Your API ID from my.telegram.org_**
+- `TOKEN` **_Your bot token from @BotFather_**
 
 ---
 
