@@ -4,6 +4,7 @@ from pyrogram import filters
 from pyrogram import enums
 
 import os
+import shutil
 import threading
 import pickle
 import time
@@ -316,15 +317,16 @@ def extract(message,oldm):
 
     with open(infofile, 'r') as f:
         lines = f.read()
-    last = lines.split("Everything is Ok")[-1]
+    last = lines.split("Everything is Ok\n\n")[-1]
     app.send_message(message.chat.id, f'__{last}__', reply_to_message_id=message.id)
 
     if os.path.exists(foldername):
         dir_list = helperfunctions.absoluteFilePaths(foldername)
         for ele in dir_list:
-            app.send_document(message.chat.id, document=ele, force_document=True, reply_to_message_id=message.id)
-            os.remove(ele)
-        os.rmdir(foldername)
+            if os.path.getsize(file) > 0:
+                app.send_document(message.chat.id, document=ele, force_document=True, reply_to_message_id=message.id)
+                os.remove(ele)
+        shutil.rmtree(foldername)
     else:
         app.send_message(message.chat.id, "**Unable to Extract**", reply_to_message_id=message.id)
     
