@@ -320,8 +320,8 @@ def extract(message,oldm):
     if os.path.exists(foldername):
         dir_list = os.listdir(foldername)
         for ele in dir_list:
-            app.send_document(message.chat.id, document=ele, force_document=True, reply_to_message_id=message.id)
-            os.remove(ele)
+            app.send_document(message.chat.id, document=f'{foldername}/{ele}', force_document=True, reply_to_message_id=message.id)
+            os.remove(f'{foldername}/{ele}')
         os.remove(foldername)
     else:
         app.send_message(message.chat.id, "**Unable to Extract**", reply_to_message_id=message.id)
@@ -417,7 +417,7 @@ def down(message):
         try:
             size = int(message.video.file_size)
         except:
-            size = int(message.audio.file_size)
+            size = 1
 
     if size > 25000000:
         msg = app.send_message(message.chat.id, '__Downloading__', reply_to_message_id=message.id)
