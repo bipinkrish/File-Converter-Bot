@@ -15,7 +15,7 @@ see the bot in action [@FilesConvertRobot](https://t.me/filesconvertrobot)
 
 ## Special Features
 
-**COLORIZE** - Colorize your Old Images
+**COLORIZE** - *Colorize your Old Images*
 
 **TEXT-to-IMAGE** - Get AI created Images from your Prompt
 
