@@ -86,34 +86,19 @@ def magickcommand(inputt,output,new):
 
 # 7zip cmd
 def zipcommand(file,message):
-    cmd = f'7z x "{file}" -o{message.id}z'
+    cmd = f'7z x "{file}" -o{message.id}z > {message.id}zl'
     print("Command to be Executed is")
     print(cmd)
-    return cmd, f'{message.id}z'
+    return cmd, f'{message.id}z', f'{message.id}zl'
 
 
-# zip info
-def ziplist(file,message):
-    os.system(f'7z l "{file}" > {message.id}zl')
-    with open(f'{message.id}zl', 'r') as f:
-        lines = f.read().splitlines()
-    last_line = lines[-1]
-    os.remove(f'{message.id}zl')
-    text = ''
-    if "folders" in last_line:
-        fld = last_line[-2]
-        text = f'**{fld}** __Folders__\n'
-        i = 2
-    else:
-        i = 0 
-
-    last_line = last_line.split(" ")
-    fil = last_line[-(2+i)]
-    com = last_line[-(4+i)]
-    siz = last_line[-(10+i)]
-
-    text = f'{text}**{fil}** __Files__\n**{com}** __Compressed Size__\n**{siz}** __Actual Size__'
-    return text
+# get files
+def absoluteFilePaths(directory):
+    listt = []
+    for dirpath,_,filenames in os.walk(directory):
+        for f in filenames:
+            listt.append(os.path.abspath(os.path.join(dirpath, f)))
+    return listt
 
 
 # new file name

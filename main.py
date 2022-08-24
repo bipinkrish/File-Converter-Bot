@@ -310,18 +310,20 @@ def sendphoto(message,oldmessage):
 # extract file
 def extract(message,oldm):
     file = app.download_media(message)
-    txt = helperfunctions.ziplist(file,message)
-    app.send_message(message.chat.id, txt, reply_to_message_id=message.id)
-
-    cmd,foldername = helperfunctions.zipcommand(file,message)
+    cmd,foldername,infofile = helperfunctions.zipcommand(file,message)
     os.system(cmd)
     os.remove(file)
 
+    with open(infofile, 'r') as f:
+        lines = f.read()
+    last = lines.split("Everything is Ok")[-1]
+    app.send_message(message.chat.id, f'__{last}__', reply_to_message_id=message.id)
+
     if os.path.exists(foldername):
-        dir_list = os.listdir(foldername)
+        dir_list = helperfunctions.absoluteFilePaths(foldername)
         for ele in dir_list:
-            app.send_document(message.chat.id, document=f'{foldername}/{ele}', force_document=True, reply_to_message_id=message.id)
-            os.remove(f'{foldername}/{ele}')
+            app.send_document(message.chat.id, document=ele, force_document=True, reply_to_message_id=message.id)
+            os.remove(ele)
         os.rmdir(foldername)
     else:
         app.send_message(message.chat.id, "**Unable to Extract**", reply_to_message_id=message.id)
