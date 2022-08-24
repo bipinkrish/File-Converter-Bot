@@ -24,9 +24,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # RUN apt-get install software-properties-common -y
-RUN apt update && apt-get upgrade -y
-RUN add-apt-repository universe
-RUN apt update && apt-get upgrade -y
+# RUN apt update && apt-get upgrade -y
+# RUN add-apt-repository universe
+# RUN apt update && apt-get upgrade -y
 RUN apt install -y p7zip-full p7zip-rar
 RUN apt-get install -y python3-numpy python3-pydot python3-matplotlib python3-opencv python3-graphviz python3-toolz
 RUN wget https://github.com/bipinkrish/Colorize-Positive-Bot/releases/download/Model/model.zip && unzip model.zip && rm model.zip
