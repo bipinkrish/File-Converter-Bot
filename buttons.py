@@ -9,7 +9,8 @@ LBW = ("ODT","DOC","DOCX","DOTX","PDF","XML","HTML","DOTM","WPS","OTT","TXT")
 LBI = ("ODP","PPT","PPTX","PPTM","PPSX","POTM","POTX","PPS","POT","ODG","OTP","XML","PDF")
 LBC = ("ODS","XLS","HTML","XLSX","XLSM","XLTM","XLTX","OTS","XML","PDF","CSV","XLM")
 FF = ("SFD","BDF","FNT","OTF","PFA","PFB","TTC","TTF","UFO","WOFF")
-EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT","ZIP")
+EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT")
+ARC = ("ZIP","RAR","7Z","TAR","XZ")
 
 # buttons
 VAboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
@@ -132,13 +133,17 @@ ReplyButton('LIT'),
 ReplyButton('LRF'),
 ReplyButton('PDB'),
 ReplyButton('PDF'),
-ReplyButton('TXT'),
-ReplyButton('ZIP')
+ReplyButton('TXT')
+            )
+
+ARCboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
+ARCboard.add(           
+ReplyButton('EXTRACT'),
             )
 
 
 # texts
-START_TEXT = f'--**Available formats**--\n\n**IMAGES** 📷 \n{helperfunctions.give_name(IMG)}\n\n**SPECIAL** 🎁 \nCOLORIZE & POSITIVE\n\n**VIDEOS/AUDIOS** 📹 / 🔊 \n{helperfunctions.give_name(VIDAUD)}\n\n**Documents** 💼 \n{helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}\n\n**Fonts** 🔤 \n{helperfunctions.give_name(FF)}\n\n**EBooks** 📚 \n{helperfunctions.give_name(EB)}'
+START_TEXT = f'--**Available formats**--\n\n**IMAGES** 📷 \n__{helperfunctions.give_name(IMG)}__\n\n**SPECIAL** 🎁 \n__COLORIZE, POSITIVE, UPSCALE, AI IMAGE & AI VIDEO__\n\n**VIDEOS/AUDIOS** 📹 / 🔊 \n__{helperfunctions.give_name(VIDAUD)}__\n\n**Documents** 💼 \n__{helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}__\n\n**Fonts** 🔤 \n__{helperfunctions.give_name(FF)}__\n\n**EBooks** 📚 \n__{helperfunctions.give_name(EB)}__'
 VA_TEXT = helperfunctions.give_name(VIDAUD)
 IMG_TEXT = helperfunctions.give_name(IMG)
 LBW_TEXT = helperfunctions.give_name(LBW)
@@ -146,3 +151,4 @@ LBC_TEXT = helperfunctions.give_name(LBC)
 LBI_TEXT = helperfunctions.give_name(LBI)
 FF_TEXT = helperfunctions.give_name(FF)
 EB_TEXT = helperfunctions.give_name(EB)
+ARC_TEXT = helperfunctions.give_name(ARC)

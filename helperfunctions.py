@@ -1,4 +1,4 @@
-import os.path
+import os
 from telegraph import Telegraph
 
 # setting
@@ -82,6 +82,38 @@ def magickcommand(inputt,output,new):
     print("Command to be Executed is")
     print(cmd)
     return cmd  
+
+
+# 7zip cmd
+def zipcommand(file,message):
+    cmd = f'7z x "{file}" -o{message.id}z'
+    print("Command to be Executed is")
+    print(cmd)
+    return cmd, f'{message.id}z'
+
+
+# zip info
+def ziplist(file,message):
+    os.system(f'7z l "{file}" > {message.id}zl')
+    with open(f'{message.id}zl', 'r') as f:
+        lines = f.read().splitlines()
+    last_line = lines[-1]
+
+    text = ''
+    if "folders" in last_line:
+        fld = last_line[-2]
+        text = f'**{fld}** __Folders__\n'
+        i = 2
+    else:
+        i = 0 
+
+    last_line = last_line.split(" ")
+    fil = last_line[-(2+i)]
+    com = last_line[-(4+i)]
+    siz = last_line[-(10+i)]
+
+    text = f'{text}**{fil}** __Files__\n**{com}** __Compressed Size__\n**{siz}** __Actual Size__'
+    return text
 
 
 # new file name
