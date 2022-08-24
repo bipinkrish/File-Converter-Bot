@@ -323,7 +323,7 @@ def extract(message,oldm):
     if os.path.exists(foldername):
         dir_list = helperfunctions.absoluteFilePaths(foldername)
         for ele in dir_list:
-            if os.path.getsize(file) > 0:
+            if os.path.getsize(ele) > 0:
                 app.send_document(message.chat.id, document=ele, force_document=True, reply_to_message_id=message.id)
                 os.remove(ele)
         shutil.rmtree(foldername)
