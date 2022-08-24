@@ -23,7 +23,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
-RUN apt-get install software-properties-common -y
+# RUN apt-get install software-properties-common -y
 RUN apt update && apt-get upgrade -y
 RUN add-apt-repository universe
 RUN apt update && apt-get upgrade -y
