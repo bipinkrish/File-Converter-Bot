@@ -98,7 +98,7 @@ def ziplist(file,message):
     with open(f'{message.id}zl', 'r') as f:
         lines = f.read().splitlines()
     last_line = lines[-1]
-
+    os.remove{f'{message.id}zl')
     text = ''
     if "folders" in last_line:
         fld = last_line[-2]
