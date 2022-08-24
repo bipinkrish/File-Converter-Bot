@@ -322,7 +322,7 @@ def extract(message,oldm):
         for ele in dir_list:
             app.send_document(message.chat.id, document=f'"{foldername}/{ele}"', force_document=True, reply_to_message_id=message.id)
             os.remove(f'"{foldername}/{ele}"')
-        os.remove(foldername)
+        os.rmdir(foldername)
     else:
         app.send_message(message.chat.id, "**Unable to Extract**", reply_to_message_id=message.id)
     
