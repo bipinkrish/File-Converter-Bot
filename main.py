@@ -163,7 +163,7 @@ def follow(message,inputt,new,oldmessage):
         app.send_message(message.chat.id,"Send me valid Extension", reply_to_message_id=message.id)
 
     # deleting message    
-    app.delete_messages(message.chat.id,message_ids=[oldmessage.id+1])
+    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
 
 
 # negative to positive
@@ -317,19 +317,27 @@ def extract(message,oldm):
 
     with open(infofile, 'r') as f:
         lines = f.read()
-    last = lines.split("Everything is Ok\n\n")[-1]
-    app.send_message(message.chat.id, f'__{last}__', reply_to_message_id=message.id)
+    last = lines.split("Everything is Ok\n\n")[-1].replace("      ","")
+    
 
     if os.path.exists(foldername):
         dir_list = helperfunctions.absoluteFilePaths(foldername)
+        if len(dir_list) > 30:
+            app.send_message(message.chat.id, f"**Number of Files is {len(dir_list)} which is More than the Limit of 30**", reply_to_message_id=message.id)
+            return
+
         for ele in dir_list:
             if os.path.getsize(ele) > 0:
                 app.send_document(message.chat.id, document=ele, force_document=True, reply_to_message_id=message.id)
                 os.remove(ele)
+            else:
+                app.send_message(message.chat.id, f'**File {ele.split("/")[-1]} is Skipped because it is 0 bytes**', reply_to_message_id=message.id)
+        
+        app.send_message(message.chat.id, f'__{last}__', reply_to_message_id=message.id)
         shutil.rmtree(foldername)
     else:
         app.send_message(message.chat.id, "**Unable to Extract**", reply_to_message_id=message.id)
-    
+
     app.delete_messages(message.chat.id, message_ids=[oldm.id])
 
 
@@ -337,6 +345,7 @@ def extract(message,oldm):
 def makefile(message,oldmessage):
     text = message.text.split("\n")
     firstline = text[0]
+    firstline = "".join( x for x in firstline if (x.isalnum() or x in "._-@ "))
     text.remove(text[0])
     
     message.text = ""
@@ -345,9 +354,10 @@ def makefile(message,oldmessage):
     
     with open(firstline,"w") as file:
         file.write(message.text)
-    try:
+
+    if os.path.exists(firstline) and os.path.getsize(firstline) > 0:
         app.send_document(message.chat.id, document=firstline, reply_to_message_id=message.id)
-    except:
+    else:
         app.send_message(message.chat.id, "Makefile takes first line of your Text as Filename and File content will start from Second line", reply_to_message_id=message.id)
 
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
@@ -545,7 +555,7 @@ def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 #source
 @app.on_message(filters.command(['source']))
 def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    oldm = app.send_message(message.chat.id, "**GITHUB - https://github.com/bipinkrish/File-Converter-Bot**", disable_web_page_preview=True, reply_to_message_id=message.id)
+    oldm = app.send_message(message.chat.id, "**__GITHUB__ - https://github.com/bipinkrish/File-Converter-Bot**", disable_web_page_preview=True, reply_to_message_id=message.id)
     dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
     dm.start() 
 
@@ -562,12 +572,12 @@ def rename(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
     if os.path.exists(f'{message.from_user.id}.json'):
         with open(f'{message.from_user.id}.json', 'rb') as handle:
             nmessage = pickle.loads(handle.read())
-        oldm = app.send_message(message.chat.id, "Renaming", reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+        oldm = app.send_message(message.chat.id, "__Renaming__", reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
         rn = threading.Thread(target=lambda:rname(nmessage,newname,oldm),daemon=True)
         rn.start() 
         os.remove(f'{message.from_user.id}.json')
     else:
-        app.send_message(message.chat.id, "You need to send me a File first", reply_to_message_id=message.id)   
+        app.send_message(message.chat.id, "__You need to send me a File first__", reply_to_message_id=message.id)   
 
 
 
@@ -592,11 +602,11 @@ def getpompt(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 	try:
 		prompt = message.text.split("/imagegen ")[1]
 	except:
-		app.send_message(message.chat.id,'Send Prompt with Command,\nUssage : **/imagegen high defination studio image of pokemon**', reply_to_message_id=message.id)
+		app.send_message(message.chat.id,'__Send Prompt with Command,\nUssage :__ **/imagegen high defination studio image of pokemon**', reply_to_message_id=message.id)
 		return	
 
 	# threding	
-	app.send_message(message.chat.id,"Prompt received and Request is sent. Waiting time is 1-2 mins", reply_to_message_id=message.id)
+	app.send_message(message.chat.id,"__Prompt received and Request is sent. Waiting time is 1-2 mins__", reply_to_message_id=message.id)
 	ai = threading.Thread(target=lambda:genrateimages(message,prompt),daemon=True)
 	ai.start()
 
@@ -799,56 +809,56 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
         if "READ" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Reading File',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            oldm = app.send_message(message.chat.id,'__**Reading File**__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             rf = threading.Thread(target=lambda:readf(nmessage,oldm),daemon=True)
             rf.start()
             return
 
         if "SENDPHOTO" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Sending Photo',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            oldm = app.send_message(message.chat.id,'**__Sending in Photo Format**__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             sp = threading.Thread(target=lambda:sendphoto(nmessage,oldm),daemon=True)
             sp.start()
             return
 
         if "SENDDOC" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Sending Document',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            oldm = app.send_message(message.chat.id,'__**Sending in Document Format**__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             sd = threading.Thread(target=lambda:senddoc(nmessage,oldm),daemon=True)
             sd.start()
             return    
 
         if "SENDVID" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Sending Video',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            oldm = app.send_message(message.chat.id,'__**Sending in Stream Format**__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             sv = threading.Thread(target=lambda:sendvideo(nmessage,oldm),daemon=True)
             sv.start()
             return
 
         if "SpeechToText" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Transcripting, takes long time for Long Files',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            oldm = app.send_message(message.chat.id,'__**Transcripting, takes long time for Long Files**__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             stt = threading.Thread(target=lambda:transcript(nmessage,oldm),daemon=True)
             stt.start()
             return
 
         if "TextToSpeech" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Generating Speech',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            oldm = app.send_message(message.chat.id,'__**Generating Speech**__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             tts = threading.Thread(target=lambda:speak(nmessage,oldm),daemon=True)
             tts.start()
             return
 
         if "UPSCALE" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Upscaling Your Image',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            oldm = app.send_message(message.chat.id,'__**Upscaling Your Image__**',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             upscl = threading.Thread(target=lambda:increaseres(nmessage,oldm),daemon=True)
             upscl.start()
             return
 
         if "EXTRACT" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'Extracting File',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            oldm = app.send_message(message.chat.id,'__**Extracting File**__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             ex = threading.Thread(target=lambda:extract(nmessage,oldm),daemon=True)
             ex.start()
             return 
@@ -902,16 +912,16 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         #if newext == "ico":
             #app.send_message(message.chat.id, "Warning: for ICO, image will be resized and made multi-resolution", reply_to_message_id=message.id)
         
-        app.send_message(message.chat.id, f'Converting from **{oldext.upper()}** to **{newext.upper()}**', reply_to_message_id=nmessage.id, reply_markup=ReplyKeyboardRemove())
+        msg = app.send_message(message.chat.id, f'Converting from **{oldext.upper()}** to **{newext.upper()}**', reply_to_message_id=nmessage.id, reply_markup=ReplyKeyboardRemove())
         app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
 
-        conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext, message), daemon=True)
+        conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext, msg), daemon=True)
         conv.start()
 
     else:
         if message.from_user.id == message.chat.id:
             #app.send_message(message.chat.id, "First send me a File", reply_to_message_id=message.id)
-            oldm = app.send_message(message.chat.id,'Making File',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+            oldm = app.send_message(message.chat.id,'__**Making File**__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
             mf = threading.Thread(target=lambda:makefile(message,oldm),daemon=True)
             mf.start()
             
