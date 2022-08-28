@@ -107,7 +107,7 @@ def follow(message,inputt,new,oldmessage):
             os.remove(output)
             
         else:
-            app.send_message(message.chat.id,"Only Availble Conversions for Animated Stickers are GIF, PNG and WEBP", reply_to_message_id=message.id)
+            app.send_message(message.chat.id,"__Only Availble Conversions for Animated Stickers are **GIF, PNG** and **WEBP**__", reply_to_message_id=message.id)
 
     elif output.upper().endswith(EB) and inputt.upper().endswith(EB):
 
@@ -246,7 +246,7 @@ def genrateimages(message,prompt):
 def genratevideos(message,prompt):
 
     hash, queuepos = aifunctions.cogvideo(prompt,AutoCall=False)
-    msg = app.send_message(message.chat.id,f"Prompt received and Request is sent. Expected waiting time is {(queuepos+1)*3} mins", reply_to_message_id=message.id)
+    msg = app.send_message(message.chat.id,f"**Prompt received and Request is sent. Expected waiting time is {(queuepos+1)*3} mins**", reply_to_message_id=message.id)
 
     file = aifunctions.cogvideostatus(hash,prompt)
     app.send_video(message.chat.id, video=file, reply_to_message_id=message.id) #,caption=f"COGVIDEO : {prompt}")
@@ -275,9 +275,9 @@ def readf(message,oldmessage,allowrename=False):
         if allowrename:
             with open(f'{message.from_user.id}.json', 'wb') as handle:
                 pickle.dump(message, handle)
-            app.send_message(message.chat.id, "Error in Reading File\nUse **/rename new-filename** to Rename", reply_to_message_id=message.id)
+            app.send_message(message.chat.id, "__Error in Reading File\nUse__ **/rename new-filename** __to Rename__", reply_to_message_id=message.id)
         else:
-            app.send_message(message.chat.id, "Error in Reading File", reply_to_message_id=message.id)
+            app.send_message(message.chat.id, "__Error in Reading File__", reply_to_message_id=message.id)
 
     os.remove(file)
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
@@ -331,7 +331,7 @@ def extract(message,oldm):
                 app.send_document(message.chat.id, document=ele, force_document=True, reply_to_message_id=message.id)
                 os.remove(ele)
             else:
-                app.send_message(message.chat.id, f'**File {ele.split("/")[-1]} is Skipped because it is 0 bytes**', reply_to_message_id=message.id)
+                app.send_message(message.chat.id, f'**{ele.split("/")[-1]}** __is Skipped because it is 0 bytes__', reply_to_message_id=message.id)
         
         app.send_message(message.chat.id, f'__{last}__', reply_to_message_id=message.id)
         shutil.rmtree(foldername)
@@ -358,7 +358,7 @@ def makefile(message,oldmessage):
     if os.path.exists(firstline) and os.path.getsize(firstline) > 0:
         app.send_document(message.chat.id, document=firstline, reply_to_message_id=message.id)
     else:
-        app.send_message(message.chat.id, "Makefile takes first line of your Text as Filename and File content will start from Second line", reply_to_message_id=message.id)
+        app.send_message(message.chat.id, "**Makefile takes first line of your Text as Filename and File content will start from Second line**", reply_to_message_id=message.id)
 
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
     os.remove(firstline)      	    
@@ -547,7 +547,7 @@ def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id,
-                     "**/start - To Check Availabe Conversions\n/help - This Message\n/dalle - Text to Image\n/cogvideo - Text to Video\n/cancel - To Cancel\n/rename - To Rename\n/source - Github Source Code\n**", reply_to_message_id=message.id)
+                     "**/start - To Check Availabe Conversions\n/help - This Message\n/imagegen - Text to Image\n/videogen - Text to Video\n/cancel - To Cancel\n/rename - To Rename\n/source - Github Source Code\n**", reply_to_message_id=message.id)
     dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
     dm.start() 
 
@@ -566,7 +566,7 @@ def rename(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
     try:
         newname = message.text.split("/rename ")[1]
     except:
-        app.send_message(message.chat.id, "Usage: **/rename new-file-name** (with extension)", reply_to_message_id=message.id)
+        app.send_message(message.chat.id, "__Usage: **/rename new-file-name**\n(with extension)__", reply_to_message_id=message.id)
         return
 
     if os.path.exists(f'{message.from_user.id}.json'):
@@ -637,7 +637,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** 📹 / 🔊\nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{VA_TEXT}__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                         f'__Detected Extension:__ **{dext}** 📹 / 🔊\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{VA_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=VAboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(IMG):
@@ -645,7 +645,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** 📷\nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                         f'__Detected Extension:__ **{dext}** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=IMGboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(LBW):
@@ -653,7 +653,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** 💼 \nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{LBW_TEXT}__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                         f'__Detected Extension:__ **{dext}** 💼 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{LBW_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=LBWboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(LBC):
@@ -661,7 +661,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** 💼 \nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{LBC_TEXT}__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                         f'__Detected Extension:__ **{dext}** 💼 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{LBC_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=LBCboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(LBI):
@@ -669,7 +669,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** 💼 \nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{LBI_TEXT}__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                         f'__Detected Extension:__ **{dext}** 💼 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{LBI_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=LBIboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(FF):
@@ -677,7 +677,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** 🔤 \nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{FF_TEXT}__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                         f'__Detected Extension:__ **{dext}** 🔤 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{FF_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=FFboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(EB):
@@ -685,7 +685,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** 📚 \nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{EB_TEXT}__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                         f'__Detected Extension:__ **{dext}** 📚 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{EB_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=EBboard, reply_to_message_id=message.id)
 
     elif message.document.file_name.upper().endswith(ARC):
@@ -693,18 +693,18 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
             pickle.dump(message, handle)
         dext = message.document.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** 🗄\nDo you want to Extract ?\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                         f'__Detected Extension:__ **{dext}** 🗄\n__Do you want to Extract ?__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=ARCboard, reply_to_message_id=message.id)
 
     else:
-        oldm = app.send_message(message.chat.id,'No Available Conversions Found, Trying to Read File',reply_markup=ReplyKeyboardRemove())
+        oldm = app.send_message(message.chat.id,'**No Available Conversions Found, Trying to Read File**',reply_markup=ReplyKeyboardRemove())
         rf = threading.Thread(target=lambda:readf(message,oldm,allowrename=True),daemon=True)
         rf.start()
 
 
 @app.on_message(filters.animation)
 def annimations(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    oldm = app.send_message(message.chat.id,'Turning it into Document then you can use that to Convert',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+    oldm = app.send_message(message.chat.id,'**Turning it into Document then you can use that to Convert**',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
     sd = threading.Thread(target=lambda:senddoc(message,oldm),daemon=True)
     sd.start()
 
@@ -718,14 +718,14 @@ def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
                 pickle.dump(message, handle)
             dext = message.video.file_name.split(".")[-1].upper()
             app.send_message(message.chat.id,
-                            f'Detected Extension: **{dext}** 📹 / 🔊\nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{VA_TEXT}__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                            f'__Detected Extension:__ **{dext}** 📹 / 🔊\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{VA_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                             reply_markup=VAboard, reply_to_message_id=message.id)
         else:
             app.send_message(message.chat.id, f'--**Available formats**--:\n\n**VIDEOS/AUDIOS** 📹 / 🔊\n__{VA_TEXT}__',
                             reply_to_message_id=message.id)
    
     except:
-        oldm = app.send_message(message.chat.id,'Turning it into Document then you can use that to Convert',reply_markup=ReplyKeyboardRemove())
+        oldm = app.send_message(message.chat.id,'**Turning it into Document then you can use that to Convert**',reply_markup=ReplyKeyboardRemove())
         sd = threading.Thread(target=lambda:senddoc(message,oldm),daemon=True)
         sd.start()
 
@@ -735,7 +735,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                f'Detected Extension: **MP4** 📹 / 🔊\nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{VA_TEXT}__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                f'__Detected Extension:__ **MP4** 📹 / 🔊\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{VA_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                 reply_markup=VAboard, reply_to_message_id=message.id)
 
 
@@ -746,7 +746,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
             pickle.dump(message, handle)
         dext = message.audio.file_name.split(".")[-1].upper()
         app.send_message(message.chat.id,
-                         f'Detected Extension: **{dext}** 📹 / 🔊\nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{VA_TEXT}__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                         f'__Detected Extension:__ **{dext}** 📹 / 🔊\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{VA_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=VAboard, reply_to_message_id=message.id)
     else:
         app.send_message(message.chat.id, f'--**Available formats**--:\n\n**VIDEOS/AUDIOS** 📹 / 🔊 \n__{VIDAUD}__',
@@ -758,7 +758,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                f'Detected Extension: **OGG** 📹 / 🔊\nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{VA_TEXT}__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                f'__Detected Extension:__ **OGG** 📹 / 🔊\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{VA_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                 reply_markup=VAboard, reply_to_message_id=message.id)
 
 
@@ -767,7 +767,7 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                     f'Detected Extension: **JPG** 📷\nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                     f'__Detected Extension:__ **JPG** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
@@ -777,11 +777,11 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
             pickle.dump(message, handle)
     if not message.sticker.is_animated and not message.sticker.is_video:
         app.send_message(message.chat.id,
-                     f'Detected Extension: **WEBP** 📷\nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                     f'__Detected Extension:__ **WEBP** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
     else:
         app.send_message(message.chat.id,
-                    f'Detected Extension: **TGS** 📷\nNow send extension to Convert to...\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} choose or click /cancel to Cancel or use /rename new-filename to rename',
+                    f'__Detected Extension:__ **TGS** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                     reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
@@ -795,7 +795,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
         if "COLOR" == message.text or "POSITIVE" == message.text:
 
-            oldm = app.send_message(message.chat.id,'Processing',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id) 
+            oldm = app.send_message(message.chat.id,'__**Processing**__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id) 
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
 
             if "COLOR" in message.text:

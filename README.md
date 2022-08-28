@@ -43,7 +43,7 @@
 
 **EBooks**:  *EPUB, MOBI, AZW3, KFX, FB2, HTMLZ, LIT, LRF, PDB, PDF, TXT*
 
-**Archive**:  *ZIP, RAR, 7Z, TAR, XY*
+**Archives**:  *ZIP, RAR, 7Z, TAR, XY, GZ, BZ*
 
 ---
 
