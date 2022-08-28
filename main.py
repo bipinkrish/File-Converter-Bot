@@ -136,7 +136,7 @@ def follow(message,inputt,new,oldmessage):
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, force_document=True, reply_to_message_id=message.id)
         else:
-            app.send_message(message.chat.id,"Error while conversion", reply_to_message_id=message.id)
+            app.send_message(message.chat.id,"**Error while conversion**", reply_to_message_id=message.id)
             if msg != None:
                 app.delete_messages(message.chat.id,message_ids=[msg.id])
             
@@ -159,8 +159,9 @@ def follow(message,inputt,new,oldmessage):
             app.send_message(message.chat.id,"**Error while Conversion**", reply_to_message_id=message.id)
             
         os.remove(output)
+    
     else:
-        app.send_message(message.chat.id,"Send me valid Extension", reply_to_message_id=message.id)
+        app.send_message(message.chat.id,"**Choose a Valid Extension, don't Type it**", reply_to_message_id=message.id)
 
     # deleting message    
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
@@ -294,8 +295,9 @@ def sendvideo(message,oldmessage):
 
 # send document
 def senddoc(message,oldmessage):
-    file = app.download_media(message)
-    app.send_document(message.chat.id, document=file, force_document=True, reply_to_message_id=message.id)
+    file, msg = down(message)
+    up(message, file, msg)
+
     app.delete_messages(message.chat.id, message_ids=[oldmessage.id])
     os.remove(file)
 
