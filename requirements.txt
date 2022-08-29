@@ -10,3 +10,4 @@ requests
 SpeechRecognition
 pydub
 gTTS
+Pillow

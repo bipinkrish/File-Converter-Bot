@@ -12,6 +12,7 @@ import time
 from buttons import *
 import aifunctions
 import helperfunctions
+import mediainfo
 
 
 # env
@@ -287,7 +288,8 @@ def readf(message,oldmessage,allowrename=False):
 # send video
 def sendvideo(message,oldmessage):
     file, msg = down(message)
-    up(message, file, msg, video=True)
+    thumb,duration,width,height = mediainfo.allinfo(file)
+    up(message, file, msg, video=True, thumb=thumb, duration=duration, height=height, widht=width)
 
     app.delete_messages(message.chat.id, message_ids=[oldmessage.id])
     os.remove(file)
@@ -448,7 +450,7 @@ def down(message):
 
 
 # uploading with progress
-def up(message,file,msg,video=False,capt=None):
+def up(message, file, msg, video=False, capt="", thumb=None, duration=0, widht=0, height=0):
 
     if msg != None:
         app.edit_message_text(message.chat.id, msg.id, '__Uploading__')
@@ -457,20 +459,14 @@ def up(message,file,msg,video=False,capt=None):
         upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt',msg),daemon=True)
         upsta.start()
 
-    if capt == None:
-        if not video:
-            app.send_document(message.chat.id, document=file, force_document=True ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
-        else:
-            app.send_video(message.chat.id, video=file ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
+    if not video:
+        app.send_document(message.chat.id, document=file, caption=capt, force_document=True ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
     else:
-        if not video:
-            app.send_document(message.chat.id, document=file, caption=capt, force_document=True ,reply_to_message_id=message.id, progress=uprogress, progress_args=[message])    
-        else:
-            app.send_video(message.chat.id, video=file, caption=capt, reply_to_message_id=message.id, progress=uprogress, progress_args=[message]) 
+        app.send_video(message.chat.id, video=file, caption=capt, thumb=thumb, duration=duration, width=widht, height=height, reply_to_message_id=message.id, progress=uprogress, progress_args=[message]) 
 
-
+    if thumb != None:
+        os.remove(thumb)
     os.remove(f'{message.id}upstatus.txt')
-
     if msg != None:
         app.delete_messages(message.chat.id,message_ids=[msg.id])
 
