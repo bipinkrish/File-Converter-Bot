@@ -37,7 +37,7 @@
 
 **VIDEOS/AUDIOS**:  *AIFF, AAC, M4A, OGA, WMA, FLAC, WAV, OPUS, OGG, MP3, MKV, MP4, MOV, AVI, M4B, VOB, DVD, WEBM, WMV*
 
-**Documents**: *ODT, DOC, DOCX, DOTX, PDF, XML, HTML, DOTM, WPS, OTT, TXT, ODP, PPT, PPTX, PPTM, PPSX, POTM, POTX, PPS, POT, ODG, OTP, XML, PDF, ODS, XLS, HTML, XLSX, XLSM, XLTM, XLTX, OTS, XML, PDF, CSV, XLM*
+**Documents**: *ODT, DOC, DOCX, DOTX, PDF, XML, HTML, DOTM, WPS, OTT, TXT, ODP, PPT, PPTX, PPTM, PPSX, POTM, POTX, PPS, POT, ODG, OTP, XML, ODS, XLS, HTML, XLSX, XLSM, XLTM, XLTX, OTS, XML, CSV, XLM*
 
 **Fonts**:  *SFD, BDF, FNT, OTF, PFA, PFB, TTC, TTF, UFO, WOFF*
 
@@ -47,9 +47,14 @@
 
 ---
 
+## Extra Features
+
+**/play** - *Play a Game with Bot*
+
+**Save Restricted** - *Send a Resctircted Public Chat's Document Link, Bot will Send you that Document*
+
+---
+
 # Deploy
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/p9CtdU?referralCode=_4oAwx)
-
-
-

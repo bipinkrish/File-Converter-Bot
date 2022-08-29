@@ -2,17 +2,20 @@ import pyrogram
 from pyrogram import Client
 from pyrogram import filters
 from pyrogram import enums
+from pyrogram.types import InlineKeyboardMarkup,InlineKeyboardButton
 
 import os
 import shutil
 import threading
 import pickle
 import time
+import random
 
 from buttons import *
 import aifunctions
 import helperfunctions
 import mediainfo
+import guess
 
 
 # env
@@ -257,9 +260,9 @@ def genratevideos(message,prompt):
 
 
 # delete msg
-def dltmsg(message,sec=15):
+def dltmsg(umsg,rmsg,sec=15):
     time.sleep(sec)
-    app.delete_messages(message.chat.id,message_ids=[message.id,message.id-1])
+    app.delete_messages(umsg.chat.id,message_ids=[umsg.id,rmsg.id])
 
 
 # read file
@@ -289,7 +292,7 @@ def readf(message,oldmessage,allowrename=False):
 def sendvideo(message,oldmessage):
     file, msg = down(message)
     thumb,duration,width,height = mediainfo.allinfo(file)
-    up(message, file, msg, video=True, thumb=thumb, duration=duration, height=height, widht=width)
+    up(message, file, msg, video=True, capt=f'**{file.split("/")[-1]}**' ,thumb=thumb, duration=duration, height=height, widht=width)
 
     app.delete_messages(message.chat.id, message_ids=[oldmessage.id])
     os.remove(file)
@@ -314,7 +317,7 @@ def sendphoto(message,oldmessage):
 
 # extract file
 def extract(message,oldm):
-    file = app.download_media(message)
+    file, msg = down(message)
     cmd,foldername,infofile = helperfunctions.zipcommand(file,message)
     os.system(cmd)
     os.remove(file)
@@ -332,7 +335,7 @@ def extract(message,oldm):
 
         for ele in dir_list:
             if os.path.getsize(ele) > 0:
-                app.send_document(message.chat.id, document=ele, force_document=True, reply_to_message_id=message.id)
+                up(message, ele, msg)
                 os.remove(ele)
             else:
                 app.send_message(message.chat.id, f'**{ele.split("/")[-1]}** __is Skipped because it is 0 bytes__', reply_to_message_id=message.id)
@@ -362,7 +365,7 @@ def makefile(message,oldmessage):
     if os.path.exists(firstline) and os.path.getsize(firstline) > 0:
         app.send_document(message.chat.id, document=firstline, reply_to_message_id=message.id)
     else:
-        app.send_message(message.chat.id, "**Makefile takes first line of your Text as Filename and File content will start from Second line**", reply_to_message_id=message.id)
+        app.send_message(message.chat.id, "__Makefile takes first line of your Text as Filename and File content will start from Second line__", reply_to_message_id=message.id)
 
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
     os.remove(firstline)      	    
@@ -419,11 +422,30 @@ def increaseres(message,oldmessage):
 # renaming
 def rname(message,newname,oldm):
     app.delete_messages(message.chat.id,message_ids=[message.id+1])
-    file = app.download_media(message)
+    file, msg = down(message)
     os.rename(file,newname)
-    app.send_document(message.chat.id, document=newname, reply_to_message_id=message.id)
+    up(message, newname, msg)
     app.delete_messages(message.chat.id,message_ids=[oldm.id])
     os.remove(newname)
+
+
+# save restricted
+def saverec(message):
+    
+    if "https://t.me/c/" in message.text:
+        app.send_message(message.chat.id, "**Send me only Public Channel Links**", reply_to_message_id=message.id)
+        return
+
+    datas = message.text.split("/")
+    msgid = int(datas[-1])
+    username = datas[-2]
+    msg  = app.get_messages(username,msgid)
+
+    if "Document" not in str(msg):
+        app.send_message(message.chat.id, "**Send me only Document Post Links**", reply_to_message_id=message.id)
+        return
+
+    app.send_document(message.chat.id, msg.document.file_id, caption=msg.caption, reply_to_message_id=message.id)
 
 
 # download with progress
@@ -537,7 +559,7 @@ def downstatus(statusfile,message):
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a **File** first and then **Extension**\n\n{START_TEXT}", reply_to_message_id=message.id)
-    dm = threading.Thread(target=lambda:dltmsg(oldm,30),daemon=True)
+    dm = threading.Thread(target=lambda:dltmsg(message,oldm,30),daemon=True)
     dm.start()                        
 
 
@@ -545,8 +567,8 @@ def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id,
-                     "**/start - To Check Availabe Conversions\n/help - This Message\n/imagegen - Text to Image\n/videogen - Text to Video\n/cancel - To Cancel\n/rename - To Rename\n/source - Github Source Code\n**", reply_to_message_id=message.id)
-    dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
+                     "**/start - To Check Availabe Conversions\n/help - This Message\n/imagegen - Text to Image\n/videogen - Text to Video\n/cancel - To Cancel\n/rename - To Rename\n/source - Github Source Code\n/play - To Play Game\n**", reply_to_message_id=message.id)
+    dm = threading.Thread(target=lambda:dltmsg(message,oldm),daemon=True)
     dm.start() 
 
 
@@ -554,7 +576,7 @@ def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 @app.on_message(filters.command(['source']))
 def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id, "**__GITHUB__ - https://github.com/bipinkrish/File-Converter-Bot**", disable_web_page_preview=True, reply_to_message_id=message.id)
-    dm = threading.Thread(target=lambda:dltmsg(oldm),daemon=True)
+    dm = threading.Thread(target=lambda:dltmsg(message,oldm),daemon=True)
     dm.start() 
 
 
@@ -587,9 +609,9 @@ def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
             nmessage = pickle.loads(handle.read())
         os.remove(f'{message.from_user.id}.json')
         app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-        app.send_message(message.chat.id,"Your job was **Canceled**",reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
+        app.send_message(message.chat.id,"__Your job was **Canceled**__",reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
     else:
-        app.send_message(message.chat.id,"No job to Cancel", reply_to_message_id=message.id)     
+        app.send_message(message.chat.id,"__No job to Cancel__", reply_to_message_id=message.id)     
 
 
 # dalle command
@@ -627,7 +649,97 @@ def videocog(client: pyrogram.client.Client, message: pyrogram.types.messages_an
     vi.start()
     
 
+# play command
+@app.on_message(filters.command(['play']))
+def startgame(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
 
+    try:
+        N = int(message.text.split("/play ")[1])
+        if N > 1000:
+            app.send_message(message.chat.id,"**Not more than 1000**",reply_to_message_id=message.id)
+            return
+    except:
+        N = 100
+
+    size = len(bin(N).replace("0b", ""))
+    app.send_message(message.chat.id,f"__Take a Number between__ **1 - {N}**\n__I will guess it in__ **{size} steps**\n__are you__ **ready ?**",reply_to_message_id=message.id,
+        reply_markup=InlineKeyboardMarkup(
+                [[
+                    InlineKeyboardButton( text='Yes', callback_data='ready'),
+                    InlineKeyboardButton( text='No', callback_data='not')
+                ]]))
+    
+
+# callback
+@app.on_callback_query()
+def answer(client: pyrogram.client.Client, call: pyrogram.types.CallbackQuery):
+
+    # not callback
+    if call.data == "not":
+        app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'**OK, No Problem.**')
+
+    # game start callback
+    elif call.data == "ready":
+        N = int(call.message.text.split(" - ")[1].split("\n")[0])
+        size = len(bin(N).replace("0b", ""))
+        binary = "0".zfill(size+1)
+
+        nlist = list(range(0,size))
+        random.shuffle(nlist)
+        slist = ""
+        for ele in nlist:
+            slist = slist + str(ele)
+
+        text = guess.generateNumbers(int(slist[0])+1, N, size)
+
+        ydata = f'{N} {binary} {slist} 1'
+        ndata = f'{N} {binary} {slist} 0'
+
+        app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'**{text}*\n_is your number there ?_ **(1 / {size})**',
+        reply_markup=InlineKeyboardMarkup(
+                    [[
+                        InlineKeyboardButton( text='Yes', callback_data=ydata),
+                        InlineKeyboardButton( text='No', callback_data=ndata)
+                    ]]))
+    
+    # game callback
+    else:
+        data = call.data.split(" ")
+        N = int(data[0])
+        size = len(bin(N).replace("0b", ""))
+        binary = data[1]
+        slist = data[2]
+        res = data[3]
+
+        pos = int(slist[0])+1
+        slist = slist[1:]
+        binary = list(binary)
+        binary[pos] = res
+        binary = "".join(binary)
+
+        if len(slist) != 0:
+
+            text = guess.generateNumbers(int(slist[0])+1, N, size)
+            ydata = f'{N} {binary} {slist} 1'
+            ndata = f'{N} {binary} {slist} 0'
+
+            app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'**{text}**\n__is your number there ?__ **({size-len(slist)+1} / {size})**',
+                    reply_markup=InlineKeyboardMarkup(
+                            [[
+                                InlineKeyboardButton( text='Yes', callback_data=ydata),
+                                InlineKeyboardButton( text='No', callback_data=ndata)
+                            ]]))
+        
+        else:
+
+            number = guess.finalize(binary,N)
+            if number == 0:
+                app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'__I said in between__ **1 - {N}**')
+            else:
+                app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'__Your number is__ **{number}**')
+
+
+# document
 @app.on_message(filters.document)
 def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     if message.document.file_name.upper().endswith(VIDAUD):
@@ -700,6 +812,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
         rf.start()
 
 
+# animation
 @app.on_message(filters.animation)
 def annimations(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id,'**Turning it into Document then you can use that to Convert**',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
@@ -707,6 +820,7 @@ def annimations(client: pyrogram.client.Client, message: pyrogram.types.messages
     sd.start()
 
 
+# video
 @app.on_message(filters.video)
 def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     
@@ -728,6 +842,7 @@ def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
         sd.start()
 
 
+# video note
 @app.on_message(filters.video_note)
 def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     with open(f'{message.from_user.id}.json', 'wb') as handle:
@@ -737,6 +852,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
                 reply_markup=VAboard, reply_to_message_id=message.id)
 
 
+# audio
 @app.on_message(filters.audio)
 def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     if message.audio.file_name.upper().endswith(VIDAUD):
@@ -751,6 +867,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
                          reply_to_message_id=message.id)
 
 
+# voice
 @app.on_message(filters.voice)
 def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     with open(f'{message.from_user.id}.json', 'wb') as handle:
@@ -760,6 +877,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
                 reply_markup=VAboard, reply_to_message_id=message.id)
 
 
+# photo
 @app.on_message(filters.photo)
 def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     with open(f'{message.from_user.id}.json', 'wb') as handle:
@@ -769,6 +887,7 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
                      reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
+# sticker
 @app.on_message(filters.sticker)
 def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     with open(f'{message.from_user.id}.json', 'wb') as handle:
@@ -783,8 +902,14 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
                     reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
+# conversion starts here
 @app.on_message(filters.text)
 def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):  
+
+    if "https://t.me/" in message.text:
+        mf = threading.Thread(target=lambda:saverec(message),daemon=True)
+        mf.start()
+        return
 
     if os.path.exists(f'{message.from_user.id}.json'):
         with open(f'{message.from_user.id}.json', 'rb') as handle:
@@ -922,7 +1047,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             oldm = app.send_message(message.chat.id,'__**Making File**__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
             mf = threading.Thread(target=lambda:makefile(message,oldm),daemon=True)
             mf.start()
-            
+          
 
 #apprun
 print("Bot Started")
