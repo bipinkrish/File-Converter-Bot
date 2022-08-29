@@ -49,9 +49,9 @@
 
 ## Extra Features
 
-**/play** - *Play a Game with Bot*
+**PLAY** - *Play a Game with Bot*
 
-**Save Restricted** - *Send a Resctircted Public Chat's Document Link, Bot will Send you that Document*
+**SAVE RESTRICTED** - *Send a Resctircted Public Chat's Document Link, Bot will Send you that Document*
 
 ---
 
