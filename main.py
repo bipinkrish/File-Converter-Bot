@@ -695,7 +695,7 @@ def answer(client: pyrogram.client.Client, call: pyrogram.types.CallbackQuery):
         ydata = f'{N} {binary} {slist} 1'
         ndata = f'{N} {binary} {slist} 0'
 
-        app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'**{text}*\n_is your number there ?_ **(1 / {size})**',
+        app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'**{text}**\n__is your number there ?__ **(1 / {size})**',
         reply_markup=InlineKeyboardMarkup(
                     [[
                         InlineKeyboardButton( text='Yes', callback_data=ydata),
