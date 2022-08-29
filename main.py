@@ -441,11 +441,32 @@ def saverec(message):
     username = datas[-2]
     msg  = app.get_messages(username,msgid)
 
-    if "Document" not in str(msg):
-        app.send_message(message.chat.id, "**Send me only Document Post Links**", reply_to_message_id=message.id)
-        return
+    if "Document" in str(msg):
+        app.send_document(message.chat.id, msg.document.file_id, caption=msg.caption, caption_entities=msg.caption_entities, reply_to_message_id=message.id)
 
-    app.send_document(message.chat.id, msg.document.file_id, caption=msg.caption, reply_to_message_id=message.id)
+    elif "Video" in str(msg):
+        app.send_video(message.chat.id, msg.video.file_id, caption=msg.caption, caption_entities=msg.caption_entities, reply_to_message_id=message.id)
+    
+    elif "Animation" in str(msg):
+        app.send_animation(message.chat.id, msg.animation.file_id, reply_to_message_id=message.id)
+
+    elif "Sticker" in str(msg):
+        app.send_sticker(message.chat.id, msg.sticker.file_id, reply_to_message_id=message.id)
+
+    elif "Voice" in str(msg):
+        app.send_voice(message.chat.id, msg.voice.file_id, caption=msg.caption, caption_entities=msg.caption_entities, reply_to_message_id=message.id)    
+
+    elif "Audio" in str(msg):
+        app.send_audio(message.chat.id, msg.audio.file_id, caption=msg.caption, caption_entities=msg.caption_entities, reply_to_message_id=message.id)    
+
+    elif "text" in str(msg):
+        app.send_message(message.chat.id, msg.text, entities=msg.entities, reply_to_message_id=message.id)
+
+    elif "Photo" in str(msg):
+        app.send_photo(message.chat.id, msg.photo.file_id, caption=msg.caption, caption_entities=msg.caption_entities, reply_to_message_id=message.id)
+
+    else:
+        app.send_message(message.chat.id,"__Not in Available Types__",reply_to_message_id=message.id)
 
 
 # download with progress
@@ -592,7 +613,7 @@ def rename(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
     if os.path.exists(f'{message.from_user.id}.json'):
         with open(f'{message.from_user.id}.json', 'rb') as handle:
             nmessage = pickle.loads(handle.read())
-        oldm = app.send_message(message.chat.id, "__Renaming__", reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+        oldm = app.send_message(message.chat.id, "__**Renaming**__", reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
         rn = threading.Thread(target=lambda:rname(nmessage,newname,oldm),daemon=True)
         rn.start() 
         os.remove(f'{message.from_user.id}.json')
