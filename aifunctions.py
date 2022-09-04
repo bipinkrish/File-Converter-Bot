@@ -172,7 +172,7 @@ def stablediff(prompt,AutoCall=True):
     }
 
     payload = json.dumps({ "fn_index": 0, "data": [
-                                                    prompt.replace(" "," | "),
+                                                    prompt,
                                                     "Stable_Diffusion_1v_4",
                                                     15,
                                                     50
@@ -229,7 +229,10 @@ def stablediffstatus(hash,prompt="stable-diff"):
         response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
         status = response["status"]
 
-    data = response["data"]["data"][0].split(",")[1]
+    data = response["data"]["data"][0]
+    if data == None:
+        return None
+    data = data.split(",")[1]
     image = base64.b64decode(data)
     with open(f"{prompt}.png","wb") as file:
         file.write(image)

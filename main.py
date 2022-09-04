@@ -233,9 +233,10 @@ def genrateimages(message,prompt):
     os.rmdir(prompt)
 
     # stable diffusion
-    app.send_message(message.chat.id,"**STABLE DIFFUSION**", reply_to_message_id=message.id)
-    app.send_document(message.chat.id,document=sdfile,force_document=True)
-    os.remove(sdfile)
+    if sdfile !=  None:
+        app.send_message(message.chat.id,"**STABLE DIFFUSION**", reply_to_message_id=message.id)
+        app.send_document(message.chat.id,document=sdfile,force_document=True)
+        os.remove(sdfile)
 
     # latent diffusion
     # app.send_message(message.chat.id,f"__LATENT DIFFUSION :__ **{prompt}**", reply_to_message_id=message.id)
