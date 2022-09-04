@@ -222,6 +222,8 @@ def genrateimages(message,prompt):
     # latfile = aifunctions.latentdiff(prompt) # latent direct
     # imagelist = aifunctions.latdifstatus(ldhash,prompt) # latent get
     # mdfile = aifunctions.mindallestatus(mdhash,prompt) # min dalle get
+    sdhash = aifunctions.stablediff(prompt,AutoCall=False) # stable diff
+    sdfile = aifunctions.stablediffstatus(sdhash,prompt) # stable diff get
 
     # dalle mini
     app.send_message(message.chat.id,"**DALLE MINI**", reply_to_message_id=message.id)
@@ -229,6 +231,11 @@ def genrateimages(message,prompt):
         app.send_document(message.chat.id,document=ele,force_document=True)
         os.remove(ele)
     os.rmdir(prompt)
+
+    # stable diffusion
+    app.send_message(message.chat.id,"**STABLE DIFFUSION**", reply_to_message_id=message.id)
+    app.send_document(message.chat.id,document=sdfile,force_document=True)
+    os.remove(sdfile)
 
     # latent diffusion
     # app.send_message(message.chat.id,f"__LATENT DIFFUSION :__ **{prompt}**", reply_to_message_id=message.id)

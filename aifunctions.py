@@ -146,6 +146,97 @@ def dallemini(prompt):
 	return images
 
 
+#############################################################################################################
+# satble diffusion
+
+
+def stablediff(prompt,AutoCall=True):
+
+    reqUrl = "https://hf.space/embed/Shuang59/Composable-Diffusion/api/queue/push/"
+    headersList = {
+    "authority": "hf.space",
+    "accept": "*/*",
+    "accept-language": "en-US,en;q=0.9",
+    "cache-control": "no-cache",
+    "content-type": "application/json",
+    "dnt": "1",
+    "origin": "https://hf.space",
+    "pragma": "no-cache",
+    "referer": "https://hf.space/embed/Shuang59/Composable-Diffusion/+?__theme=light",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "Linux",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" 
+    }
+
+    payload = json.dumps({ "fn_index": 0, "data": [
+                                                    prompt.replace(" "," | "),
+                                                    "Stable_Diffusion_1v_4",
+                                                    15,
+                                                    50
+                                                ], "action": "predict", "session_hash": "nothing" })
+
+    response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
+    hash = response["hash"]
+
+    if AutoCall:
+        filepath = stablediffstatus(hash,prompt)
+        return filepath
+    else:
+        return hash
+
+
+def stablediffstatus(hash,prompt="stable-diff"):
+
+    reqUrl = "https://hf.space/embed/Shuang59/Composable-Diffusion/api/queue/status/"
+    headersList = {
+    "authority": "hf.space",
+    "accept": "*/*",
+    "accept-language": "en-US,en;q=0.9",
+    "cache-control": "no-cache",
+    "content-type": "application/json",
+    "dnt": "1",
+    "origin": "https://hf.space",
+    "pragma": "no-cache",
+    "referer": "https://hf.space/embed/Shuang59/Composable-Diffusion/+?__theme=light",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "Linux",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" 
+    }
+
+    payload = json.dumps({ "hash": hash })
+    response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
+    
+    status = response["status"]
+    print("Status : " + status)
+    
+    while status != "COMPLETE":
+        
+        if status == "QUEUED":
+            queue_position = str(response["data"])
+            print("Queue Position : " + queue_position)
+            
+        if status == "PENDING":
+            print("Your job is processing")
+            
+        time.sleep(10)
+        
+        response = requests.request("POST", reqUrl, data=payload,  headers=headersList).json()
+        status = response["status"]
+
+    data = response["data"]["data"][0].split(",")[1]
+    image = base64.b64decode(data)
+    with open(f"{prompt}.png","wb") as file:
+        file.write(image)
+    
+    return f"{prompt}.png"
+
+
 ##############################################################################################################
 # deolidfy
 
