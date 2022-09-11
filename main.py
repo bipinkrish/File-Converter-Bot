@@ -346,17 +346,18 @@ def extract(message,oldm):
     if os.path.exists(foldername):
         dir_list = helperfunctions.absoluteFilePaths(foldername)
         if len(dir_list) > 30:
-            app.send_message(message.chat.id, f"__Number of files is **{len(dir_list)}** which is more than the limit of **30**__", reply_to_message_id=message.id)
-            os.remove(f'{message.id}downstatus.txt')
             if msg != None:
                 app.delete_messages(message.chat.id,message_ids=[msg.id])
+            app.send_message(message.chat.id, f"__Number of files is **{len(dir_list)}** which is more than the limit of **30**__", reply_to_message_id=message.id)     
         else:
             for ele in dir_list:
                 if os.path.getsize(ele) > 0:
-                    up(message, ele, msg)
+                    up(message, ele, msg, multi=True)
                     os.remove(ele)
                 else:
                     app.send_message(message.chat.id, f'**{ele.split("/")[-1]}** __is Skipped because it is 0 bytes__', reply_to_message_id=message.id)
+            
+            app.delete_messages(message.chat.id,message_ids=[msg.id])
             app.send_message(message.chat.id, f'__{last}__', reply_to_message_id=message.id)
 
         shutil.rmtree(foldername)
@@ -511,11 +512,14 @@ def down(message):
 
 
 # uploading with progress
-def up(message, file, msg, video=False, capt="", thumb=None, duration=0, widht=0, height=0):
+def up(message, file, msg, video=False, capt="", thumb=None, duration=0, widht=0, height=0, multi=False):
 
     if msg != None:
-        app.edit_message_text(message.chat.id, msg.id, '__Uploading__')
-
+        try:
+            app.edit_message_text(message.chat.id, msg.id, '__Uploading__')
+        except:
+            pass
+        
     if os.path.getsize(file) > 25000000:
         upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt',msg),daemon=True)
         upsta.start()
@@ -527,8 +531,10 @@ def up(message, file, msg, video=False, capt="", thumb=None, duration=0, widht=0
 
     if thumb != None:
         os.remove(thumb)
-    os.remove(f'{message.id}upstatus.txt')
-    if msg != None:
+    if os.path.exists(f'{message.id}upstatus.txt'):   
+        os.remove(f'{message.id}upstatus.txt')
+
+    if msg != None and not multi:
         app.delete_messages(message.chat.id,message_ids=[msg.id])
 
 
