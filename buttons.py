@@ -4,7 +4,7 @@ import helperfunctions
 
 # suporrted extensions
 VIDAUD = ("AIFF","AAC","M4A","OGA","WMA","FLAC","WAV","OPUS","OGG","MP3","MKV","MP4","MOV","AVI","M4B","VOB","DVD","WEBM","WMV")
-IMG = ("OCR","ICO","GIF","TIFF","BMP","WEBP","JP2","JPEG","JPG","PNG")
+IMG = ("SVG","OCR","ICO","GIF","TIFF","BMP","WEBP","JP2","JPEG","JPG","PNG")
 LBW = ("ODT","DOC","DOCX","DOTX","PDF","XML","HTML","DOTM","WPS","OTT","TXT")
 LBI = ("ODP","PPT","PPTX","PPTM","PPSX","POTM","POTX","PPS","POT","ODG","OTP","XML","PDF")
 LBC = ("ODS","XLS","HTML","XLSX","XLSM","XLTM","XLTX","OTS","XML","PDF","CSV","XLM")
@@ -50,6 +50,7 @@ ReplyButton('WEBP'),
 ReplyButton('JPEG'),
 ReplyButton('JPG'),
 ReplyButton('PNG'),
+ReplyButton('SVG'),
 ReplyButton('COLOR'),
 ReplyButton('POSITIVE'),
 ReplyButton('UPSCALE'),
