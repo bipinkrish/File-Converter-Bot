@@ -53,7 +53,7 @@ def follow(message,inputt,new,oldmessage):
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             up(message,output,msg,capt=caption)
         else:
-            app.send_message(message.chat.id,"**Error while Conversion**", reply_to_message_id=message.id)
+            app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
             
         os.remove(output)
 
@@ -69,10 +69,9 @@ def follow(message,inputt,new,oldmessage):
         if os.path.exists(output) and os.path.getsize(output) > 0:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, force_document=True, caption=f'**Source File** : __{srclink}\n\n**Converted File** : __{conlink}__', reply_to_message_id=message.id)
+            os.remove(output)
         else:
-            app.send_message(message.chat.id,"**Error while Conversion**", reply_to_message_id=message.id)
-            
-        os.remove(output)
+            app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
 
         if new == "ocr":
             cmd = helperfunctions.tesrctcommand(file,message.id)
@@ -105,7 +104,7 @@ def follow(message,inputt,new,oldmessage):
                 app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
                 app.send_document(message.chat.id,document=output, force_document=True, caption=f'**Source File** : __{srclink}\n\n**Converted File** : __{conlink}__', reply_to_message_id=message.id)
             else:
-                app.send_message(message.chat.id,"**Error while Conversion**", reply_to_message_id=message.id)
+                app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
 
             os.remove(file)
             os.remove(output)
@@ -125,7 +124,7 @@ def follow(message,inputt,new,oldmessage):
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id, document=output, force_document=True, reply_to_message_id=message.id)
         else:
-            app.send_message(message.chat.id,"**Error while Conversion**", reply_to_message_id=message.id)
+            app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
             
         os.remove(output)
 
@@ -140,7 +139,7 @@ def follow(message,inputt,new,oldmessage):
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, force_document=True, reply_to_message_id=message.id)
         else:
-            app.send_message(message.chat.id,"**Error while conversion**", reply_to_message_id=message.id)
+            app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
             if msg != None:
                 app.delete_messages(message.chat.id,message_ids=[msg.id])
             
@@ -160,7 +159,7 @@ def follow(message,inputt,new,oldmessage):
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, force_document=True, reply_to_message_id=message.id)
         else:
-            app.send_message(message.chat.id,"**Error while Conversion**", reply_to_message_id=message.id)
+            app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
             
         os.remove(output)
     
