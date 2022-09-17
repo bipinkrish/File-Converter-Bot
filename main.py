@@ -30,19 +30,21 @@ os.system("chmod 777 c41lab.py negfix8 tgsconverter")
 
 
 # main function to follow
-def follow(message,inputt,new,oldmessage):
+def follow(message,inputt,new,oldmessage, oldext):
+    
     output = helperfunctions.updtname(inputt,new)
+    msgtxt =  f'Converting from **{oldext.upper()}** to **{new.upper()}**\n'
 
     if output.upper().endswith(VIDAUD) and inputt.upper().endswith(VIDAUD):
 
         print("It is VID/AUD option")
 
-        file,msg = down(message)
+        file,msg = down(message, oldmessage, msgtxt)
         srclink = helperfunctions.videoinfo(file)
         cmd = helperfunctions.ffmpegcommand(file,output,new)
 
         if msg != None:
-            app.edit_message_text(message.chat.id, msg.id, '__Converting__')
+            app.edit_message_text(message.chat.id, msg.id, msgtxt + '__Converting__')
 
         os.system(cmd)
         os.remove(file)
@@ -51,7 +53,7 @@ def follow(message,inputt,new,oldmessage):
         if os.path.exists(output) and os.path.getsize(output) > 0:
             caption=f'**Source File** : __{srclink}__\n\n**Converted File** : __{conlink}__'
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
-            up(message,output,msg,capt=caption)
+            up(message, output, msg, capt=caption, msgtxt=msgtxt)
         else:
             app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
             
@@ -166,9 +168,11 @@ def follow(message,inputt,new,oldmessage):
     else:
         app.send_message(message.chat.id,"**Choose a Valid Extension, don't Type it**", reply_to_message_id=message.id)
 
-    # deleting message    
-    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
-
+    # deleting message
+    try:
+        app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    except:
+        pass
 
 # negative to positive
 def negetivetopostive(message,oldmessage):
@@ -303,20 +307,26 @@ def readf(message,oldmessage,allowrename=False):
 
 # send video
 def sendvideo(message,oldmessage):
-    file, msg = down(message)
+    msgtxt = f'__**Sending in Stream Format**__\n'
+    file, msg = down(message, oldmessage, msgtxt)
     thumb,duration,width,height = mediainfo.allinfo(file)
-    up(message, file, msg, video=True, capt=f'**{file.split("/")[-1]}**' ,thumb=thumb, duration=duration, height=height, widht=width)
-
-    app.delete_messages(message.chat.id, message_ids=[oldmessage.id])
+    up(message, file, msg, video=True, capt=f'**{file.split("/")[-1]}**' ,thumb=thumb, duration=duration, height=height, widht=width, msgtxt=msgtxt)
+    try:
+        app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    except:
+        pass
     os.remove(file)
 
 
 # send document
 def senddoc(message,oldmessage):
-    file, msg = down(message)
-    up(message, file, msg)
-
-    app.delete_messages(message.chat.id, message_ids=[oldmessage.id])
+    msgtxt = f'__**Sending in Stream Format**__\n'
+    file, msg = down(message, oldmessage, msgtxt)
+    up(message, file, msg, msgtxt=msgtxt)
+    try:
+        app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    except:
+        pass
     os.remove(file)
 
 
@@ -330,10 +340,11 @@ def sendphoto(message,oldmessage):
 
 # extract file
 def extract(message,oldm):
-    file, msg = down(message)
+    msgtxt = f'__**Extracting File**__\n'
+    file, msg = down(message, oldm, msgtxt)
     cmd,foldername,infofile = helperfunctions.zipcommand(file,message)
     if msg != None:
-        app.edit_message_text(message.chat.id, msg.id, '__Extracting__')
+        app.edit_message_text(message.chat.id, msg.id, msgtxt + '__Extracting__')
     os.system(cmd)
     os.remove(file)
 
@@ -351,7 +362,7 @@ def extract(message,oldm):
         else:
             for ele in dir_list:
                 if os.path.getsize(ele) > 0:
-                    up(message, ele, msg, multi=True)
+                    up(message, ele, msg, multi=True, msgtxt=msgtxt)
                     os.remove(ele)
                 else:
                     app.send_message(message.chat.id, f'**{ele.split("/")[-1]}** __is Skipped because it is 0 bytes__', reply_to_message_id=message.id)
@@ -363,8 +374,10 @@ def extract(message,oldm):
     else:
         app.send_message(message.chat.id, "**Unable to Extract**", reply_to_message_id=message.id)
 
-    app.delete_messages(message.chat.id, message_ids=[oldm.id])
-
+    try:
+        app.delete_messages(message.chat.id, message_ids=[oldm.id])
+    except:
+        pass
 
 # make file
 def makefile(message,oldmessage):
@@ -440,10 +453,14 @@ def increaseres(message,oldmessage):
 # renaming
 def rname(message,newname,oldm):
     app.delete_messages(message.chat.id,message_ids=[message.id+1])
-    file, msg = down(message)
+    msgtxt = '__**Renaming**__\n'
+    file, msg = down(message, oldm, msgtxt)
     os.rename(file,newname)
-    up(message, newname, msg)
-    app.delete_messages(message.chat.id,message_ids=[oldm.id])
+    up(message, newname, msg, msgtxt=msgtxt)
+    try:
+        app.delete_messages(message.chat.id,message_ids=[oldm.id])
+    except:
+        pass
     os.remove(newname)
 
 
@@ -488,7 +505,7 @@ def saverec(message):
 
 
 # download with progress
-def down(message):
+def down(message, msg, msgtxt=""):
 
     try:
         size = int(message.document.file_size)
@@ -499,8 +516,8 @@ def down(message):
             size = 1
 
     if size > 25000000:
-        msg = app.send_message(message.chat.id, '__Downloading__', reply_to_message_id=message.id)
-        dosta = threading.Thread(target=lambda:downstatus(f'{message.id}downstatus.txt',msg),daemon=True)
+        app.edit_message_text(message.chat.id, msg.id, msgtxt + '__Downloading__')
+        dosta = threading.Thread(target=lambda:downstatus(f'{message.id}downstatus.txt', msg, msgtxt),daemon=True)
         dosta.start()
     else:
         msg = None
@@ -511,16 +528,16 @@ def down(message):
 
 
 # uploading with progress
-def up(message, file, msg, video=False, capt="", thumb=None, duration=0, widht=0, height=0, multi=False):
+def up(message, file, msg, video=False, capt="", thumb=None, duration=0, widht=0, height=0, multi=False, msgtxt=""):
 
     if msg != None:
         try:
-            app.edit_message_text(message.chat.id, msg.id, '__Uploading__')
+            app.edit_message_text(message.chat.id, msg.id, msgtxt + '__Uploading__')
         except:
             pass
         
     if os.path.getsize(file) > 25000000:
-        upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt',msg),daemon=True)
+        upsta = threading.Thread(target=lambda:upstatus(f'{message.id}upstatus.txt', msg, msgtxt),daemon=True)
         upsta.start()
 
     if not video:
@@ -550,7 +567,7 @@ def dprogress(current, total, message):
 
 
 # upload status
-def upstatus(statusfile,message):
+def upstatus(statusfile,message,msgtxt):
 
     while True:
         if os.path.exists(statusfile):
@@ -566,7 +583,7 @@ def upstatus(statusfile,message):
                 #txt = "0.0%"
 
         try:
-            app.edit_message_text(message.chat.id, message.id, f"__Uploaded__ : **{txt}**")
+            app.edit_message_text(message.chat.id, message.id, msgtxt + f"__Uploaded__ : **{txt}**")
             #if txt == "100.0%":
                 #break
             time.sleep(10)
@@ -575,7 +592,7 @@ def upstatus(statusfile,message):
 
 
 # download status
-def downstatus(statusfile,message):
+def downstatus(statusfile, message ,msgtxt):
 
     while True:
         if os.path.exists(statusfile):
@@ -591,7 +608,7 @@ def downstatus(statusfile,message):
                 #txt = "0.0%"
 
         try:
-            app.edit_message_text(message.chat.id, message.id, f"__Downloaded__ : **{txt}**")
+            app.edit_message_text(message.chat.id, message.id, msgtxt + f"__Downloaded__ : **{txt}**")
             #if txt == "100.0%":
                 #break
             time.sleep(10)
@@ -1082,7 +1099,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         msg = app.send_message(message.chat.id, f'Converting from **{oldext.upper()}** to **{newext.upper()}**', reply_to_message_id=nmessage.id, reply_markup=ReplyKeyboardRemove())
         app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
 
-        conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext, msg), daemon=True)
+        conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext, msg, oldext), daemon=True)
         conv.start()
 
     else:
