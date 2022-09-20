@@ -55,7 +55,8 @@ def follow(message,inputt,new,oldmessage):
         else:
             app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
             
-        os.remove(output)
+        if os.path.exists(output):
+            os.remove(output)   
 
     elif output.upper().endswith(IMG) and inputt.upper().endswith(IMG):
 
@@ -69,9 +70,11 @@ def follow(message,inputt,new,oldmessage):
         if os.path.exists(output) and os.path.getsize(output) > 0:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
             app.send_document(message.chat.id,document=output, force_document=True, caption=f'**Source File** : __{srclink}\n\n**Converted File** : __{conlink}__', reply_to_message_id=message.id)
-            os.remove(output)
         else:
             app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
+
+        if os.path.exists(output):
+            os.remove(output) 
 
         if new == "ocr":
             cmd = helperfunctions.tesrctcommand(file,message.id)
@@ -97,6 +100,7 @@ def follow(message,inputt,new,oldmessage):
             file = app.download_media(message)
             srclink = helperfunctions.imageinfo(file)        
             os.system(f'./tgsconverter "{file}" "{new}"')
+            os.remove(file)
             output = helperfunctions.updtname(file,new)
             conlink = helperfunctions.imageinfo(output)
 
@@ -106,8 +110,8 @@ def follow(message,inputt,new,oldmessage):
             else:
                 app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
 
-            os.remove(file)
-            os.remove(output)
+            if os.path.exists(output):
+                os.remove(output) 
             
         else:
             app.send_message(message.chat.id,"__Only Availble Conversions for Animated Stickers are **GIF, PNG** and **WEBP**__", reply_to_message_id=message.id)
@@ -126,7 +130,8 @@ def follow(message,inputt,new,oldmessage):
         else:
             app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
             
-        os.remove(output)
+        if os.path.exists(output):
+            os.remove(output) 
 
     elif (output.upper().endswith(LBW) and inputt.upper().endswith(LBW)) or (output.upper().endswith(LBI) and inputt.upper().endswith(LBI)) or (output.upper().endswith(LBC) and inputt.upper().endswith(LBC)):
         
@@ -134,6 +139,7 @@ def follow(message,inputt,new,oldmessage):
         file = app.download_media(message)
         cmd = helperfunctions.libreofficecommand(file,new)
         os.system(cmd)
+        os.remove(file)
 
         if os.path.exists(output) and os.path.getsize(output) > 0:
             app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
@@ -142,9 +148,9 @@ def follow(message,inputt,new,oldmessage):
             app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
             if msg != None:
                 app.delete_messages(message.chat.id,message_ids=[msg.id])
-            
-        os.remove(file)
-        os.remove(output)
+        
+        if os.path.exists(output):
+            os.remove(output) 
 
     elif output.upper().endswith(FF) and inputt.upper().endswith(FF):
         
@@ -161,7 +167,8 @@ def follow(message,inputt,new,oldmessage):
         else:
             app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
             
-        os.remove(output)
+        if os.path.exists(output):
+            os.remove(output) 
     
     else:
         app.send_message(message.chat.id,"**Choose a Valid Extension, don't Type it**", reply_to_message_id=message.id)
