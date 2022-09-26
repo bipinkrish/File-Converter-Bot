@@ -14,6 +14,46 @@ from pydub.silence import split_on_silence
 from gtts import gTTS
 
 
+############################################################################################################
+# whisper
+
+def whisper(file):
+
+    reqUrl = "https://hf.space/embed/Amrrs/openai-whisper-live-transcribe/api/predict"
+    headersList = {
+        "authority": "hf.space",
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "cache-control": "no-cache",
+        "content-type": "application/json",
+        "dnt": "1",
+        "origin": "https://hf.space",
+        "pragma": "no-cache",
+        "referer": "https://huggingface.co/spaces/Amrrs/openai-whisper-live-transcribe",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "Linux",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36" 
+        }
+
+
+    with open(file,"rb") as byte:
+        rdata = base64.b64encode(byte.read()).decode('utf-8')
+    rdata = "data:audio/mp3;base64," + rdata
+
+    payload = json.dumps({ "data": [{
+                                            "name": file.split("/")[-1],
+                                            "data": rdata
+                                    }]
+                        })
+
+    response = requests.request("POST", reqUrl, data=payload, headers=headersList).json()
+    data = response["data"][0]
+    return data
+
+
 ##############################################################################################################
 # dalle
 

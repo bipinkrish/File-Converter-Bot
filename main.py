@@ -33,7 +33,7 @@ os.system("chmod 777 c41lab.py negfix8 tgsconverter")
 def follow(message,inputt,new,oldmessage):
     output = helperfunctions.updtname(inputt,new)
 
-    if output.upper().endswith(VIDAUD) and inputt.upper().endswith(VIDAUD):
+    if (output.upper().endswith(VIDAUD) or new == "gif") and inputt.upper().endswith(VIDAUD):
 
         print("It is VID/AUD option")
 
@@ -146,8 +146,6 @@ def follow(message,inputt,new,oldmessage):
             app.send_document(message.chat.id,document=output, force_document=True, reply_to_message_id=message.id)
         else:
             app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
-            if msg != None:
-                app.delete_messages(message.chat.id,message_ids=[msg.id])
         
         if os.path.exists(output):
             os.remove(output) 
@@ -171,7 +169,7 @@ def follow(message,inputt,new,oldmessage):
             os.remove(output) 
     
     else:
-        app.send_message(message.chat.id,"**Choose a Valid Extension, don't Type it**", reply_to_message_id=message.id)
+        app.send_message(message.chat.id,"__Choose a Valid Extension, don't Type it__", reply_to_message_id=message.id)
 
     # deleting message    
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
@@ -402,7 +400,7 @@ def transcript(message,oldmessage):
     inputt = file.split("/")[-1]
     output = helperfunctions.updtname(inputt,"wav")
     temp = helperfunctions.updtname(inputt,"txt")
-
+        
     if file.endswith("wav"):
         aifunctions.splitfn(file,message,temp)
     else:
@@ -410,13 +408,22 @@ def transcript(message,oldmessage):
         os.system(cmd)
         aifunctions.splitfn(output,message,temp)
         os.remove(output)
-        
-    app.send_document(message.chat.id, document=temp, reply_to_message_id=message.id)
+
+    if os.path.getsize(temp) > 0:
+        app.send_document(message.chat.id, document=temp,caption="**Google Engine**", reply_to_message_id=message.id)
+    os.remove(temp)
+
+    data = aifunctions.whisper(file)
+    with open(temp,"w") as wfile:
+        wfile.write(data)
+    if os.path.getsize(temp) > 0:
+        app.send_document(message.chat.id, document=temp,caption="**OpenAI Engine** __(whisper)__", reply_to_message_id=message.id)
+    os.remove(temp)
+
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
     os.remove(file)
-    os.remove(temp)
     
-
+    
 # text to speech 
 def speak(message,oldmessage):
     file = app.download_media(message)
@@ -654,7 +661,7 @@ def rename(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
 
 # cancel
 @app.on_message(filters.command(['cancel']))
-def source(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+def cancel(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     if os.path.exists(f'{message.from_user.id}.json'):
         with open(f'{message.from_user.id}.json', 'rb') as handle:
             nmessage = pickle.loads(handle.read())
@@ -895,7 +902,7 @@ def video(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 
 # video note
 @app.on_message(filters.video_note)
-def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+def videonote(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
@@ -920,7 +927,7 @@ def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 
 # voice
 @app.on_message(filters.voice)
-def audio(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+def voice(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
@@ -940,7 +947,7 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 
 # sticker
 @app.on_message(filters.sticker)
-def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+def sticker(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
     if not message.sticker.is_animated and not message.sticker.is_video:
