@@ -11,3 +11,5 @@ SpeechRecognition
 pydub
 gTTS
 Pillow
+bs4
+bencode

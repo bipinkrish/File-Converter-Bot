@@ -11,6 +11,7 @@ LBC = ("ODS","XLS","HTML","XLSX","XLSM","XLTM","XLTX","OTS","XML","PDF","CSV","X
 FF = ("SFD","BDF","FNT","OTF","PFA","PFB","TTC","TTF","UFO","WOFF")
 EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT")
 ARC = ("ZIP","RAR","7Z","TAR","XZ","GZ","BZ")
+TOR = ("TORRENT","MAGNET")
 
 # buttons
 VAboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
@@ -143,16 +144,12 @@ ARCboard.add(
 ReplyButton('EXTRACT'),
             )
 
+TORboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
+TORboard.add(           
+ReplyButton('MAGNET'),
+            )
 
 # texts
-START_TEXT = f'--**Available formats**--\n\n\
-**IMAGES** 📷 \n__{helperfunctions.give_name(IMG)}__\n\n\
-**SPECIAL** 🎁 \n__COLORIZE, POSITIVE, UPSCALE, TEXT-to-SPEECH, SPEECH-to-TEXT, AI IMAGE & AI VIDEO__\n\n\
-**VIDEOS/AUDIOS** 📹 / 🔊 \n__{helperfunctions.give_name(VIDAUD)}__\n\n\
-**Documents** 💼 \n__{helperfunctions.give_name(LBW)},{helperfunctions.give_name(LBI)},{helperfunctions.give_name(LBC)}__\n\n\
-**Fonts** 🔤 \n__{helperfunctions.give_name(FF)}__\n\n\
-**EBooks** 📚 \n__{helperfunctions.give_name(EB)}__\n\n\
-**Archives** 🗄 \n__{helperfunctions.give_name(ARC)}__'
 VA_TEXT = helperfunctions.give_name(VIDAUD)
 IMG_TEXT = helperfunctions.give_name(IMG)
 LBW_TEXT = helperfunctions.give_name(LBW)
@@ -161,3 +158,14 @@ LBI_TEXT = helperfunctions.give_name(LBI)
 FF_TEXT = helperfunctions.give_name(FF)
 EB_TEXT = helperfunctions.give_name(EB)
 ARC_TEXT = helperfunctions.give_name(ARC)
+TOR_TEXT = helperfunctions.give_name(TOR)
+
+START_TEXT = f'**IMAGES** 📷 \n__{IMG_TEXT}__\n\n\
+**SPECIAL** 🎁 \n__COLORIZE, POSITIVE, UPSCALE, TEXT-to-SPEECH, SPEECH-to-TEXT, AI IMAGE & AI VIDEO__\n\n\
+**VIDEOS/AUDIOS** 📹 / 🔊 \n__{VA_TEXT}__\n\n\
+**Documents** 💼 \n__{LBW_TEXT},{LBI_TEXT},{LBC_TEXT}__\n\n\
+**Fonts** 🔤 \n__{FF_TEXT}__\n\n\
+**EBooks** 📚 \n__{EB_TEXT}__\n\n\
+**Archives** 🗄 \n__{ARC_TEXT}__\n\n\
+**Torrent** 🧲 \n__{TOR_TEXT}__'
+

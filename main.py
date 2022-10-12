@@ -16,6 +16,7 @@ import aifunctions
 import helperfunctions
 import mediainfo
 import guess
+import torrent
 
 
 # env
@@ -226,8 +227,8 @@ def genrateimages(message,prompt):
     # latfile = aifunctions.latentdiff(prompt) # latent direct
     # imagelist = aifunctions.latdifstatus(ldhash,prompt) # latent get
     # mdfile = aifunctions.mindallestatus(mdhash,prompt) # min dalle get
-    sdhash = aifunctions.stablediff(prompt,AutoCall=False) # stable diff
-    sdfile = aifunctions.stablediffstatus(sdhash,prompt) # stable diff get
+    # sdhash = aifunctions.stablediff(prompt,AutoCall=False) # stable diff
+    # sdfile = aifunctions.stablediffstatus(sdhash,prompt) # stable diff get
 
     # dalle mini
     app.send_message(message.chat.id,"**DALLE MINI**", reply_to_message_id=message.id)
@@ -237,10 +238,10 @@ def genrateimages(message,prompt):
     os.rmdir(prompt)
 
     # stable diffusion
-    if sdfile !=  None:
-        app.send_message(message.chat.id,"**STABLE DIFFUSION**", reply_to_message_id=message.id)
-        app.send_document(message.chat.id,document=sdfile,force_document=True)
-        os.remove(sdfile)
+    # if sdfile !=  None:
+    #     app.send_message(message.chat.id,"**STABLE DIFFUSION**", reply_to_message_id=message.id)
+    #     app.send_document(message.chat.id,document=sdfile,force_document=True)
+    #     os.remove(sdfile)
 
     # latent diffusion
     # app.send_message(message.chat.id,f"__LATENT DIFFUSION :__ **{prompt}**", reply_to_message_id=message.id)
@@ -369,6 +370,22 @@ def extract(message,oldm):
         app.send_message(message.chat.id, "**Unable to Extract**", reply_to_message_id=message.id)
 
     app.delete_messages(message.chat.id, message_ids=[oldm.id])
+
+
+# getting magnet
+def getmag(message,oldm):
+    file = app.download_media(message)
+    maglink = torrent.getMagnet(file)
+    app.send_message(message.chat.id, f'__{maglink}__', reply_to_message_id=message.id)
+    app.delete_messages(message.chat.id,message_ids=[oldm.id])
+    os.remove(file)
+
+
+# getting torrent file
+def gettorfile(message):
+    file = torrent.getTorrent(message.text)
+    app.send_document(message.chat.id, file, reply_to_message_id=message.id)
+    os.remove(file)
 
 
 # make file
@@ -672,10 +689,10 @@ def cancel(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
         app.send_message(message.chat.id,"__No job to Cancel__", reply_to_message_id=message.id)     
 
 
-# dalle command
+# imagen command
 @app.on_message(filters.command(["imagegen"]))
 def getpompt(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-
+    
 	# getting prompt from the text
 	try:
 		prompt = message.text.split("/imagegen ")[1]
@@ -689,11 +706,11 @@ def getpompt(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 	ai.start()
 
 
-# cog video
+# videogen command
 @app.on_message(filters.command(["videogen"]))
 def videocog(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     
-    app.send_message(message.chat.id,'Currently Not Working', reply_to_message_id=message.id)
+    app.send_message(message.chat.id,'__Currently Not Working__', reply_to_message_id=message.id)
     return
     
     try:
@@ -864,6 +881,14 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 🗄\n__Do you want to Extract ?__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=ARCboard, reply_to_message_id=message.id)
 
+    elif message.document.file_name.upper().endswith(TOR):
+        with open(f'{message.from_user.id}.json', 'wb') as handle:
+            pickle.dump(message, handle)
+        dext = message.document.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,
+                         f'__Detected Extension:__ **{dext}** 🧲\n__Do you want to extract Magnet Link ?__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                         reply_markup=TORboard, reply_to_message_id=message.id)
+
     else:
         oldm = app.send_message(message.chat.id,'**No Available Conversions Found, Trying to Read File**',reply_markup=ReplyKeyboardRemove())
         rf = threading.Thread(target=lambda:readf(message,oldm,allowrename=True),daemon=True)
@@ -964,11 +989,19 @@ def sticker(client: pyrogram.client.Client, message: pyrogram.types.messages_and
 @app.on_message(filters.text)
 def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):  
 
+    # save restricted
     if "https://t.me/" in message.text:
         mf = threading.Thread(target=lambda:saverec(message),daemon=True)
         mf.start()
         return
 
+    # magnet link
+    if message.text[:8] == "magnet:?":
+        tf = threading.Thread(target=lambda:gettorfile(message),daemon=True)
+        tf.start()
+        return
+
+    # normal
     if os.path.exists(f'{message.from_user.id}.json'):
         with open(f'{message.from_user.id}.json', 'rb') as handle:
             nmessage = pickle.loads(handle.read())
@@ -1044,6 +1077,13 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             ex.start()
             return 
 
+        if "MAGNET" == message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'__**Getting Magnet Link**__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            ml = threading.Thread(target=lambda:getmag(nmessage,oldm),daemon=True)
+            ml.start()
+            return 
+
         if "document" in str(nmessage):
             inputt = nmessage.document.file_name
             print("File is a Document")
@@ -1093,11 +1133,15 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         #if newext == "ico":
             #app.send_message(message.chat.id, "Warning: for ICO, image will be resized and made multi-resolution", reply_to_message_id=message.id)
         
-        msg = app.send_message(message.chat.id, f'Converting from **{oldext.upper()}** to **{newext.upper()}**', reply_to_message_id=nmessage.id, reply_markup=ReplyKeyboardRemove())
-        app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+        if oldext.upper() == newext.upper():
+            app.send_message(message.chat.id, "__Nice try, Don't choose same Extension__", reply_to_message_id=nmessage.id, reply_markup=ReplyKeyboardRemove())
+            
+        else:
+            msg = app.send_message(message.chat.id, f'Converting from **{oldext.upper()}** to **{newext.upper()}**', reply_to_message_id=nmessage.id, reply_markup=ReplyKeyboardRemove())
+            conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext, msg), daemon=True)
+            conv.start()
 
-        conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext, msg), daemon=True)
-        conv.start()
+        app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
 
     else:
         if message.from_user.id == message.chat.id:
@@ -1110,3 +1154,4 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 #apprun
 print("Bot Started")
 app.run()
+
