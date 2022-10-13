@@ -87,7 +87,8 @@ def follow(message,inputt,new,old,oldmessage):
             with open(f"{message.id}.txt","r") as ocr:
                 text = ocr.read()
             os.remove(f"{message.id}.txt")
-            app.send_message(message.chat.id, text, reply_to_message_id=message.id)
+            if text != "":
+		app.send_message(message.chat.id, text, reply_to_message_id=message.id)
             
         if new == "ico":
             slist = ["256", "128", "96", "64", "48", "32", "16"]
@@ -185,8 +186,8 @@ def follow(message,inputt,new,old,oldmessage):
     # subtitles
     elif output.upper().endswith(SUB) and inputt.upper().endswith(SUB):
 
-        if not ((old in ["TTML", "SCC", "STL", "SRT"]) and (new in ["TTML","SRT", "VTT"])):
-            app.send_message(message.chat.id,f"__**{old}** to **{new}** is not Supported.\n\nSupported Inputs: TTML, SCC, STL & SRT\nSupported Outputs: TTML, SRT & VTT__", reply_to_message_id=message.id)
+        if not ((old.upper() in ["TTML", "SCC", "STL", "SRT"]) and (new.upper() in ["TTML","SRT", "VTT"])):
+            app.send_message(message.chat.id,f"__**{old.upper()}** to **{new.upper()}** is not Supported.\n\n**Supported Formats**\n**Inputs**: TTML, SCC, STL & SRT\n**Outputs**: TTML, SRT & VTT__", reply_to_message_id=message.id)
 
         else:
             print("It is Subtitles option")
