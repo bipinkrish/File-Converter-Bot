@@ -47,6 +47,7 @@
 
 **Torrents**: *TORRENT, MAGENT*
 
+**Subtitles**: *TTML, SCC, STL, SRT, VTT*
 ---
 
 ## Extra Features

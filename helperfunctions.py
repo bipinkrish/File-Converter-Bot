@@ -9,6 +9,14 @@ telegraph = Telegraph()
 telegraph.create_account(short_name='file-converter')
 
 
+# ttconv subtiles cmd
+def subtitlescommand(inputt,output):
+    cmd = f'tt convert -i {inputt} -o {output}'
+    print("Command to be Executed is")
+    print(cmd)
+    return cmd
+
+
 # calibre cmd
 def calibrecommand(inputt,output):
     cmd = f'ebook-convert "{inputt}" "{output}" --enable-heuristics'

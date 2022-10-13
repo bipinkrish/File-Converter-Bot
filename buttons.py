@@ -12,6 +12,8 @@ FF = ("SFD","BDF","FNT","OTF","PFA","PFB","TTC","TTF","UFO","WOFF")
 EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT")
 ARC = ("ZIP","RAR","7Z","TAR","XZ","GZ","BZ")
 TOR = ("TORRENT","MAGNET")
+SUB = ("TTML","SCC","STL","SRT","VTT")
+
 
 # buttons
 VAboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
@@ -149,6 +151,16 @@ TORboard.add(
 ReplyButton('MAGNET'),
             )
 
+SUBboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
+SUBboard.add(           
+ReplyButton("TTML"), 
+ReplyButton("SCC"),
+ReplyButton("STL"),
+ReplyButton("SRT"),
+ReplyButton("VTT")
+            )
+
+
 # texts
 VA_TEXT = helperfunctions.give_name(VIDAUD)
 IMG_TEXT = helperfunctions.give_name(IMG)
@@ -159,13 +171,15 @@ FF_TEXT = helperfunctions.give_name(FF)
 EB_TEXT = helperfunctions.give_name(EB)
 ARC_TEXT = helperfunctions.give_name(ARC)
 TOR_TEXT = helperfunctions.give_name(TOR)
+SUB_TEXT = helperfunctions.give_name(SUB)
 
-START_TEXT = f'**IMAGES** 📷 \n__{IMG_TEXT}__\n\n\
-**SPECIAL** 🎁 \n__COLORIZE, POSITIVE, UPSCALE, TEXT-to-SPEECH, SPEECH-to-TEXT, AI IMAGE & AI VIDEO__\n\n\
-**VIDEOS/AUDIOS** 📹 / 🔊 \n__{VA_TEXT}__\n\n\
+START_TEXT = f'**Images** 📷 \n__{IMG_TEXT}__\n\n\
+**Special** 🎁 \n__COLORIZE, POSITIVE, UPSCALE, TEXT-to-SPEECH, SPEECH-to-TEXT, AI IMAGE & AI VIDEO__\n\n\
+**Videos/Audios** 📹 / 🔊 \n__{VA_TEXT}__\n\n\
 **Documents** 💼 \n__{LBW_TEXT},{LBI_TEXT},{LBC_TEXT}__\n\n\
 **Fonts** 🔤 \n__{FF_TEXT}__\n\n\
-**EBooks** 📚 \n__{EB_TEXT}__\n\n\
+**eBooks** 📚 \n__{EB_TEXT}__\n\n\
 **Archives** 🗄 \n__{ARC_TEXT}__\n\n\
-**Torrent** 🧲 \n__{TOR_TEXT}__'
+**Torrents** 🧲 \n__{TOR_TEXT}\n\n\
+**Subtitles** 🗯️ \n__{SUB_TEXT}__'
 

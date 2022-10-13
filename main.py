@@ -31,9 +31,11 @@ os.system("chmod 777 c41lab.py negfix8 tgsconverter")
 
 
 # main function to follow
-def follow(message,inputt,new,oldmessage):
+def follow(message,inputt,new,old,oldmessage):
     output = helperfunctions.updtname(inputt,new)
 
+
+    # ffmpeg videos audios
     if (output.upper().endswith(VIDAUD) or new == "gif") and inputt.upper().endswith(VIDAUD):
 
         print("It is VID/AUD option")
@@ -59,6 +61,8 @@ def follow(message,inputt,new,oldmessage):
         if os.path.exists(output):
             os.remove(output)   
 
+
+    # images
     elif output.upper().endswith(IMG) and inputt.upper().endswith(IMG):
 
         print("It is IMG option")
@@ -93,6 +97,8 @@ def follow(message,inputt,new,oldmessage):
         
         os.remove(file)
 
+
+    # stickers
     elif output.upper().endswith(IMG) and inputt.upper().endswith("TGS"):
 
         if new == "webp" or new == "gif" or new == "png":
@@ -117,6 +123,8 @@ def follow(message,inputt,new,oldmessage):
         else:
             app.send_message(message.chat.id,"__Only Availble Conversions for Animated Stickers are **GIF, PNG** and **WEBP**__", reply_to_message_id=message.id)
 
+
+    # ebooks
     elif output.upper().endswith(EB) and inputt.upper().endswith(EB):
 
         print("It is Ebook option")
@@ -134,6 +142,8 @@ def follow(message,inputt,new,oldmessage):
         if os.path.exists(output):
             os.remove(output) 
 
+
+    # libreoffice documents
     elif (output.upper().endswith(LBW) and inputt.upper().endswith(LBW)) or (output.upper().endswith(LBI) and inputt.upper().endswith(LBI)) or (output.upper().endswith(LBC) and inputt.upper().endswith(LBC)):
         
         print("It is LibreOffice option")
@@ -151,6 +161,8 @@ def follow(message,inputt,new,oldmessage):
         if os.path.exists(output):
             os.remove(output) 
 
+
+    # fonts
     elif output.upper().endswith(FF) and inputt.upper().endswith(FF):
         
         print("It is FontForge option")
@@ -168,9 +180,35 @@ def follow(message,inputt,new,oldmessage):
             
         if os.path.exists(output):
             os.remove(output) 
+
     
+    # subtitles
+    elif output.upper().endswith(SUB) and inputt.upper().endswith(SUB):
+
+        if not ((old in ["TTML", "SCC", "STL", "SRT"]) and (new in ["TTML","SRT", "VTT"])):
+            app.send_message(message.chat.id,f"__**{old}** to **{new}** is not Supported.\n\nSupported Inputs: TTML, SCC, STL & SRT\nSupported Outputs: TTML, SRT & VTT__", reply_to_message_id=message.id)
+
+        else:
+            print("It is Subtitles option")
+            file = app.download_media(message)
+            cmd = helperfunctions.subtitlescommand(file,output)
+            os.system(cmd)
+            os.remove(file)
+
+            if os.path.exists(output) and os.path.getsize(output) > 0:
+                app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
+                app.send_document(message.chat.id,document=output, force_document=True, reply_to_message_id=message.id)
+            else:
+                app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
+                
+            if os.path.exists(output):
+                os.remove(output)
+
+
+    # or else
     else:
         app.send_message(message.chat.id,"__Choose a Valid Extension, don't Type it__", reply_to_message_id=message.id)
+
 
     # deleting message    
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
@@ -382,9 +420,10 @@ def getmag(message,oldm):
 
 
 # getting torrent file
-def gettorfile(message):
+def gettorfile(message,oldm):
     file = torrent.getTorrent(message.text)
     app.send_document(message.chat.id, file, reply_to_message_id=message.id)
+    app.delete_messages(message.chat.id,message_ids=[oldm.id])
     os.remove(file)
 
 
@@ -889,6 +928,14 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 🧲\n__Do you want to extract Magnet Link ?__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=TORboard, reply_to_message_id=message.id)
 
+    elif message.document.file_name.upper().endswith(SUB):
+        with open(f'{message.from_user.id}.json', 'wb') as handle:
+            pickle.dump(message, handle)
+        dext = message.document.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,
+                         f'__Detected Extension:__ **{dext}** 🗯️ \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{SUB_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                         reply_markup=SUBboard, reply_to_message_id=message.id)
+
     else:
         oldm = app.send_message(message.chat.id,'**No Available Conversions Found, Trying to Read File**',reply_markup=ReplyKeyboardRemove())
         rf = threading.Thread(target=lambda:readf(message,oldm,allowrename=True),daemon=True)
@@ -997,7 +1044,8 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
     # magnet link
     if message.text[:8] == "magnet:?":
-        tf = threading.Thread(target=lambda:gettorfile(message),daemon=True)
+        oldm = app.send_message(message.chat.id,'__Processing...__', reply_to_message_id=message.id) 
+        tf = threading.Thread(target=lambda:gettorfile(message,oldm),daemon=True)
         tf.start()
         return
 
@@ -1138,7 +1186,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             
         else:
             msg = app.send_message(message.chat.id, f'Converting from **{oldext.upper()}** to **{newext.upper()}**', reply_to_message_id=nmessage.id, reply_markup=ReplyKeyboardRemove())
-            conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext, msg), daemon=True)
+            conv = threading.Thread(target=lambda: follow(nmessage, inputt, newext, oldext, msg), daemon=True)
             conv.start()
 
         app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
@@ -1154,4 +1202,5 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 #apprun
 print("Bot Started")
 app.run()
+
 

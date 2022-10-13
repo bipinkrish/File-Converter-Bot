@@ -12,3 +12,4 @@ pydub
 gTTS
 Pillow
 bs4
+ttconv
