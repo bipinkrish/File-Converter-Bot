@@ -16,7 +16,7 @@ import aifunctions
 import helperfunctions
 import mediainfo
 import guess
-import torrent
+import tormag
 
 
 # env
@@ -88,7 +88,7 @@ def follow(message,inputt,new,old,oldmessage):
                 text = ocr.read()
             os.remove(f"{message.id}.txt")
             if text != "":
-		app.send_message(message.chat.id, text, reply_to_message_id=message.id)
+                app.send_message(message.chat.id, text, reply_to_message_id=message.id)
             
         if new == "ico":
             slist = ["256", "128", "96", "64", "48", "32", "16"]
@@ -414,15 +414,15 @@ def extract(message,oldm):
 # getting magnet
 def getmag(message,oldm):
     file = app.download_media(message)
-    maglink = torrent.getMagnet(file)
+    maglink = tormag.getMagnet(file)
     app.send_message(message.chat.id, f'__{maglink}__', reply_to_message_id=message.id)
     app.delete_messages(message.chat.id,message_ids=[oldm.id])
     os.remove(file)
 
 
-# getting torrent file
+# getting tor file
 def gettorfile(message,oldm):
-    file = torrent.getTorrent(message.text)
+    file = tormag.getTorFile(message.text)
     app.send_document(message.chat.id, file, reply_to_message_id=message.id)
     app.delete_messages(message.chat.id,message_ids=[oldm.id])
     os.remove(file)
