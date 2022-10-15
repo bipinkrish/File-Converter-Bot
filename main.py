@@ -389,7 +389,7 @@ def readf(message,oldmessage):
             return
 
         for ele in split:
-            app.send_message(message.chat.id, ele, reply_to_message_id=message.id)
+            app.send_message(message.chat.id, ele, disable_web_page_preview=True, reply_to_message_id=message.id)
             time.sleep(3)   
     except:
             app.send_message(message.chat.id, "__Error in Reading File__", reply_to_message_id=message.id)
@@ -839,7 +839,8 @@ def makecmd(client: pyrogram.client.Client, message: pyrogram.types.messages_and
     if os.path.exists(f'{message.from_user.id}.json'):
         with open(f'{message.from_user.id}.json', 'rb') as handle:
             nmessage = pickle.loads(handle.read())
-        text = nmessage.text
+	os.remove(f'{message.from_user.id}.json')
+	text = nmessage.text
     else:
         try:
             text = str(message.reply_to_message.text)
@@ -1017,7 +1018,9 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
     
     # else
     else:
-        app.send_message(message.chat.id,'__No Available Conversions found for the File.\n\nYou can use:__\n **/rename new-filename** __to Rename__\n**/read** __to Read the File__',reply_markup=ReplyKeyboardRemove())
+        oldm = app.send_message(message.chat.id,'__No Available Conversions found.\n\nYou can use:__\n**/rename new-filename** __to Rename__\n**/read** __to Read the File__')
+	dm = threading.Thread(target=lambda:dltmsg(message,oldm),daemon=True)
+	dm.start() 
 
 
 # animation
@@ -1272,7 +1275,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
     else:
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
-        if message.from_user.id == message.chat.id:
+        if str(message.from_user.id) == str(message.chat.id):
             app.send_message(message.chat.id, '__for Text messages, You can use **/make** to Create a File from it.\n(first line of text will be trancated and used as filename)__', reply_to_message_id=nmessage.id)
             
             
