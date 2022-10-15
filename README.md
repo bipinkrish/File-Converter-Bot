@@ -49,13 +49,15 @@
 
 **Subtitles**: *TTML, SCC, STL, SRT, VTT*
 
+**Programming Languages**: *C, CPP, PY, RS, JL, KT, NIM, DART, GO, JAVA, JS, TS*
+
 ---
 
 ## Extra Features
 
 **PLAY** - *Play a Game with Bot*
 
-**SAVE RESTRICTED** - *Send a Resctircted Public Chat Post's Link, Bot will Send you that Post*
+**SAVE RESTRICTED** - *Send a Resctircted Public Chat Post;s Link, Bot will Send you that Post*
 
 ---
 

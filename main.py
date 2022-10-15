@@ -17,6 +17,7 @@ import helperfunctions
 import mediainfo
 import guess
 import tormag
+import progconv
 
 
 # env
@@ -205,6 +206,60 @@ def follow(message,inputt,new,old,oldmessage):
             if os.path.exists(output):
                 os.remove(output)
 
+
+    # programs
+    elif output.upper().endswith(PRO) and inputt.upper().endswith(PRO):
+
+        flag = 0
+        if ((old.upper() == "C") and (new.upper() == "GO")):
+            flag = 1
+
+        elif ((old.upper() == "PY") and (new.upper() in ['CPP','RS','JL','KT','NIM','DART','GO'])):
+            flag = 2
+            extens = ['CPP','RS','JL','KT','NIM','DART','GO']
+            langs = ['cpp','rust','julia','kotlin','nim','dart','go']
+            for i in range(len(langs)):
+                if new.upper() == extens[i]:
+                    lang = langs[i]
+
+        elif ((old.upper() == "JAVA") and (new.upper() in ["JS","TS"])):
+            flag = 3
+            lang = new.upper()
+
+        if not flag:
+            app.send_message(message.chat.id,f"__**{old.upper()}** to **{new.upper()}** is not Supported.\n\
+            \n**Supported Formats:**\nC -> GO\nPY -> CPP,RS,JL,KT,NIM,DART,GO\nJAVA -> JS,TS__", reply_to_message_id=message.id)
+
+        else:
+            print("It is Programs option")
+            file = app.download_media(message)
+
+            if flag == 1:
+                output = progconv.c2Go(file)
+            elif flag == 2:
+                output = progconv.py2Many(file,lang)
+            elif flag == 3:
+                info = progconv.java2JSandTS(file,lang)
+                if info[0] == 1:
+                    with open(output,"w") as pfile:
+                        pfile.write(info[1])
+                else:
+                    errormessage = ""
+                    for ele in info[1]:
+                        errormessage = errormessage + ele + "\n"
+
+            os.remove(file)
+
+            if os.path.exists(output) and os.path.getsize(output) > 0:
+                app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
+                app.send_document(message.chat.id,document=output, force_document=True, reply_to_message_id=message.id)
+            else:
+                if flag != 3:
+                    errormessage = "Error while Conversion"
+                app.send_message(message.chat.id,f"__{errormessage}__", reply_to_message_id=message.id)
+                
+            if os.path.exists(output):
+                os.remove(output)
 
     # or else
     else:
@@ -857,6 +912,7 @@ def answer(client: pyrogram.client.Client, call: pyrogram.types.CallbackQuery):
 # document
 @app.on_message(filters.document)
 def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    # VID / AUD
     if message.document.file_name.upper().endswith(VIDAUD):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
@@ -865,6 +921,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 📹 / 🔊\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{VA_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=VAboard, reply_to_message_id=message.id)
 
+    # IMG
     elif message.document.file_name.upper().endswith(IMG):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
@@ -873,6 +930,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=IMGboard, reply_to_message_id=message.id)
 
+    # LBW
     elif message.document.file_name.upper().endswith(LBW):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
@@ -881,6 +939,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 💼 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{LBW_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=LBWboard, reply_to_message_id=message.id)
 
+    # LBC
     elif message.document.file_name.upper().endswith(LBC):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
@@ -889,6 +948,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 💼 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{LBC_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=LBCboard, reply_to_message_id=message.id)
 
+    # LBI
     elif message.document.file_name.upper().endswith(LBI):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
@@ -897,6 +957,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 💼 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{LBI_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=LBIboard, reply_to_message_id=message.id)
 
+    # FF
     elif message.document.file_name.upper().endswith(FF):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
@@ -905,6 +966,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 🔤 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{FF_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=FFboard, reply_to_message_id=message.id)
 
+    # EB
     elif message.document.file_name.upper().endswith(EB):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
@@ -912,7 +974,8 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
         app.send_message(message.chat.id,
                          f'__Detected Extension:__ **{dext}** 📚 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{EB_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=EBboard, reply_to_message_id=message.id)
-
+    
+    # ARC
     elif message.document.file_name.upper().endswith(ARC):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
@@ -921,6 +984,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 🗄\n__Do you want to Extract ?__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=ARCboard, reply_to_message_id=message.id)
 
+    # TOR
     elif message.document.file_name.upper().endswith(TOR):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
@@ -928,7 +992,8 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
         app.send_message(message.chat.id,
                          f'__Detected Extension:__ **{dext}** 🧲\n__Do you want to extract Magnet Link ?__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=TORboard, reply_to_message_id=message.id)
-
+    
+    # SUB
     elif message.document.file_name.upper().endswith(SUB):
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
@@ -937,6 +1002,16 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 🗯️ \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{SUB_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=SUBboard, reply_to_message_id=message.id)
 
+    # PRO
+    elif message.document.file_name.upper().endswith(PRO):
+        with open(f'{message.from_user.id}.json', 'wb') as handle:
+            pickle.dump(message, handle)
+        dext = message.document.file_name.split(".")[-1].upper()
+        app.send_message(message.chat.id,
+                         f'__Detected Extension:__ **{dext}** 👨‍💻 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{PRO_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                         reply_markup=PROboard, reply_to_message_id=message.id)
+    
+    # else
     else:
         oldm = app.send_message(message.chat.id,'**No Available Conversions Found, Trying to Read File**',reply_markup=ReplyKeyboardRemove())
         rf = threading.Thread(target=lambda:readf(message,oldm,allowrename=True),daemon=True)

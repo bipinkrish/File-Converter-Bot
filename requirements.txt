@@ -13,3 +13,4 @@ gTTS
 Pillow
 bs4
 ttconv
+py2many
