@@ -46,7 +46,7 @@ def java2JSandTS(javacode,lang="JS"):
     }
 
     data = f'-----------------------------373487287711602769823423273183\r\nContent-Disposition: form-data; name="javaCode"\r\n\r\n{javacode}\
-    \r\n-----------------------------373487287711602769823423273183\r\nContent-Disposition: form-data; name="tid"\r\n\r\nbc21573e-c72e-4cf7-180d-c551256e2055\r\n-----------------------------373487287711602769823423273183\r\nContent><Content-Disposition: form-data; name="tsout"\r\n\r\ntrue\r\n-----------------------------373487287711602769823423273183--\r\n'
+    \r\n-----------------------------373487287711602769823423273183\r\nContent-Disposition: form-data; name="tid"\r\n\r\nbc21573e-c72e-4cf7-180d-c551256e2055\r\n-----------------------------373487287711602769823423273183\r\nContent-Disposition: form-data; name="tsout"\r\n\r\ntrue\r\n-----------------------------373487287711602769823423273183--\r\n'
 
     res = requests.post('https://sandbox.jsweet.org/transpile',  headers=headers, data=data).json()
     if res["success"] == True:
