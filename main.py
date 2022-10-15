@@ -825,10 +825,10 @@ def readcmd(client: pyrogram.client.Client, message: pyrogram.types.messages_and
         os.remove(f'{message.from_user.id}.json')
 
     else:
-        app.send_message(message.chat.id,'__First send me a File__', reply_to_message_id=nmessage.id)
+        app.send_message(message.chat.id,'__First send me a File__', reply_to_message_id=message.id)
         return
 
-    oldm = app.send_message(message.chat.id,'__Reading File__', reply_to_message_id=nmessage.id)
+    oldm = app.send_message(message.chat.id,'__Reading File__', reply_to_message_id=message.id)
     rf = threading.Thread(target=lambda:readf(nmessage,oldm),daemon=True)
     rf.start()
 
