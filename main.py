@@ -228,7 +228,7 @@ def follow(message,inputt,new,old,oldmessage):
 
         if not flag:
             app.send_message(message.chat.id,f"__**{old.upper()}** to **{new.upper()}** is not Supported.\n\
-            \n**Supported Formats:**\nC -> GO\nPY -> CPP,RS,JL,KT,NIM,DART,GO\nJAVA -> JS,TS__", reply_to_message_id=message.id)
+            \n**Supported Formats:**\nC -> GO\nPY -> CPP, RS, JL, KT, NIM, DART & GO\nJAVA -> JS & TS__", reply_to_message_id=message.id)
 
         else:
             print("It is Programs option")
@@ -239,7 +239,9 @@ def follow(message,inputt,new,old,oldmessage):
             elif flag == 2:
                 output = progconv.py2Many(file,lang)
             elif flag == 3:
-                info = progconv.java2JSandTS(file,lang)
+                with open(file,"r") as jfile:
+                    javacode = jfile.read()
+                info = progconv.java2JSandTS(javacode,lang)
                 if info[0] == 1:
                     with open(output,"w") as pfile:
                         pfile.write(info[1])
