@@ -839,8 +839,8 @@ def makecmd(client: pyrogram.client.Client, message: pyrogram.types.messages_and
     if os.path.exists(f'{message.from_user.id}.json'):
         with open(f'{message.from_user.id}.json', 'rb') as handle:
             nmessage = pickle.loads(handle.read())
-	os.remove(f'{message.from_user.id}.json')
-	text = nmessage.text
+        os.remove(f'{message.from_user.id}.json')
+        text = nmessage.text
     else:
         try:
             text = str(message.reply_to_message.text)
@@ -1019,8 +1019,8 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
     # else
     else:
         oldm = app.send_message(message.chat.id,'__No Available Conversions found.\n\nYou can use:__\n**/rename new-filename** __to Rename__\n**/read** __to Read the File__')
-	dm = threading.Thread(target=lambda:dltmsg(message,oldm),daemon=True)
-	dm.start() 
+        dm = threading.Thread(target=lambda:dltmsg(message,oldm),daemon=True)
+        dm.start() 
 
 
 # animation
@@ -1284,5 +1284,3 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 #apprun
 print("Bot Started")
 app.run()
-
-
