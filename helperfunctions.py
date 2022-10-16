@@ -9,19 +9,21 @@ telegraph = Telegraph()
 telegraph.create_account(short_name='file-converter')
 
 
+# ctmconv 3d file cmd
+def ctm3dcommand(inputt,output):
+    cmd = f'ctmconv {inputt} {output}'
+    return cmd
+
+
 # ttconv subtiles cmd
 def subtitlescommand(inputt,output):
     cmd = f'tt convert -i {inputt} -o {output}'
-    print("Command to be Executed is")
-    print(cmd)
     return cmd
 
 
 # calibre cmd
 def calibrecommand(inputt,output):
     cmd = f'ebook-convert "{inputt}" "{output}" --enable-heuristics'
-    print("Command to be Executed is")
-    print(cmd)
     return cmd
 
 
@@ -35,8 +37,6 @@ def fontforgecommand(inputt,output,message):
     os.system(f"chmod 777 {message.id}-convert.pe")
     #cmd = f'{fontforge} --appimage-extract-and-run -script "{cdes}"'
     cmd = f'fontforge -script "{cdes}"'
-    print("Command to be Executed is")
-    print(cmd)
     return cmd
 
 
@@ -47,8 +47,6 @@ def libreofficecommand(inputt,new):
         cmd = f'libreoffice --infilter=="writer_pdf_import" --headless --convert-to "{new}":"writer_pdf_Export" "{inputt}" --outdir "{dirPath}"'
     else:
         cmd = f'libreoffice --headless --convert-to "{new}" "{inputt}" --outdir "{dirPath}"'
-    print("Command to be Executed is")
-    print(cmd)
     return cmd
 
 
@@ -56,8 +54,6 @@ def libreofficecommand(inputt,new):
 def tesrctcommand(inputt,out):
     #cmd = f'{tesseract} --appimage-extract-and-run "{inputt}" "{output}"'
     cmd = f'tesseract "{inputt}" {out}'
-    print("Command to be Executed is")
-    print(cmd)
     return cmd
 
 
@@ -68,8 +64,6 @@ def ffmpegcommand(inputt,output,new):
         cmd = f'ffmpeg -i "{inputt}" -c copy "{output}"'
     else:
         cmd = f'ffmpeg -i "{inputt}" "{output}"'
-    print("Command to be Executed is")
-    print(cmd)
     return cmd
 
 
@@ -87,16 +81,12 @@ def magickcommand(inputt,output,new):
         cmd = f'{cmd} "{output}"'
     else:
         cmd = f'convert "{inputt}" "{output}"'
-    print("Command to be Executed is")
-    print(cmd)
     return cmd  
 
 
 # 7zip cmd
 def zipcommand(file,message):
     cmd = f'7z x "{file}" -o{message.id}z > {message.id}zl'
-    print("Command to be Executed is")
-    print(cmd)
     return cmd, f'{message.id}z', f'{message.id}zl'
 
 
@@ -148,7 +138,6 @@ def imageinfo(file):
 # video info
 def videoinfo(file):
     cmd = f'ffprobe -v quiet -show_format -show_streams "{file}" > "{file}.txt"'
-    print(cmd)
     os.system(cmd)
     with open(f'{file}.txt', "rb") as infile:
         info = str(infile.read())

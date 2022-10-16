@@ -263,6 +263,30 @@ def follow(message,inputt,new,old,oldmessage):
             if os.path.exists(output):
                 os.remove(output)
 
+
+    # 3D files
+    elif output.upper().endswith(T3D) and inputt.upper().endswith(T3D):
+
+        if (old.upper() == "WRL"):
+            app.send_message(message.chat.id,f"__**{old.upper()}** is Export Only, cannot be used to Convert from__", reply_to_message_id=message.id)
+
+        else:
+            print("It is 3D files option")
+            file = app.download_media(message)
+            cmd = helperfunctions.ctm3dcommand(file,output)
+            os.system(cmd)
+            os.remove(file)
+
+            if os.path.exists(output) and os.path.getsize(output) > 0:
+                app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
+                app.send_document(message.chat.id,document=output, force_document=True, reply_to_message_id=message.id)
+            else:
+                app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
+                
+            if os.path.exists(output):
+                os.remove(output)
+
+
     # or else
     else:
         app.send_message(message.chat.id,"__Choose a Valid Extension, don't Type it__", reply_to_message_id=message.id)
@@ -1016,11 +1040,16 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 👨‍💻 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{PRO_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=PROboard, reply_to_message_id=message.id)
     
+    # T3D
+    elif message.document.file_name.upper().endswith(T3D):
+        app.send_message(message.chat.id,
+                         f'__Detected Extension:__ **{dext}** 💠 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{T3D_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                         reply_markup=T3Dboard, reply_to_message_id=message.id)
+
     # else
     else:
-        oldm = app.send_message(message.chat.id,'__No Available Conversions found.\n\nYou can use:__\n**/rename new-filename** __to Rename__\n**/read** __to Read the File__')
-        dm = threading.Thread(target=lambda:dltmsg(message,oldm),daemon=True)
-        dm.start() 
+        app.send_message(message.chat.id,'__No Available Conversions found.\n\nYou can use:__\n**/rename new-filename** __to Rename__\n**/read** __to Read the File__')
+    
 
 
 # animation
