@@ -12,7 +12,7 @@ FF = ("SFD","BDF","FNT","OTF","PFA","PFB","TTC","TTF","UFO","WOFF")
 EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT")
 ARC = ("ZIP","RAR","7Z","TAR","XZ","GZ","BZ")
 TOR = ("TORRENT","MAGNET")
-SUB = ("TTML","SCC","STL","SRT","VTT")
+SUB = ("TTML","SCC","SRT","VTT")
 PRO = ('C','CPP','PY','RS','JL','KT','NIM','DART','GO','JAVA','JS','TS')
 T3D = ('CTM','PLY','STL','3DS','DAE','OBJ','LWO','OFF','WRL')
 
@@ -157,7 +157,6 @@ SUBboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert
 SUBboard.add(           
 ReplyButton("TTML"), 
 ReplyButton("SCC"),
-ReplyButton("STL"),
 ReplyButton("SRT"),
 ReplyButton("VTT")
             )
