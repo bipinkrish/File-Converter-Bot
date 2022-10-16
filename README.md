@@ -51,6 +51,8 @@
 
 **Programming Languages**: *C, CPP, PY, RS, JL, KT, NIM, DART, GO, JAVA, JS, TS*
 
+**3D Files**: *CTM, PLY, STL, 3DS, DAE, OBJ, LWO, OFF, WRL*
+
 ---
 
 ## Extra Features
