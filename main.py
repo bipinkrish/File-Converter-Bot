@@ -187,8 +187,8 @@ def follow(message,inputt,new,old,oldmessage):
     # subtitles
     elif output.upper().endswith(SUB) and inputt.upper().endswith(SUB):
 
-        if not ((old.upper() in ["TTML", "SCC", "STL", "SRT"]) and (new.upper() in ["TTML","SRT", "VTT"])):
-            app.send_message(message.chat.id,f"__**{old.upper()}** to **{new.upper()}** is not Supported.\n\n**Supported Formats**\n**Inputs**: TTML, SCC, STL & SRT\n**Outputs**: TTML, SRT & VTT__", reply_to_message_id=message.id)
+        if not ((old.upper() in ["TTML", "SCC", "SRT"]) and (new.upper() in ["TTML","SRT", "VTT"])):
+            app.send_message(message.chat.id,f"__**{old.upper()}** to **{new.upper()}** is not Supported.\n\n**Supported Formats**\n**Inputs**: TTML, SCC & SRT\n**Outputs**: TTML, SRT & VTT__", reply_to_message_id=message.id)
 
         else:
             print("It is Subtitles option")
