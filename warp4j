@@ -1,0 +1,737 @@
+#!/usr/bin/env bash
+
+function print_help {
+    echo
+    echo 'Usage: warp4j [options] <app.jar>'
+    echo
+    echo 'Turn JAR (java archive) into self-contained executable'
+    echo
+    echo 'Options:'
+    echo '  -j, --java-version   <version>'
+    echo '                       override JDK/JRE version'
+    echo '                       examples: "11", "11.0", "11.0.2", "11.0.2+9"'
+    echo '                       (default: 11)'
+    echo '  -o, --output         <directory>'
+    echo '                       override output directory;'
+    echo '                       this is relative to current PWD'
+    echo '                       (default: ./warped)'
+    echo '  --list               show available java releases;'
+    echo '                       takes into consideration other options:'
+    echo '                       "--java-version", "--no-optimize", "--jvm-impl";'
+    echo '                       the output may be used to specify concrete'
+    echo '                       "--java-version"'
+    echo '  --no-optimize        use JRE instead of optimized JDK;'
+    echo '                       by default jdeps and jlink are used to create'
+    echo '                       optimized JDK for the particular jar;'
+    echo '                       JRE is always used for java 8'
+    echo '  --pull               check if more recent JDK/JRE distro is available;'
+    echo '                       by default latest cached version that matches'
+    echo '                       "--java-version" is used'
+    echo '  --linux              create binary for Linux'
+    echo '  --macos              create binary for macOS'
+    echo '  --windows            create binary for Windows'
+    echo '                       if no targets are specified then binaries for'
+    echo '                       all targets are created'
+    echo '  --jvm-impl           jvm implementation: hotspot or openj9'
+    echo '                       (default: hotspot)'
+    echo '  --jvm-options        <options>'
+    echo '                       passed to java like this:'
+    echo '                       "java <options> -jar <jar file>";'
+    echo '                       use quotes when passing multiple options'
+    echo "                       example: '-Xms512m -Xmx1024m'"
+    echo '  -h, --help           show this message'
+    exit
+}
+
+# exit top level program from subshell
+trap "exit 1" TERM
+export TOP_PID=$$
+function fail() {
+    kill -s TERM $TOP_PID
+}
+
+# fail with a message
+function fail_with() {
+    local message=$1
+    echo "Error: $message" >&2
+    fail
+}
+
+# if error code is not zero fail with a message 
+function fail_if() {
+    local error_code=$1
+    local message=$2
+    if [[ $error_code != 0 ]]; then
+        fail_with "$message"
+    fi
+}
+
+# common warning
+function warn() {
+    local message=$1
+    echo "Warning: $message" >&2
+}
+
+# platform IDs
+LIN=linux
+MAC=macos
+WIN=windows
+
+# returns this platform ID
+function get_this_platform() {
+    local this_platform="$(uname -s)"
+    case $this_platform in
+        Linux*) echo $LIN ;;
+        Darwin*) echo $MAC ;;
+        *)
+            fail_with "Unsupported platform $this_platform"
+        ;;
+    esac
+}
+
+# show help if no arguments specified
+if [[ $# -eq 0 ]]; then
+    print_help
+    exit
+fi
+
+# parse arguments
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+    -h|--help)
+        print_help
+        exit
+    ;;
+    -j|--java-version)
+        JAVA_VERSION="$2"
+        JAVA_VERSION_OVERRIDEN=true
+        shift 2
+    ;;
+    -o|--output)
+        OUTPUT_DIR_PATH="$2"
+        shift 2
+    ;;
+    --list)
+        LIST_RELEASES=true
+        shift
+    ;;
+    --no-optimize)
+        NO_OPTIMIZE=true
+        shift
+    ;;
+    --pull)
+        PULL=true
+        shift
+    ;;
+    --linux)
+        TARGETS+=($LIN)
+        shift
+    ;;
+    --macos)
+        TARGETS+=($MAC)
+        shift
+    ;;
+    --windows)
+        TARGETS+=($WIN)
+        shift
+    ;;
+    --jvm-impl)
+        JVM_IMPL="$2"
+        shift 2
+    ;;
+    --jvm-options)
+        JVM_OPTIONS="$2"
+        shift 2
+    ;;
+    -*|--*) # unsupported options
+        fail_with "Unsupported option $1"
+    ;;
+    *)
+        POSITIONAL+=("$1") # store positional arguments
+        shift
+    ;;
+    esac
+done
+set -- "${POSITIONAL[@]}" # restore positional arguments
+
+THIS_PLATFORM=$(get_this_platform)
+
+# checks if all dependencies are available
+function check_deps() {
+    local deps=( 
+        "awk" \
+        "curl" \
+        "file" \
+        "grep" \
+        "sed" \
+        "sort" \
+        "tar" \
+        "unzip" \
+        "warp-packer" \
+    )
+    local missing=()
+    for d in ${deps[@]}; do
+        if ! command -v $d &> /dev/null ; then
+            missing+=($d)
+        fi
+    done
+    if [[ $missing ]]; then
+        echo -n "Error: Missing dependencies: " >&2
+        for d in ${missing[@]}; do
+            echo -n "$d " >&2
+        done
+        echo >&2
+        fail
+    fi
+}
+
+# actually check dependencies
+check_deps
+
+# apart from options only one argument is allowed
+if [[ $# -gt 1 ]]; then
+    fail_with "Too many arguments: $*; expecting only jar name"
+else
+    JAR=$1
+fi
+
+# checks if java version specified correctly
+function java_version_is_correct() {
+    local pattern="^[0-9]+(\.[0-9]+(\.[0-9]+(\+[0-9]+)?)?)?$"
+    local version=$1
+    if [[ $version =~ $pattern ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# validate java version
+if [[ $JAVA_VERSION ]] && ! java_version_is_correct $JAVA_VERSION ; then
+    fail_with "JDK version \"$JAVA_VERSION\" is not correct"
+fi
+
+JVM_IMPL_HOTSPOT=hotspot
+JVM_IMPL_OPENJ9=openj9
+
+# validate jvm implementation
+if [[ $JVM_IMPL ]] && 
+   [[ $JVM_IMPL != $JVM_IMPL_HOTSPOT ]] &&
+   [[ $JVM_IMPL != $JVM_IMPL_OPENJ9 ]]; then
+    fail_with "jvm implementation \"$JVM_IMPL\" is not correct"
+fi
+
+LATEST_LTS=11 # latest LTS java branch
+
+# default options
+test -z $JAVA_VERSION && JAVA_VERSION=$LATEST_LTS
+test -z $TARGETS && TARGETS=($LIN $MAC $WIN)
+test -z $JVM_IMPL && JVM_IMPL=$JVM_IMPL_HOTSPOT
+
+# returns java branch version
+function get_base_version() {
+    local version=$1
+    echo `echo $version | cut -d"." -f1`
+}
+
+# actually set java branch
+JAVA_VERSION_BASE=$(get_base_version $JAVA_VERSION)
+
+DISTRO_TYPE_JRE=jre
+DISTRO_TYPE_JDK=jdk
+
+# chooses what to use, JDK or JRE
+function choose_distro_type() {
+    if [[ $JAVA_VERSION_BASE == 8 ]] ||
+       [[ $NO_OPTIMIZE ]]; then
+        echo $DISTRO_TYPE_JRE
+    else
+        echo $DISTRO_TYPE_JDK
+    fi
+}
+
+# actually choose distro type
+JAVA_DISTRO_TYPE=$(choose_distro_type)
+
+# generates adoptopenjdk api url
+function api_url() {
+    local request=$1 # info/binary
+    local platform=$2 # windows/linux/macos
+    # adoptopenjdk uses "mac" instead of "macos"
+    if [[ $platform == "macos" ]]; then
+        platform="mac"
+    fi
+    echo -n "https://api.adoptopenjdk.net/v2/\
+$request/releases/openjdk$JAVA_VERSION_BASE?\
+openjdk_impl=$JVM_IMPL&\
+os=$platform&\
+arch=x64&\
+type=$JAVA_DISTRO_TYPE"
+}
+
+# requests info about all releases for given platform and java branch
+function fetch_distro_info() {
+    local platform=$1 # platform ID
+    local branch=$2 # 8/9/10/11...
+    curl -s $(api_url info $platform)
+    fail_if $? "Failed to fetch java $branch info"
+}
+
+# extracts all concrete java versions that match the version specified by user
+# from provided distro info
+function find_matched_versions() {
+    local info=$1
+    local user_version=$2
+    # turning something like "11.0.1+13" into regexp like "^11\.0\.1\+13"
+    local pattern="^"$(echo $user_version \
+        | sed -e 's/\./\\\./g' -e 's/\+/\\\+/g')
+    local versions=$(echo "$info" \
+        | grep '"semver"' \
+        | sort --reverse --version-sort \
+        | awk '{print $2}' \
+        | sed -e 's/"//g' -e 's/,//')
+    for v in ${versions[@]}; do
+        if [[ $v =~ $pattern ]]; then
+            echo $v
+        fi
+    done
+}
+
+# prints all concrete java versions that match the version specified by user
+function list_releases() {
+    local info
+    local matched
+    local printed
+    local platform="linux" # just picked any
+    info=$(fetch_distro_info $platform $JAVA_VERSION_BASE)
+    matched=$(find_matched_versions "$info" $JAVA_VERSION)
+    if [[ $matched ]]; then
+        echo "Releases that match $JAVA_VERSION:"
+        for m in ${matched[@]}; do
+            if [[ ${printed[@]} != *"$m"* ]]; then
+                echo $m
+                printed+=($m)
+            fi
+        done
+    else
+        echo "No releases that match $JAVA_VERSION"
+    fi
+}
+
+# actually show matched releases
+if [[ $LIST_RELEASES ]]; then
+    list_releases
+    exit
+fi
+
+JAR_FILE_BASE_NAME=$(basename -- "$JAR") # "my-app.jAr"
+JAR_EXTENSION="${JAR_FILE_BASE_NAME##*.}" # "jAr" 
+JAR_EXTENSION_LOWERCASE=$(printf "%s" "$JAR_EXTENSION" | tr '[:upper:]' '[:lower:]') # "jar"
+JAR_NAME="${JAR_FILE_BASE_NAME%.*}" # "my-app"
+
+APP_NAME=$JAR_NAME # final binary name
+LAUNCHER_NAME=$JAR_NAME # launcher name inside bundle
+
+# checking jar file exists
+if [[ ! -e $JAR ]]; then
+    fail_with "File \"$JAR\" does not exist"
+fi
+
+# checking file is actually java archive
+if ([[ $(file $JAR) != *"Java"* ]] && # it could be "Java archive data" or "Java Jar file data (zip)"
+   [[ $(file $JAR) != *"Zip"*  ]]) || # or "Zip archive data"
+   [[ $JAR_EXTENSION_LOWERCASE != "jar" ]]; then
+    fail_with "File \"$JAR\" is not a java archive"
+fi
+
+# even if this platform is not targeted, we still need
+# a JDK for this platform to optimize JDKs for other platforms 
+TARGETS_TO_CACHE=${TARGETS[@]}
+if [[ $JAVA_DISTRO_TYPE == $DISTRO_TYPE_JDK ]] &&  # if usind JDK (not JRE)
+   [[ ${TARGETS[@]} != *"$THIS_PLATFORM"* ]]; then # and this platform is not targeted
+    TARGETS_TO_CACHE+=($THIS_PLATFORM)
+fi
+
+# choose cache path for this platform
+case $THIS_PLATFORM in
+    $MAC) CACHE_PATH="$HOME/Library/Application Support/warp4j" ;;
+    *)    CACHE_PATH="$HOME/.local/share/warp4j" ;;
+esac
+
+# cache path can be overriden with environment variable
+if [[ $WARP4J_CACHE ]]; then
+    CACHE_PATH=$WARP4J_CACHE
+fi
+
+# this is not full path, platform name and full version will be added
+JAVA_DOWNLOAD_PATH=$CACHE_PATH/$JAVA_DISTRO_TYPE/$JVM_IMPL
+BUNDLES_PATH=$CACHE_PATH/bundle # prepare bundles here
+
+DIR="$(pwd -P)" # execution directory path
+
+# final binaries created in WARPED_TEMP_PATH and then moved to WARPED_PATH
+WARPED_TEMP_PATH=$CACHE_PATH/out-temp
+if [[ -z $OUTPUT_DIR_PATH ]]; then
+    WARPED_PATH=$DIR/warped
+else
+    WARPED_PATH=$OUTPUT_DIR_PATH
+fi
+
+BUNDLED_DISTRO_SUBDIR="java" # runtime directory inside a bundle
+
+# prints a launcher for bash
+function print_launcher_bash() {
+printf "%s" \
+'#!/usr/bin/env bash
+
+JAVA_DIST='"$BUNDLED_DISTRO_SUBDIR"'
+JAR='"$JAR_NAME"'.jar
+
+DIR="$(cd "$(dirname "$0")" ; pwd -P)"
+JAVA=$DIR/$JAVA_DIST/bin/java
+JAR_PATH=$DIR/$JAR
+
+exec "$JAVA" '"$JVM_OPTIONS"' -jar "$JAR_PATH" "$@"
+' 
+}
+
+# prints a launcher for windows cmd
+function print_launcher_cmd() {
+printf "%s" \
+'@ECHO OFF
+
+SETLOCAL
+
+SET "JAVA_DIST='"$BUNDLED_DISTRO_SUBDIR"'"
+SET "JAR='"$JAR_NAME"'.jar"
+
+SET "JAVA=%~dp0\%JAVA_DIST%\bin\java.exe"
+SET "JAR_PATH=%~dp0\%JAR%"
+
+CALL %JAVA% '"$JVM_OPTIONS"' -jar %JAR_PATH% %*
+EXIT /B %ERRORLEVEL%
+' 
+}
+
+# these files are success markers
+MARKER_DOWNLOADED="downloaded" # after runtime download
+MARKER_UNPACKED="unpacked" # after runtime uncompress
+
+# returns latest cached version that matches version specified by user
+function find_latest_cached() {
+    local platform=$1
+    local user_version=$2
+    local platform_dir=$JAVA_DOWNLOAD_PATH/$platform/
+    # turning something like "11.0.1+13" into regexp like "^11\.0\.1\+13"
+    local pattern="^"$(echo $user_version \
+                     | sed -e 's/\./\\\./g' -e 's/\+/\\\+/g')
+    local versions=$(ls -1 "$platform_dir" 2> /dev/null \
+                   | sort --reverse --version-sort)
+    local version
+    for v in ${versions[@]}; do
+        if [[ -e $platform_dir/$v/$MARKER_DOWNLOADED ]] &&
+           [[ $v =~ $pattern ]]; then
+            version=$v
+            break
+        fi
+    done
+    if [[ $version ]]; then
+        echo $version
+    else
+        return 1
+    fi
+}
+
+# finds latest concrete distro version that matches version specified by user
+function find_latest_version() {
+    local info=$1 # info fetched from AdoptOpenJDK
+    local user_version=$2 # version supplied by user is a template
+    local matched_version # latest version that matches the template
+    local versions # all versions
+    versions=$(echo "$info" \
+            | grep '"semver"' \
+            | sort --reverse --version-sort \
+            | awk '{print $2}' \
+            | sed -e 's/"//g' -e 's/,//')
+    # turning something like "11.0.1+13" into regexp like "^11\.0\.1\+13"
+    # remember that user may provide shorter version like "11", "11.0", "11.0.1"
+    local pattern="^"$(echo $user_version | sed -e 's/\./\\\./g' -e 's/\+/\\\+/g')
+    for v in ${versions[@]}; do
+        if [[ $v =~ $pattern ]]; then
+            matched_version=$v
+            break
+        fi
+    done
+    if [[ -z $matched_version ]]; then
+        fail_with "Can't find distro that matches $user_version"
+    fi
+    echo $matched_version
+}
+
+# finds direct link to download concrete runtime version
+function find_distro_link() {
+    local info=$1 # info fetched from AdoptOpenJDK
+    local version=$2 # concrete distro version like "11.0.2+9"
+    local link=$(echo "$info" \
+        | grep -B13 "\"heap_size\": \"normal\"" \
+        | grep -B11 "\"semver\": \"$version\"" \
+        | grep "binary_link" \
+        | sort --reverse \
+        | head -n 1 \
+        | awk '{print $2}' \
+        | sed -e 's/"//g' -e 's/,//')
+    if [[ -z $link ]]; then
+        fail_with "Can't find download link for $version"
+    fi
+    echo "$link"
+}
+
+# downloads runtime distro
+function download_distro() {
+    local platform=$1
+    local version=$2
+    local link=$3
+    local download_dir=$JAVA_DOWNLOAD_PATH/$platform/$version
+    echo "Downloading $JVM_IMPL-$JAVA_DISTRO_TYPE-$version-$platform..."
+    rm -rf "$download_dir"
+    mkdir -p "$download_dir"
+    (cd "$download_dir"
+        curl --progress-bar --location --remote-name "$link"
+        if [[ $? == 0 ]]; then
+            touch $MARKER_DOWNLOADED
+        else
+            fail_with "Failed to download $JVM_IMPL-$JAVA_DISTRO_TYPE-$version-$platform"
+        fi
+    )
+}
+
+# ensures required distro is in cache 
+function ensure_distro_cached() {
+    local platform=$1
+    local distro_info
+    local distro_link
+    if [[ -z $PULL ]]; then
+        if [[ -z $JAVA_VERSION_OVERRIDEN ]]; then
+            if [[ ! $(find_latest_cached $platform $LATEST_LTS) ]]; then
+                distro_info=$(fetch_distro_info $platform $LATEST_LTS)
+                CONCRETE_JAVA_VERSION=$(find_latest_version "$distro_info" $LATEST_LTS)
+                distro_link=$(find_distro_link "$distro_info" $CONCRETE_JAVA_VERSION)
+                download_distro $platform $CONCRETE_JAVA_VERSION "$distro_link"
+            else
+                CONCRETE_JAVA_VERSION=$(find_latest_cached $platform $LATEST_LTS)
+            fi 
+        else
+            if [[ ! $(find_latest_cached $platform $JAVA_VERSION) ]]; then
+                distro_info=$(fetch_distro_info $platform $JAVA_VERSION_BASE)
+                CONCRETE_JAVA_VERSION=$(find_latest_version "$distro_info" $JAVA_VERSION)
+                distro_link=$(find_distro_link "$distro_info" $CONCRETE_JAVA_VERSION)
+                download_distro $platform $CONCRETE_JAVA_VERSION "$distro_link"
+            else
+                CONCRETE_JAVA_VERSION=$(find_latest_cached $platform $JAVA_VERSION)
+            fi 
+        fi
+    else
+        if [[ -z $JAVA_VERSION ]]; then
+            distro_info=$(fetch_distro_info $platform $LATEST_LTS)
+            CONCRETE_JAVA_VERSION=$(find_latest_version "$distro_info" $LATEST_LTS)
+        else
+            distro_info=$(fetch_distro_info $platform $JAVA_VERSION_BASE)
+            CONCRETE_JAVA_VERSION=$(find_latest_version "$distro_info" $JAVA_VERSION)
+        fi
+        if [[ ! $(find_latest_cached $platform $CONCRETE_JAVA_VERSION) ]]; then
+            distro_link=$(find_distro_link "$distro_info" $CONCRETE_JAVA_VERSION)
+            download_distro $platform $CONCRETE_JAVA_VERSION "$distro_link"
+        fi
+    fi
+}
+
+# actually ensure required distro is in cache
+for target in ${TARGETS_TO_CACHE[@]}; do
+    ensure_distro_cached $target
+done
+
+UNPACKED_SUBDIR="distro"
+
+# ensures required distro uncompressed 
+function ensure_distro_unpacked() {
+    local platform=$1
+    local version=$2
+    local download_dir=$JAVA_DOWNLOAD_PATH/$platform/$version
+    local unpacked_dir=$download_dir/$UNPACKED_SUBDIR
+    if [[ ! -e $download_dir/$MARKER_UNPACKED ]]; then
+        echo "Uncompressing $JVM_IMPL-$JAVA_DISTRO_TYPE-$version-$platform"
+        # removing all leftover directories
+        for d in "$download_dir"/* ; do
+            if [[ -d $d ]]; then
+                rm -rf "$d"
+            fi
+        done
+        case $platform in
+            $LIN)
+                mkdir -p "$unpacked_dir"
+                tar --strip-components=1 -C "$unpacked_dir" -xzf "$download_dir"/*.tar.gz
+            ;;
+            $MAC)
+                # to uncompess distro for macOS we need to use wildcards
+                # to use wildcards with GNU tar (on Linux) '--wildcard' option is required
+                # to use wildcards with BSD tar (on macOS) no options required
+                # if invoked with '--wildcards' BSD tar with exit with message:
+                # "Option --wildcards is not supported"
+                local tar_cmd
+                if tar --wildcards 2>&1 | grep "not supported" > /dev/null ; then
+                    tar_cmd="tar"
+                else
+                    tar_cmd="tar --wildcards"
+                fi
+                mkdir -p "$unpacked_dir"
+                $tar_cmd --strip-components=3 -C "$unpacked_dir" -xzf "$download_dir"/*.tar.gz \
+                    "jdk*/Contents/Home"
+            ;;
+            $WIN)
+                (cd "$download_dir"
+                    unzip -oq *.zip && mv jdk* $UNPACKED_SUBDIR
+                )
+            ;;
+        esac
+        if [[ $? == 0 ]]; then
+            touch "$download_dir/$MARKER_UNPACKED"
+            case $platform in
+                $WIN) rm "$download_dir"/*.zip    ;;
+                *)    rm "$download_dir"/*.tar.gz ;;
+            esac
+        else
+            fail_with "Failed to unpack $JVM_IMPL-$JAVA_DISTRO_TYPE-$version-$platform"
+        fi
+    fi
+}
+
+# actually ensure required distro uncompressed 
+for target in ${TARGETS[@]}; do
+    ensure_distro_unpacked $target $CONCRETE_JAVA_VERSION
+done
+
+JDK_PATH=$JAVA_DOWNLOAD_PATH/$THIS_PLATFORM/$CONCRETE_JAVA_VERSION/$UNPACKED_SUBDIR
+JLINK=$JDK_PATH/bin/jlink
+JDEPS=$JDK_PATH/bin/jdeps
+
+# modules are only needed if JDK optimisation is performed
+if [[ $JAVA_DISTRO_TYPE == $DISTRO_TYPE_JDK ]]; then
+    echo "Analyzing dependencies..."
+    # TODO check for errors
+    MODULES=$("$JDEPS" --print-module-deps "$JAR" | grep -v Warning)
+fi
+
+# creates minimized runtime for the platform
+function create_optimized_runtime() {
+    local platform=$1
+    local jmods=$JAVA_DOWNLOAD_PATH/$platform/$CONCRETE_JAVA_VERSION/$UNPACKED_SUBDIR/jmods
+    echo "Creating minimal runtime for $platform..."
+    "$JLINK" \
+        --no-header-files \
+        --no-man-pages \
+        --strip-debug \
+        --module-path "$jmods" \
+        --add-modules $MODULES \
+        --output "$BUNDLES_PATH/$platform/$BUNDLED_DISTRO_SUBDIR"
+    fail_if $? "Failed to optimize runtime"
+}
+
+# creates warp bundle for the platform
+function create_bundle() {
+    local platform=$1
+    case $JAVA_DISTRO_TYPE in
+        $DISTRO_TYPE_JDK)
+            create_optimized_runtime $platform
+        ;;
+        $DISTRO_TYPE_JRE)
+            mkdir -p "$BUNDLES_PATH/$platform/$BUNDLED_DISTRO_SUBDIR"
+            cp -r "$JAVA_DOWNLOAD_PATH/$platform/$CONCRETE_JAVA_VERSION/$UNPACKED_SUBDIR"/* \
+                  "$BUNDLES_PATH/$platform/$BUNDLED_DISTRO_SUBDIR"
+        ;;
+    esac
+    case $platform in
+        $WIN) print_launcher_cmd  > "$BUNDLES_PATH/$platform/$LAUNCHER_NAME.cmd" ;;
+        *) print_launcher_bash > "$BUNDLES_PATH/$platform/$LAUNCHER_NAME.sh"
+            chmod +x "$BUNDLES_PATH/$platform/$LAUNCHER_NAME.sh"
+        ;;
+    esac
+    cp "$JAR" "$BUNDLES_PATH/$platform/"
+}
+
+# remove old bundles
+rm -rf "$BUNDLES_PATH"
+# actually create bundles for all targets
+for target in ${TARGETS[@]}; do
+    create_bundle $target
+done
+
+# creates binaries and archives for all targets
+function warp_targets() {
+    mkdir -p "$WARPED_PATH"
+
+    if [[ ${TARGETS[*]} == *"$LIN"* ]]; then
+        echo "Warping for $LIN..."
+        mkdir -p "$WARPED_TEMP_PATH/$LIN"
+        warp-packer \
+            --arch linux-x64 \
+            --input_dir "$BUNDLES_PATH/$LIN" \
+            --exec "$LAUNCHER_NAME.sh" \
+            --output "$WARPED_TEMP_PATH/$LIN/$APP_NAME" \
+            &> /dev/null
+        fail_if $? "Failed to warp for $LIN"
+        echo "Archiving for $LIN..."
+        tar -C "$WARPED_TEMP_PATH/$LIN" -czf "$WARPED_TEMP_PATH/$APP_NAME-$LIN-x64.tar.gz" "$APP_NAME"
+        fail_if $? "Failed to make archive for $LIN"
+        mv "$WARPED_TEMP_PATH/$LIN/$APP_NAME" "$WARPED_PATH/$APP_NAME-$LIN-x64"
+        mv "$WARPED_TEMP_PATH/$APP_NAME-$LIN-x64.tar.gz" "$WARPED_PATH"
+        rmdir "$WARPED_TEMP_PATH/$LIN"
+    fi
+
+    if [[ ${TARGETS[*]} == *"$MAC"* ]]; then
+        echo "Warping for $MAC..."
+        mkdir -p "$WARPED_TEMP_PATH/$MAC"
+        warp-packer \
+            --arch macos-x64 \
+            --input_dir "$BUNDLES_PATH/$MAC" \
+            --exec "$LAUNCHER_NAME.sh" \
+            --output "$WARPED_TEMP_PATH/$MAC/$APP_NAME" \
+            &> /dev/null
+        fail_if $? "Failed to warp for $MAC"
+        echo "Archiving for $MAC..."
+        tar -C "$WARPED_TEMP_PATH/$MAC" -czf "$WARPED_TEMP_PATH/$APP_NAME-$MAC-x64.tar.gz" "$APP_NAME"
+        fail_if $? "Failed to make archive for $MAC"
+        mv "$WARPED_TEMP_PATH/$MAC/$APP_NAME" "$WARPED_PATH/$APP_NAME-$MAC-x64"
+        mv "$WARPED_TEMP_PATH/$APP_NAME-$MAC-x64.tar.gz" "$WARPED_PATH"
+        rmdir "$WARPED_TEMP_PATH/$MAC"
+    fi
+
+    if [[ ${TARGETS[*]} == *"$WIN"* ]]; then
+        echo "Warping for $WIN..."
+        mkdir -p "$WARPED_TEMP_PATH/$WIN"
+        warp-packer \
+            --arch windows-x64 \
+            --input_dir "$BUNDLES_PATH/$WIN" \
+            --exec "$LAUNCHER_NAME.cmd" \
+            --output "$WARPED_TEMP_PATH/$WIN/$APP_NAME.exe" \
+            &> /dev/null
+        fail_if $? "Failed to warp for $WIN"
+        if command -v zip &> /dev/null ; then (
+            echo "Archiving for $WIN..."
+            cd "$WARPED_TEMP_PATH/$WIN"
+            zip -r "$WARPED_TEMP_PATH/$APP_NAME-$WIN-x64.zip" "$APP_NAME.exe" &> /dev/null
+            fail_if $? "Failed to make archive for $WIN"
+            mv "$WARPED_TEMP_PATH/$APP_NAME-$WIN-x64.zip" "$WARPED_PATH"
+        ) else
+            warn "'zip' not found, will skip creation of archive for windows"
+        fi
+        mv "$WARPED_TEMP_PATH/$WIN/$APP_NAME.exe" "$WARPED_PATH/$APP_NAME-windows-x64.exe"
+        rmdir "$WARPED_TEMP_PATH/$WIN"
+    fi
+    
+    rmdir "$WARPED_TEMP_PATH"
+}
+
+# actually create binaries and archives for all targets
+warp_targets
