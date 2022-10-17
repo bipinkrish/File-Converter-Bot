@@ -2,7 +2,7 @@
 
 **A Telegram Bot that can convert Images, Videos, Audios, Fonts, Documents and Ebooks.**
 
-**_see the bot in action [@FilesConvertRobot](https://t.me/filesconvertrobot)_**
+**_See the Bot in Action [@FilesConvertRobot](https://t.me/filesconvertrobot)_**
 
 ---
 
@@ -12,25 +12,6 @@
 - `TOKEN` **_Your bot token from @BotFather_**
 
 ---
-
-## Special Features
-
-**COLORIZE** - *Colorize your Old Images*
-
-**TEXT-to-IMAGE** - *Get AI created Images from your Prompt*
-
-**POSITIVE** - *Convert your Negetive Images to Positive*
-
-**SPEECH-to-TEXT** - *Transcrpting from a Audio*
-
-**TEXT-to-SPEECH** - *Generate Speech from a Text File*
-
-**UPSCALE** - *Increase Resolution of a Image*
-
-**TEXT-to-VIDEO** - *Get AI created Videos from your Prompt*
-
----
-
 ## Supported Formats
 
 **Images**:  *OCR, ICO, GIF, TIFF, BMP, WEBP, JP2, JPEG, JPG, PNG*
@@ -47,11 +28,33 @@
 
 **Torrents**: *TORRENT, MAGENT*
 
-**Subtitles**: *TTML, SCC, STL, SRT, VTT*
+**Subtitles**: *TTML, SCC, SRT, VTT*
 
 **Programming Languages**: *C, CPP, PY, RS, JL, KT, NIM, DART, GO, JAVA, JS, TS*
 
 **3D Files**: *CTM, PLY, STL, 3DS, DAE, OBJ, LWO, OFF, WRL*
+
+**Executable**: *JAR*
+
+---
+
+## Special Features
+
+**COLORIZE** - *Colorize your Old B&W Images*
+
+**TEXT-to-IMAGE** - *Get AI created Images from your Prompt*
+
+**POSITIVE** - *Convert your Negetive Images to Positive Images*
+
+**SPEECH-to-TEXT** - *Transcrpting from a Audio*
+
+**TEXT-to-SPEECH** - *Generate Speech from a Text File*
+
+**UPSCALE** - *Increase Resolution of a Image*
+
+**TEXT-to-VIDEO** - *Get AI created Videos from your Prompt*
+
+**SCAN** - *Get Scanned Data from QR Codes and Bar Codes*
 
 ---
 

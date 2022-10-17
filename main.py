@@ -504,6 +504,42 @@ def gettorfile(message,oldm):
     os.remove(file)
 
 
+# compiling
+def compile(message,oldm):
+    ext = message.document.file_name.split(".")[-1]
+    file = app.download_media(message)
+
+    if ext.upper() == "JAR":
+        cmd,folder,files = helperfunctions.warpcommand(file,message)
+        os.system(cmd)
+        if not os.path.exists(folder):
+            cmd,folder,files = helperfunctions.warpcommand(file,message,True)
+            os.system(cmd)
+
+        os.remove(file)
+        if os.path.exists(folder):
+            app.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
+            for ele in files:
+                if os.path.exists(ele) and os.path.getsize(ele) > 0:
+                    app.send_document(message.chat.id,document=ele, force_document=True, reply_to_message_id=message.id)
+                os.remove(ele)
+            shutil.rmtree(folder)
+        else:
+            app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
+
+
+    app.delete_messages(message.chat.id,message_ids=[oldm.id])
+
+
+# scanning
+def scan(message,oldm):
+    file = app.download_media(message)
+    info = helperfunctions.scanner(file)
+    app.send_message(message.chat.id,f"__{info}__", reply_to_message_id=message.id)
+    app.delete_messages(message.chat.id,message_ids=[oldm.id])
+    os.remove(file)
+
+
 # make file
 def makefile(message,mtext,oldmessage):
     text = mtext.split("\n")
@@ -1046,6 +1082,12 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          f'__Detected Extension:__ **{dext}** 💠 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{T3D_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=T3Dboard, reply_to_message_id=message.id)
 
+    # BIN
+    elif message.document.file_name.upper().endswith(BIN):
+        app.send_message(message.chat.id,
+                         f'__Detected Extension:__ **{dext}** 🎛️\n__Do you want to Compile it ?__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                         reply_markup=BINboard, reply_to_message_id=message.id)
+
     # else
     else:
         app.send_message(message.chat.id,'__No Available Conversions found.\n\nYou can use:__\n**/rename new-filename** __to Rename__\n**/read** __to Read the File__')
@@ -1240,8 +1282,22 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             oldm = app.send_message(message.chat.id,'__Getting Magnet Link__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             ml = threading.Thread(target=lambda:getmag(nmessage,oldm),daemon=True)
             ml.start()
-            return 
+            return
 
+        if "COMPILE" == message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'__Compiling__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            cmp = threading.Thread(target=lambda:compile(nmessage,oldm),daemon=True)
+            cmp.start()
+            return
+
+        if "SCAN" == message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'__Scanning__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            scn = threading.Thread(target=lambda:scan(nmessage,oldm),daemon=True)
+            scn.start()
+            return
+    
         if "document" in str(nmessage):
             inputt = nmessage.document.file_name
             print("File is a Document")

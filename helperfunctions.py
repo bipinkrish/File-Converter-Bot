@@ -1,5 +1,8 @@
 import os
 from telegraph import Telegraph
+from pyzbar.pyzbar import decode
+from PIL import Image
+
 
 # setting
 currentFile = __file__
@@ -7,6 +10,27 @@ realPath = os.path.realpath(currentFile)
 dirPath = os.path.dirname(realPath)
 telegraph = Telegraph()
 telegraph.create_account(short_name='file-converter')
+
+
+# scan qr and barcode
+def scanner(file):
+    data = decode(Image.open(file))
+    info = ""
+    for ele in data:
+        info = info + str(ele[0],encoding="utf-8") + "\n\n"
+    return info
+
+
+# compiling jar command
+def warpcommand(inputt,message,optimize=False):
+    if not optimize:
+        cmd = f'warp4j {inputt} -o warp{message.id}'
+    else:
+        cmd = f'warp4j {inputt} --no-optimize -o warp{message.id}'
+
+    filename = inputt.replace(".jar","")
+    filelist = [f'warp{message.id}/{filename}-linux-x64', f'warp{message.id}/{filename}-macos-x64', f'warp{message.id}/{filename}-windows-x64.exe']
+    return cmd,f'warp{message.id}/',filelist
 
 
 # ctmconv 3d file cmd

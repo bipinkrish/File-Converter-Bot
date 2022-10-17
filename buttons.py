@@ -15,6 +15,7 @@ TOR = ("TORRENT","MAGNET")
 SUB = ("TTML","SCC","SRT","VTT")
 PRO = ('C','CPP','PY','RS','JL','KT','NIM','DART','GO','JAVA','JS','TS')
 T3D = ('CTM','PLY','STL','3DS','DAE','OBJ','LWO','OFF','WRL')
+BIN = ('JAR')
 
 
 # buttons
@@ -60,6 +61,7 @@ ReplyButton('SVG'),
 ReplyButton('COLOR'),
 ReplyButton('POSITIVE'),
 ReplyButton('UPSCALE'),
+ReplyButton('SCAN'),
 ReplyButton('SENDPHOTO'),
 ReplyButton('SENDDOC')
             )
@@ -191,6 +193,11 @@ ReplyButton('OFF'),
 ReplyButton('WRL')
             )
 
+BINboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
+BINboard.add(           
+ReplyButton('COMPILE')
+            )
+
 
 # texts
 VA_TEXT = helperfunctions.give_name(VIDAUD)
@@ -205,6 +212,8 @@ TOR_TEXT = helperfunctions.give_name(TOR)
 SUB_TEXT = helperfunctions.give_name(SUB)
 PRO_TEXT = helperfunctions.give_name(PRO)
 T3D_TEXT = helperfunctions.give_name(T3D)
+BIN_TEXT = helperfunctions.give_name(BIN)
+
 
 START_TEXT = f'**Images** 📷 \n__{IMG_TEXT}__\n\n\
 **Special** 🎁 \n__COLORIZE, POSITIVE, UPSCALE, TEXT-to-SPEECH, SPEECH-to-TEXT, AI IMAGE & AI VIDEO__\n\n\
@@ -216,5 +225,6 @@ START_TEXT = f'**Images** 📷 \n__{IMG_TEXT}__\n\n\
 **Torrents** 🧲 \n__{TOR_TEXT}__\n\n\
 **Subtitles** 🗯️ \n__{SUB_TEXT}__\n\n\
 **Programming Languages** 👨‍💻 \n__{PRO_TEXT}__\n\n\
-**3D Files** 💠 \n__{T3D_TEXT}__'
+**3D Files** 💠 \n__{T3D_TEXT}__\n\n\
+**Executable** 🎛️ \n__{BIN_TEXT}__'
 
