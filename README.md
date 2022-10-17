@@ -34,7 +34,7 @@
 
 **3D Files**: *CTM, PLY, STL, 3DS, DAE, OBJ, LWO, OFF, WRL*
 
-**Executable**: *JAR*
+**Executables**: *JAR*
 
 ---
 
