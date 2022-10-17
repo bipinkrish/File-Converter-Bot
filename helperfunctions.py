@@ -28,7 +28,7 @@ def warpcommand(inputt,message,optimize=False):
     else:
         cmd = f'warp4j {inputt} --no-optimize -o warp{message.id}'
 
-    filename = inputt.replace(".jar","")
+    filename = inputt.split("/")[-1].replace(".jar","")
     filelist = [f'warp{message.id}/{filename}-linux-x64', f'warp{message.id}/{filename}-macos-x64', f'warp{message.id}/{filename}-windows-x64.exe']
     return cmd,f'warp{message.id}/',filelist
 
