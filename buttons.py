@@ -212,7 +212,7 @@ TOR_TEXT = helperfunctions.give_name(TOR)
 SUB_TEXT = helperfunctions.give_name(SUB)
 PRO_TEXT = helperfunctions.give_name(PRO)
 T3D_TEXT = helperfunctions.give_name(T3D)
-BIN_TEXT = helperfunctions.give_name(BIN)
+BIN_TEXT = "JAR"#helperfunctions.give_name(BIN)
 
 
 START_TEXT = f'**Images** 📷 \n__{IMG_TEXT}__\n\n\
@@ -226,5 +226,5 @@ START_TEXT = f'**Images** 📷 \n__{IMG_TEXT}__\n\n\
 **Subtitles** 🗯️ \n__{SUB_TEXT}__\n\n\
 **Programming Languages** 👨‍💻 \n__{PRO_TEXT}__\n\n\
 **3D Files** 💠 \n__{T3D_TEXT}__\n\n\
-**Executable** 🎛️ \n__{BIN_TEXT}__'
+**Executables** 🎛️ \n__{BIN_TEXT}__'
 
