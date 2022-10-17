@@ -17,6 +17,7 @@ RUN curl -fsSL -o /tmp/warp-packer \
         /usr/local/bin \
     && rm /tmp/warp-packer
 COPY warp4j /usr/local/bin/
+RUN chmod 777 /usr/local/bin/warp4j
 RUN wget https://www.jflap.org/jflaptmp/july27-18/JFLAP7.1.jar && warp4j JFLAP7.1.jar  && rm -r warped/ && warp4j JFLAP7.1.jar --no-optimize && rm -r warped/ && rm JFLAP7.1.jar
 
 COPY . .
