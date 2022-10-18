@@ -30,11 +30,9 @@
 
 **Subtitles**: *TTML, SCC, SRT, VTT*
 
-**Programming Languages**: *C, CPP, PY, RS, JL, KT, NIM, DART, GO, JAVA, JS, TS*
+**Programming Languages**: *C, CPP, PY, RS, JL, KT, NIM, DART, GO, JAVA, JS, TS, JAR*
 
 **3D Files**: *CTM, PLY, STL, 3DS, DAE, OBJ, LWO, OFF, WRL*
-
-**Executables**: *JAR*
 
 ---
 
@@ -55,6 +53,8 @@
 **TEXT-to-VIDEO** - *Get AI created Videos from your Prompt*
 
 **SCAN** - *Get Scanned Data from QR Codes and Bar Codes*
+
+**COMPILE** - *Get Self-Contained Linux Executable*
 
 ---
 

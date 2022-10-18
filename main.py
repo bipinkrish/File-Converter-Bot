@@ -509,6 +509,8 @@ def compile(message,oldm):
     ext = message.document.file_name.split(".")[-1]
     file = app.download_media(message)
 
+
+    # jar compilation
     if ext.upper() == "JAR":
         cmd,folder,files = helperfunctions.warpcommand(file,message)
         os.system(cmd)
@@ -525,9 +527,25 @@ def compile(message,oldm):
                 os.remove(ele)
             shutil.rmtree(folder)
         else:
-            app.send_message(message.chat.id,"__Error while Conversion__", reply_to_message_id=message.id)
+            app.send_message(message.chat.id,"__Error while Compiling__", reply_to_message_id=message.id)
 
 
+    # c and c++ compilation
+    elif ext.upper() in ['C','CPP']:
+        cmd,output = helperfunctions.gppcommand(file)
+        os.system(cmd)
+        os.remove(file)
+        if os.path.exists(output) and os.path.getsize(output) > 0:
+            app.send_document(message.chat.id,document=output, caption="__Linux Executable__", force_document=True, reply_to_message_id=message.id)
+            os.remove(output)
+        else:
+            app.send_message(message.chat.id,"__Error while Compiling__", reply_to_message_id=message.id)
+        
+    else:
+        app.send_message(message.chat.id,"__At this time Compilation only supports from JAR, C and CPP Files__", reply_to_message_id=message.id)
+
+
+    # delete message
     app.delete_messages(message.chat.id,message_ids=[oldm.id])
 
 
@@ -1019,7 +1037,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
     # IMG
     elif message.document.file_name.upper().endswith(IMG):
         app.send_message(message.chat.id,
-                         f'__Detected Extension:__ **{dext}** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                         f'__Detected Extension:__ **{dext}** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE, UPSCALE & SCAN__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=IMGboard, reply_to_message_id=message.id)
 
     # LBW
@@ -1081,12 +1099,6 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
         app.send_message(message.chat.id,
                          f'__Detected Extension:__ **{dext}** 💠 \n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{T3D_TEXT}__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=T3Dboard, reply_to_message_id=message.id)
-
-    # BIN
-    elif message.document.file_name.upper().endswith(BIN):
-        app.send_message(message.chat.id,
-                         f'__Detected Extension:__ **{dext}** 🎛️\n__Do you want to Compile it ?__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
-                         reply_markup=BINboard, reply_to_message_id=message.id)
 
     # else
     else:
@@ -1165,7 +1177,7 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                     f'__Detected Extension:__ **JPG** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                     f'__Detected Extension:__ **JPG** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE, UPSCALE & SCAN__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
@@ -1176,11 +1188,11 @@ def sticker(client: pyrogram.client.Client, message: pyrogram.types.messages_and
             pickle.dump(message, handle)
     if not message.sticker.is_animated and not message.sticker.is_video:
         app.send_message(message.chat.id,
-                     f'__Detected Extension:__ **WEBP** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                     f'__Detected Extension:__ **WEBP** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE, UPSCALE & SCAN__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
     else:
         app.send_message(message.chat.id,
-                    f'__Detected Extension:__ **TGS** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE & UPSCALE__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                    f'__Detected Extension:__ **TGS** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE, UPSCALE & SCAN__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                     reply_markup=IMGboard, reply_to_message_id=message.id)
 
 

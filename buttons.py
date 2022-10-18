@@ -13,9 +13,8 @@ EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT")
 ARC = ("ZIP","RAR","7Z","TAR","XZ","GZ","BZ")
 TOR = ("TORRENT","MAGNET")
 SUB = ("TTML","SCC","SRT","VTT")
-PRO = ('C','CPP','PY','RS','JL','KT','NIM','DART','GO','JAVA','JS','TS')
+PRO = ('C','CPP','PY','RS','JL','KT','NIM','DART','GO','JAVA','JS','TS','JAR')
 T3D = ('CTM','PLY','STL','3DS','DAE','OBJ','LWO','OFF','WRL')
-BIN = ('JAR')
 
 
 # buttons
@@ -158,26 +157,28 @@ ReplyButton('MAGNET'),
 SUBboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
 SUBboard.add(           
 ReplyButton("TTML"), 
-ReplyButton("SCC"),
+#ReplyButton("SCC"),
 ReplyButton("SRT"),
 ReplyButton("VTT")
             )
 
 PROboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
 PROboard.add(           
-ReplyButton('C'), 
+#ReplyButton('C'), 
 ReplyButton('CPP'),
-ReplyButton('PY'),
+#ReplyButton('PY'),
 ReplyButton('RS'),
 ReplyButton('JL'),
 ReplyButton('KT'),
 ReplyButton('NIM'),
 ReplyButton('DART'),
 ReplyButton('GO'),
-ReplyButton('JAVA'),
+#ReplyButton('JAVA'),
 ReplyButton('TS'),
 ReplyButton('JS'),
-ReplyButton('READ')
+#ReplyButton('JAR'),
+ReplyButton('READ'),
+ReplyButton('COMPILE')
             )
 
 T3Dboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
@@ -190,12 +191,7 @@ ReplyButton('DAE'),
 ReplyButton('OBJ'),
 ReplyButton('LWO'),
 ReplyButton('OFF'),
-ReplyButton('WRL')
-            )
-
-BINboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
-BINboard.add(           
-ReplyButton('COMPILE')
+#ReplyButton('WRL')
             )
 
 
@@ -212,11 +208,9 @@ TOR_TEXT = helperfunctions.give_name(TOR)
 SUB_TEXT = helperfunctions.give_name(SUB)
 PRO_TEXT = helperfunctions.give_name(PRO)
 T3D_TEXT = helperfunctions.give_name(T3D)
-BIN_TEXT = "JAR"#helperfunctions.give_name(BIN)
 
 
 START_TEXT = f'**Images** 📷 \n__{IMG_TEXT}__\n\n\
-**Special** 🎁 \n__COLORIZE, POSITIVE, UPSCALE, TEXT-to-SPEECH, SPEECH-to-TEXT, AI IMAGE & AI VIDEO__\n\n\
 **Videos/Audios** 📹 / 🔊 \n__{VA_TEXT}__\n\n\
 **Documents** 💼 \n__{LBW_TEXT},{LBI_TEXT},{LBC_TEXT}__\n\n\
 **Fonts** 🔤 \n__{FF_TEXT}__\n\n\
@@ -226,5 +220,5 @@ START_TEXT = f'**Images** 📷 \n__{IMG_TEXT}__\n\n\
 **Subtitles** 🗯️ \n__{SUB_TEXT}__\n\n\
 **Programming Languages** 👨‍💻 \n__{PRO_TEXT}__\n\n\
 **3D Files** 💠 \n__{T3D_TEXT}__\n\n\
-**Executables** 🎛️ \n__{BIN_TEXT}__'
+**Special** 🎁 \n__COLORIZE, POSITIVE, UPSCALE, TEXT-to-SPEECH, SPEECH-to-TEXT, AI IMAGE, AI VIDEO, SCAN & COMPILE__'
 

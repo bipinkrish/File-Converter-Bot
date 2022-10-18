@@ -12,6 +12,13 @@ telegraph = Telegraph()
 telegraph.create_account(short_name='file-converter')
 
 
+# g++ compile command
+def gppcommand(inputt):
+    filename = inputt.split("/")[-1].split(".")[0]
+    cmd = f'g++ -o {filename} {inputt}'
+    return cmd, filename
+
+
 # scan qr and barcode
 def scanner(file):
     data = decode(Image.open(file))
