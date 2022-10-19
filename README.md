@@ -26,8 +26,6 @@
 
 **Archives**:  *ZIP, RAR, 7Z, TAR, XY, GZ, BZ*
 
-**Torrents**: *TORRENT, MAGENT*
-
 **Subtitles**: *TTML, SCC, SRT, VTT*
 
 **Programming Languages**: *C, CPP, PY, RS, JL, KT, NIM, DART, GO, JAVA, JS, TS, JAR*
@@ -63,6 +61,8 @@
 **PLAY** - *Play a Game with Bot*
 
 **SAVE RESTRICTED** - *Send a Resctircted Public Chat Post's Link, Bot will Send you that Post*
+
+**Torrent <-> Magnet** - *Send Torrent File to get Magnet Link and Viceversa*
 
 ---
 
