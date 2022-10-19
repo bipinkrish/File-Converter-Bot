@@ -11,7 +11,6 @@ LBC = ("ODS","XLS","HTML","XLSX","XLSM","XLTM","XLTX","OTS","XML","PDF","CSV","X
 FF = ("SFD","BDF","FNT","OTF","PFA","PFB","TTC","TTF","UFO","WOFF")
 EB = ("EPUB","MOBI","AZW3","KFX","FB2","HTMLZ","LIT","LRF","PDB","PDF","TXT")
 ARC = ("ZIP","RAR","7Z","TAR","XZ","GZ","BZ")
-TOR = ("TORRENT","MAGNET")
 SUB = ("TTML","SCC","SRT","VTT")
 PRO = ('C','CPP','PY','RS','JL','KT','NIM','DART','GO','JAVA','JS','TS','JAR')
 T3D = ('CTM','PLY','STL','3DS','DAE','OBJ','LWO','OFF','WRL')
@@ -149,10 +148,6 @@ ARCboard.add(
 ReplyButton('EXTRACT'),
             )
 
-TORboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
-TORboard.add(           
-ReplyButton('MAGNET'),
-            )
 
 SUBboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
 SUBboard.add(           
@@ -204,7 +199,6 @@ LBI_TEXT = helperfunctions.give_name(LBI)
 FF_TEXT = helperfunctions.give_name(FF)
 EB_TEXT = helperfunctions.give_name(EB)
 ARC_TEXT = helperfunctions.give_name(ARC)
-TOR_TEXT = helperfunctions.give_name(TOR)
 SUB_TEXT = helperfunctions.give_name(SUB)
 PRO_TEXT = helperfunctions.give_name(PRO)
 T3D_TEXT = helperfunctions.give_name(T3D)
@@ -216,9 +210,7 @@ START_TEXT = f'**Images** 📷 \n__{IMG_TEXT}__\n\n\
 **Fonts** 🔤 \n__{FF_TEXT}__\n\n\
 **eBooks** 📚 \n__{EB_TEXT}__\n\n\
 **Archives** 🗄 \n__{ARC_TEXT}__\n\n\
-**Torrents** 🧲 \n__{TOR_TEXT}__\n\n\
 **Subtitles** 🗯️ \n__{SUB_TEXT}__\n\n\
 **Programming Languages** 👨‍💻 \n__{PRO_TEXT}__\n\n\
 **3D Files** 💠 \n__{T3D_TEXT}__\n\n\
 **Special** 🎁 \n__COLORIZE, POSITIVE, UPSCALE, TEXT-to-SPEECH, SPEECH-to-TEXT, AI IMAGE, AI VIDEO, SCAN & COMPILE__'
-
