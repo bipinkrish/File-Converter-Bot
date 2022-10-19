@@ -1077,10 +1077,11 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
                          reply_markup=ARCboard, reply_to_message_id=message.id)
 
     # TOR
-    elif message.document.file_name.upper().endswith(TOR):
-        app.send_message(message.chat.id,
-                         f'__Detected Extension:__ **{dext}** 🧲\n__Do you want to extract Magnet Link ?__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
-                         reply_markup=TORboard, reply_to_message_id=message.id)
+    elif message.document.file_name.upper().endswith("TORRENT"):
+        oldm = app.send_message(message.chat.id,'__Getting Magnet Link__', reply_to_message_id=message.id)
+        ml = threading.Thread(target=lambda:getmag(message,oldm),daemon=True)
+        ml.start()
+        return
     
     # SUB
     elif message.document.file_name.upper().endswith(SUB):
@@ -1288,13 +1289,6 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             ex = threading.Thread(target=lambda:extract(nmessage,oldm),daemon=True)
             ex.start()
             return 
-
-        if "MAGNET" == message.text:
-            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
-            oldm = app.send_message(message.chat.id,'__Getting Magnet Link__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
-            ml = threading.Thread(target=lambda:getmag(nmessage,oldm),daemon=True)
-            ml.start()
-            return
 
         if "COMPILE" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
