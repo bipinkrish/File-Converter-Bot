@@ -541,8 +541,29 @@ def compile(message,oldm):
         else:
             app.send_message(message.chat.id,"__Error while Compiling__", reply_to_message_id=message.id)
         
+
+    # python compile
+    if ext.upper() == "PY":
+        cmd, output, ofold, tfold, temp = helperfunctions.pyinstallcommand(message,file)
+        os.system(cmd)
+        os.remove(file)
+        if os.path.exists(output) and os.path.getsize(output) > 0:
+            app.send_document(message.chat.id,document=output, caption="__Linux Executable__", force_document=True, reply_to_message_id=message.id)
+            os.remove(output)
+        else:
+            app.send_message(message.chat.id,"__Error while Compiling__", reply_to_message_id=message.id)
+        
+        if os.path.exists(temp):
+            os.remove(temp)
+        if os.path.exists(ofold):
+            shutil.rmtree(ofold)
+        if os.path.exists(tfold):
+            shutil.rmtree(tfold)
+
+
+    # not supported yet
     else:
-        app.send_message(message.chat.id,"__At this time Compilation only supports from JAR, C and CPP Files__", reply_to_message_id=message.id)
+        app.send_message(message.chat.id,"__At this time Compilation only supports from JAR, PY, C and CPP Files__", reply_to_message_id=message.id)
 
 
     # delete message

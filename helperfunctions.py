@@ -12,6 +12,17 @@ telegraph = Telegraph()
 telegraph.create_account(short_name='file-converter')
 
 
+# pyinstaller compile
+def pyinstallcommand(message,inputt):
+    ofold = str(message.id) + "/"
+    tfold = str(message.id) + "t/"
+    basename = inputt.split("/")[-1].split(".")[0]
+    out = ofold + basename
+    temp = basename + ".spec"
+    cmd = f'pyinstaller --onefile --distpath {ofold} --workpath {tfold} {inputt}'
+    return cmd, out, ofold, tfold, temp
+
+
 # g++ compile command
 def gppcommand(inputt):
     filename = inputt.split("/")[-1].split(".")[0]
