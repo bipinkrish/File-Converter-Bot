@@ -82,25 +82,25 @@
 
 - for extracting **Archives** it uses **[7zip](https://www.7-zip.org/)**
 
-- for converting **Subtitles** it uses **[ttconv](https://github.com/sandflow/ttconv/)**
+- for converting **Subtitles** it uses **[TTconv](https://github.com/sandflow/ttconv/)**
 
-- for converting **3D Models** it uses **[openctm-tools](https://github.com/Danny02/OpenCTM/)**
+- for converting **3D Models** it uses **[OpenCTM-Tools](https://github.com/Danny02/OpenCTM/)**
 
-- for converting **TGS** it uses **[tgsconverter](https://github.com/Benau/tgsconverter/)**
+- for converting **TGS** it uses **[TGSconverter](https://github.com/Benau/tgsconverter/)**
 
-- for transpiling **Python Programs** it uses **[py2many](https://github.com/py2many/py2many/)**
+- for transpiling **Python Programs** it uses **[Py2Many](https://github.com/py2many/py2many/)**
 
-- for transpiling **C Programs** it uses **[c4go](https://github.com/Konstantin8105/c4go/)**
+- for transpiling **C Programs** it uses **[C4Go](https://github.com/Konstantin8105/c4go/)**
 
-- for transpiling **Java Programs** it uses **[jsweet](https://github.com/cincheo/jsweet/)**
+- for transpiling **Java Programs** it uses **[Jsweet](https://github.com/cincheo/jsweet/)**
 
-- for scanning **QR & Bar Codes** it uses **[pyzbar](https://github.com/NaturalHistoryMuseum/pyzbar/)**
+- for scanning **QR & Bar Codes** it uses **[PyzBar](https://github.com/NaturalHistoryMuseum/pyzbar/)**
 
-- for compiling **JAR** it uses **[warp4j](https://github.com/guziks/warp4j/)**
+- for compiling **JAR** it uses **[Warp4j](https://github.com/guziks/warp4j/)**
 
-- for compiling **C & C++** it uses **[g++](https://gcc.gnu.org/)**
+- for compiling **C & C++** it uses **[G++](https://gcc.gnu.org/)**
 
-- for compiling **Python** it uses **[pyinstaller](https://github.com/pyinstaller/pyinstaller/)**
+- for compiling **Python** it uses **[PyInstaller](https://github.com/pyinstaller/pyinstaller/)**
 
 - for **Colorizing Images** it uses **[DeOldify](https://github.com/jantic/DeOldify/)** hosted on **[Hugging Face](https://huggingface.co/spaces/PaddlePaddle/deoldify/)** and **[Photo-Colorizer](https://github.com/PySimpleGUI/PySimpleGUI-Photo-Colorizer)**
 
@@ -108,7 +108,7 @@
 
 - for generating **AI Videos** it uses **[CogVideo](https://github.com/THUDM/CogVideo/)** hosted on **[Hugging Face](https://huggingface.co/spaces/THUDM/CogVideo/)**
 
-- for generating **Positive Images** it uses **[c41lab or c41](https://gist.github.com/stollcri/1aaec353a0e883888920c1b501cc1484/)**, **[open-cv](https://opencv.org/)** and **[negfix8](https://github.com/chrishunt/negfix8/)**
+- for generating **Positive Images** it uses **[C41lab or C41](https://gist.github.com/stollcri/1aaec353a0e883888920c1b501cc1484/)**, **[Open-CV](https://opencv.org/)** and **[Negfix8](https://github.com/chrishunt/negfix8/)**
 
 - for **Speech to Text** it uses **[Google's API](https://github.com/Uberi/speech_recognition)** and **[Open-AI's Whisper](https://github.com/openai/whisper)** hosted on **[Hugging Face](https://huggingface.co/spaces/Amrrs/openai-whisper-live-transcribe)**
 
@@ -116,4 +116,4 @@
 
 - for **Upscalling Images** it uses **[Zyro's Image-Upscaller](https://zyro.com/in/tools/image-upscaler)** 
 
-- for **Torrents** it uses **[itorrents](https://itorrents.org/)** and **[torrent2magnet](https://github.com/repolho/torrent2magnet)**
+- for **Torrents** it uses **[iTorrents](https://itorrents.org/)** and **[Torrent2Magnet](https://github.com/repolho/torrent2magnet)**
