@@ -112,8 +112,8 @@
 
 - for **Speech to Text** it uses **[Google's API](https://github.com/Uberi/speech_recognition)** and **[Open-AI's Whisper](https://github.com/openai/whisper)** hosted on **[Hugging Face](https://huggingface.co/spaces/Amrrs/openai-whisper-live-transcribe)**
 
-- for **Speech to Text** it uses **[Google's gTTS API](https://github.com/pndurette/gTTS)** 
+- for **Text to Speech** it uses **[Google's gTTS API](https://github.com/pndurette/gTTS)** 
 
-- for **Speech to Text** it uses **[Zyro's Image-Upscaller](https://zyro.com/in/tools/image-upscaler)** 
+- for **Upscalling Images** it uses **[Zyro's Image-Upscaller](https://zyro.com/in/tools/image-upscaler)** 
 
 - for **Torrents** it uses **[itorrents](https://itorrents.org/)** and **[torrent2magnet](https://github.com/repolho/torrent2magnet)**
