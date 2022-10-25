@@ -110,7 +110,7 @@
 
 - for generating **Positive Images** it uses **[c41lab or c41](https://gist.github.com/stollcri/1aaec353a0e883888920c1b501cc1484/)**, **[open-cv](https://opencv.org/)** and **[negfix8](https://github.com/chrishunt/negfix8/)**
 
-- for **Speech to Text** it uses **[Google's Speech Recognition API](https://github.com/Uberi/speech_recognition)** and **[Open-AI's Whisper](https://github.com/openai/whisper)** hosted on **[Hugging Face](https://huggingface.co/spaces/Amrrs/openai-whisper-live-transcribe)**
+- for **Speech to Text** it uses **[Google's API](https://github.com/Uberi/speech_recognition)** and **[Open-AI's Whisper](https://github.com/openai/whisper)** hosted on **[Hugging Face](https://huggingface.co/spaces/Amrrs/openai-whisper-live-transcribe)**
 
 - for **Speech to Text** it uses **[Google's gTTS API](https://github.com/pndurette/gTTS)** 
 
