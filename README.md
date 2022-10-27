@@ -64,6 +64,10 @@
 
 **Torrent <-> Magnet** - *Send Torrent File to get Magnet Link and Viceversa*
 
+**Time and Date** - *Send 'Time' or 'Date' keyword to get Current Time & Date in Several TimeZones*
+
+**Maths** - *Send Math Expression (in Python Format) to get its Result*
+
 ---
 
 # Wiki
@@ -117,3 +121,7 @@
 - for **Upscalling Images** it uses **[Zyro's Image-Upscaller](https://zyro.com/in/tools/image-upscaler)** 
 
 - for **Torrents** it uses **[iTorrents](https://itorrents.org/)** and **[Torrent2Magnet](https://github.com/repolho/torrent2magnet)**
+
+- for **Date and Time** it uses **[Arrow](https://github.com/arrow-py/arrow)**
+
+- for **Math Expressions** it uses **[ASTeval](https://github.com/newville/asteval)**

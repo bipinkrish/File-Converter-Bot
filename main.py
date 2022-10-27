@@ -18,6 +18,7 @@ import mediainfo
 import guess
 import tormag
 import progconv
+import others
 
 
 # env
@@ -582,6 +583,10 @@ def scan(message,oldm):
 # make file
 def makefile(message,mtext,oldmessage):
     text = mtext.split("\n")
+    if len(text) == 1:
+        app.send_message(message.chat.id, "__Make-File takes First line of your Text as Filename and File content will start from Second line__", reply_to_message_id=message.id)
+        return
+
     firstline = text[0]
     firstline = "".join( x for x in firstline if (x.isalnum() or x in "._-@ "))
     text.remove(text[0])
@@ -596,7 +601,7 @@ def makefile(message,mtext,oldmessage):
     if os.path.exists(firstline) and os.path.getsize(firstline) > 0:
         app.send_document(message.chat.id, document=firstline, reply_to_message_id=message.id)
     else:
-        app.send_message(message.chat.id, "__Make-File takes First line of your Text as Filename and File content will start from Second line__", reply_to_message_id=message.id)
+        app.send_message(message.chat.id, "__Error while making file__", reply_to_message_id=message.id)
 
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
     os.remove(firstline)      	    
@@ -707,6 +712,18 @@ def saverec(message):
 
     else:
         app.send_message(message.chat.id,"__Not in Available Types__",reply_to_message_id=message.id)
+
+
+# others
+def other(message):
+
+    if message.text in ["time","Time",'date','Date']:
+        info = others.timeanddate()
+        app.send_message(message.chat.id, info, reply_to_message_id=message.id)
+    
+    elif not message.text.isalnum():
+        info = others.maths(message.text)
+        app.send_message(message.chat.id, info, reply_to_message_id=message.id)
 
 
 # download with progress
@@ -904,15 +921,15 @@ def videocog(client: pyrogram.client.Client, message: pyrogram.types.messages_an
     app.send_message(message.chat.id,'__Currently Not Working__', reply_to_message_id=message.id)
     return
     
-    try:
-        prompt = message.text.split("/videogen ")[1]    
-    except:
-        app.send_message(message.chat.id,'__Send Prompt with Command,\nUsage__ : **/videogen a man climbing up a mountain**', reply_to_message_id=message.id)
-        return	
+    # try:
+    #     prompt = message.text.split("/videogen ")[1]    
+    # except:
+    #     app.send_message(message.chat.id,'__Send Prompt with Command,\nUsage__ : **/videogen a man climbing up a mountain**', reply_to_message_id=message.id)
+    #     return	
 
-	# threding
-    vi = threading.Thread(target=lambda:genratevideos(message,prompt),daemon=True)
-    vi.start()
+	# # threding
+    # vi = threading.Thread(target=lambda:genratevideos(message,prompt),daemon=True)
+    # vi.start()
 
 
 # read command
@@ -1099,6 +1116,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 
     # TOR
     elif message.document.file_name.upper().endswith("TORRENT"):
+        os.remove(f'{message.from_user.id}.json')
         oldm = app.send_message(message.chat.id,'__Getting Magnet Link__', reply_to_message_id=message.id)
         ml = threading.Thread(target=lambda:getmag(message,oldm),daemon=True)
         ml.start()
@@ -1342,7 +1360,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
                     print("File is a Voice")
                 else:
                     if "sticker" in str(nmessage):
-                        if not nmessage.sticker.is_animated and not nmessage.sticker.is_video:
+                        if (not nmessage.sticker.is_animated) and (not nmessage.sticker.is_video):
                             inputt = nmessage.sticker.set_name + ".webp"
                         else:
                             inputt = nmessage.sticker.set_name + ".tgs"
@@ -1388,7 +1406,12 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         with open(f'{message.from_user.id}.json', 'wb') as handle:
             pickle.dump(message, handle)
         if str(message.from_user.id) == str(message.chat.id):
-            app.send_message(message.chat.id, '__for Text messages, You can use **/make** to Create a File from it.\n(first line of text will be trancated and used as filename)__', reply_to_message_id=message.id)
+            if len(message.text.split("\n")) == 1:
+                os.remove(f'{message.from_user.id}.json')
+                ots = threading.Thread(target=lambda: other(message), daemon=True)
+                ots.start()
+            else:    
+                app.send_message(message.chat.id, '__for Text messages, You can use **/make** to Create a File from it.\n(first line of text will be trancated and used as filename)__', reply_to_message_id=message.id)
             
             
           

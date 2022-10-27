@@ -16,3 +16,5 @@ ttconv
 py2many
 pyzbar
 pyinstaller
+asteval
+arrow
