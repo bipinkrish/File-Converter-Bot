@@ -54,6 +54,8 @@
 
 **COMPILE** - *Get Self-Contained Linux Executable*
 
+**RUN** - *Run a Python Program*
+
 ---
 
 ## Extra Features

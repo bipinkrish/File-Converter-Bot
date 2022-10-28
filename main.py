@@ -508,11 +508,10 @@ def gettorfile(message,oldm):
 # compiling
 def compile(message,oldm):
     ext = message.document.file_name.split(".")[-1]
-    file = app.download_media(message)
-
 
     # jar compilation
     if ext.upper() == "JAR":
+        file = app.download_media(message)
         cmd,folder,files = helperfunctions.warpcommand(file,message)
         os.system(cmd)
         if not os.path.exists(folder):
@@ -533,6 +532,7 @@ def compile(message,oldm):
 
     # c and c++ compilation
     elif ext.upper() in ['C','CPP']:
+        file = app.download_media(message)
         cmd,output = helperfunctions.gppcommand(file)
         os.system(cmd)
         os.remove(file)
@@ -545,6 +545,7 @@ def compile(message,oldm):
 
     # python compile
     if ext.upper() == "PY":
+        file = app.download_media(message)
         cmd, output, ofold, tfold, temp = helperfunctions.pyinstallcommand(message,file)
         os.system(cmd)
         os.remove(file)
@@ -569,6 +570,25 @@ def compile(message,oldm):
 
     # delete message
     app.delete_messages(message.chat.id,message_ids=[oldm.id])
+
+
+# running a program
+def runpro(message,oldm):
+    ext = message.document.file_name.split(".")[-1]
+
+    # python run
+    if ext.upper() == "PY":
+        file = app.download_media(message)
+        code = open(file,"r").read()
+        os.remove(file)
+        info = others.pyrun(code)
+        app.send_message(message.chat.id, info, reply_to_message_id=message.id)
+        app.delete_messages(message.chat.id,message_ids=[oldm.id])
+        
+
+    # not supported yet
+    else:
+        app.send_message(message.chat.id,"__At this time Running only supports from PY Files__", reply_to_message_id=message.id)
 
 
 # scanning
@@ -723,7 +743,8 @@ def other(message):
     
     elif not message.text.isalnum():
         info = others.maths(message.text)
-        app.send_message(message.chat.id, info, reply_to_message_id=message.id)
+        if info != None:
+            app.send_message(message.chat.id, info, reply_to_message_id=message.id)
 
 
 # download with progress
@@ -1075,7 +1096,7 @@ def documnet(client: pyrogram.client.Client, message: pyrogram.types.messages_an
     # IMG
     elif message.document.file_name.upper().endswith(IMG):
         app.send_message(message.chat.id,
-                         f'__Detected Extension:__ **{dext}** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE, UPSCALE & SCAN__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                         f'__Detected Extension:__ **{dext}** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__Colorize, Positive, Upscale & Scan__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                          reply_markup=IMGboard, reply_to_message_id=message.id)
 
     # LBW
@@ -1217,7 +1238,7 @@ def photo(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     with open(f'{message.from_user.id}.json', 'wb') as handle:
         pickle.dump(message, handle)
     app.send_message(message.chat.id,
-                     f'__Detected Extension:__ **JPG** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE, UPSCALE & SCAN__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                     f'__Detected Extension:__ **JPG** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__Colorize, Positive, Upscale & Scan__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
@@ -1228,11 +1249,11 @@ def sticker(client: pyrogram.client.Client, message: pyrogram.types.messages_and
             pickle.dump(message, handle)
     if not message.sticker.is_animated and not message.sticker.is_video:
         app.send_message(message.chat.id,
-                     f'__Detected Extension:__ **WEBP** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE, UPSCALE & SCAN__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                     f'__Detected Extension:__ **WEBP** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__Colorize, Positive, Upscale & Scan__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                      reply_markup=IMGboard, reply_to_message_id=message.id)
     else:
         app.send_message(message.chat.id,
-                    f'__Detected Extension:__ **TGS** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__COLORIZE, POSITIVE, UPSCALE & SCAN__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
+                    f'__Detected Extension:__ **TGS** 📷\n__Now send extension to Convert to...__\n\n--**Available formats**-- \n\n__{IMG_TEXT}__\n\n**SPECIAL** 🎁\n__Colorize, Positive, Upscale & Scan__\n\n{message.from_user.mention} __choose or click /cancel to Cancel or use /rename  to  Rename__',
                     reply_markup=IMGboard, reply_to_message_id=message.id)
 
 
@@ -1342,7 +1363,14 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             scn = threading.Thread(target=lambda:scan(nmessage,oldm),daemon=True)
             scn.start()
             return
-    
+
+        if "RUN" == message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'__Running__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            rpro = threading.Thread(target=lambda:runpro(nmessage,oldm),daemon=True)
+            rpro.start()
+            return
+
         if "document" in str(nmessage):
             inputt = nmessage.document.file_name
             print("File is a Document")
@@ -1413,8 +1441,6 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             else:    
                 app.send_message(message.chat.id, '__for Text messages, You can use **/make** to Create a File from it.\n(first line of text will be trancated and used as filename)__', reply_to_message_id=message.id)
             
-            
-          
 
 #apprun
 print("Bot Started")

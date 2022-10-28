@@ -173,7 +173,8 @@ ReplyButton('TS'),
 ReplyButton('JS'),
 #ReplyButton('JAR'),
 ReplyButton('READ'),
-ReplyButton('COMPILE')
+ReplyButton('COMPILE'),
+ReplyButton('RUN')
             )
 
 T3Dboard = ReplyKeyboard(row_width=3,one_time_keyboard=True,placeholder="convert to",resize_keyboard=True,selective=True)
@@ -213,4 +214,5 @@ START_TEXT = f'**Images** 📷 \n__{IMG_TEXT}__\n\n\
 **Subtitles** 🗯️ \n__{SUB_TEXT}__\n\n\
 **Programming Languages** 👨‍💻 \n__{PRO_TEXT}__\n\n\
 **3D Files** 💠 \n__{T3D_TEXT}__\n\n\
-**Special** 🎁 \n__COLORIZE, POSITIVE, UPSCALE, TEXT-to-SPEECH, SPEECH-to-TEXT, AI IMAGE, AI VIDEO, SCAN & COMPILE__'
+**Special** 🎁 \n__Colorize, Positive, Upscale, Text-to-Speech, Speech-to-Text, AI Image, AI Video, Scan, Compile & Run__\n\n\
+**Extra** ➕  \n__Play a Game, Save Restricted Content, Torrent <-> Magnet, Time or Date, Maths__'
