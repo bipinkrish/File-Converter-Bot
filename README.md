@@ -70,7 +70,7 @@
 
 **Maths** - *Send Math Expression (in Python Format) to get its Result*
 
-**Base64** - *Send 'b64e <string>' to encode 'string' and 'b64d <string>' to decode 'string'*
+**Base64** - *Send 'b64e string' to encode 'string' and 'b64d string' to decode 'string'*
 
 ---
 
