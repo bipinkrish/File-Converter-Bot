@@ -70,6 +70,8 @@
 
 **Maths** - *Send Math Expression (in Python Format) to get its Result*
 
+**Base64** - *Send 'b64e <string>' to encode 'string' and 'b64d <string>' to decode 'string'*
+
 ---
 
 # Wiki
@@ -126,4 +128,4 @@
 
 - for **Date and Time** it uses **[Arrow](https://github.com/arrow-py/arrow)**
 
-- for **Math Expressions** it uses **[ASTeval](https://github.com/newville/asteval)**
+- for **Maths** and **RUN** it uses **[ASTeval](https://github.com/newville/asteval)**

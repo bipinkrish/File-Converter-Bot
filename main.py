@@ -737,10 +737,25 @@ def saverec(message):
 # others
 def other(message):
 
+    # time date
     if message.text in ["time","Time",'date','Date']:
-        info = others.timeanddate()
-        app.send_message(message.chat.id, info, reply_to_message_id=message.id)
+        app.send_message(message.chat.id, others.timeanddate(), reply_to_message_id=message.id)
     
+    # b64 decode
+    elif message.text[:5] == "b64d ":
+        try:
+            app.send_message(message.chat.id, f'__{others.b64d(message.text[5:])}__', reply_to_message_id=message.id)
+        except:
+            app.send_message(message.chat.id, "__Invalid__", reply_to_message_id=message.id)
+
+    # b64 encode
+    elif message.text[:5] == "b64e ":
+        try:
+            app.send_message(message.chat.id, f'__{others.b64e(message.text[5:])}__', reply_to_message_id=message.id)
+        except:
+            app.send_message(message.chat.id, "__Invalid__", reply_to_message_id=message.id)
+
+    # maths
     elif not message.text.isalnum():
         info = others.maths(message.text)
         if info != None:
