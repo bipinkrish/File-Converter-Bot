@@ -705,33 +705,7 @@ def saverec(message):
     msgid = int(datas[-1])
     username = datas[-2]
     msg  = app.get_messages(username,msgid)
-
-    if "Document" in str(msg):
-        app.send_document(message.chat.id, msg.document.file_id, caption=msg.caption, caption_entities=msg.caption_entities, reply_to_message_id=message.id)
-
-    elif "Video" in str(msg):
-        app.send_video(message.chat.id, msg.video.file_id, caption=msg.caption, caption_entities=msg.caption_entities, reply_to_message_id=message.id)
-    
-    elif "Animation" in str(msg):
-        app.send_animation(message.chat.id, msg.animation.file_id, reply_to_message_id=message.id)
-
-    elif "Sticker" in str(msg):
-        app.send_sticker(message.chat.id, msg.sticker.file_id, reply_to_message_id=message.id)
-
-    elif "Voice" in str(msg):
-        app.send_voice(message.chat.id, msg.voice.file_id, caption=msg.caption, caption_entities=msg.caption_entities, reply_to_message_id=message.id)    
-
-    elif "Audio" in str(msg):
-        app.send_audio(message.chat.id, msg.audio.file_id, caption=msg.caption, caption_entities=msg.caption_entities, reply_to_message_id=message.id)    
-
-    elif "text" in str(msg):
-        app.send_message(message.chat.id, msg.text, entities=msg.entities, reply_to_message_id=message.id)
-
-    elif "Photo" in str(msg):
-        app.send_photo(message.chat.id, msg.photo.file_id, caption=msg.caption, caption_entities=msg.caption_entities, reply_to_message_id=message.id)
-
-    else:
-        app.send_message(message.chat.id,"__Not in Available Types__",reply_to_message_id=message.id)
+    app.copy_message(message.chat.id, msg.chat.id, msg.id)
 
 
 # others
@@ -1029,6 +1003,7 @@ def startgame(client: pyrogram.client.Client, message: pyrogram.types.messages_a
 # callback
 @app.on_callback_query()
 def answer(client: pyrogram.client.Client, call: pyrogram.types.CallbackQuery):
+    app.answer_callback_query(call.id)
 
     # not callback
     if call.data == "not":
