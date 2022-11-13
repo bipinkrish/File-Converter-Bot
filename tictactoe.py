@@ -303,7 +303,8 @@ def TTTgame(app,call,message,flag=0):
 	if data[pos] != "0":
 		app.answer_callback_query(call.id, "Don't you know the Rules?", show_alert=True)
 		return
-
+	
+	app.answer_callback_query(call.id)
 	if ai:
 		if not chance:
 			pos = getAI(data)
