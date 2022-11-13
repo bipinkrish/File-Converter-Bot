@@ -60,7 +60,9 @@
 
 ## Extra Features
 
-**PLAY** - *Play a Game with Bot*
+**Tic Tac Toe** - *Play a Tic Tac Toe with Bot or Players*
+
+**Guess Game** - *Bot will Guess your Number*
 
 **SAVE RESTRICTED** - *Send a Resctircted Public Chat Post's Link, Bot will Send you that Post*
 

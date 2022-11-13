@@ -215,4 +215,4 @@ START_TEXT = f'**Images** 📷 \n__{IMG_TEXT}__\n\n\
 **Programming Languages** 👨‍💻 \n__{PRO_TEXT}__\n\n\
 **3D Files** 💠 \n__{T3D_TEXT}__\n\n\
 **Special** 🎁 \n__Colorize, Positive, Upscale, Text-to-Speech, Speech-to-Text, AI Image, AI Video, Scan, Compile & Run__\n\n\
-**Extra** ➕  \n__Play a Game, Save Restricted Content, Torrent <-> Magnet, Time or Date, Maths & Base64__'
+**Extra** ➕  \n__Play TicTacToe, Guess Game, Save Restricted Content, Torrent <-> Magnet, Time or Date, Maths & Base64__'

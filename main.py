@@ -19,6 +19,7 @@ import guess
 import tormag
 import progconv
 import others
+import tictactoe
 
 
 # env
@@ -860,7 +861,7 @@ def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id,
-                     "**/start - To Check Availabe Conversions\n/help - This Message\n/imagegen - Text to Image\n/videogen - Text to Video\n/cancel - To Cancel\n/rename - To Rename File\n/read - To Read File\n/make - To Make File\n/source - Github Source Code\n/play - To Play Game\n**", reply_to_message_id=message.id)
+                     "**/start - To Check Availabe Conversions\n/help - This Message\n/imagegen - Text to Image\n/videogen - Text to Video\n/cancel - To Cancel\n/rename - To Rename File\n/read - To Read File\n/make - To Make File\n/guess - To Guess\n/tictactoe - To Play Tic Tac Toe\n/source - Github Source Code\n**", reply_to_message_id=message.id)
     dm = threading.Thread(target=lambda:dltmsg(message,oldm),daemon=True)
     dm.start() 
 
@@ -930,16 +931,6 @@ def videocog(client: pyrogram.client.Client, message: pyrogram.types.messages_an
     
     app.send_message(message.chat.id,'__Currently Not Working__', reply_to_message_id=message.id)
     return
-    
-    # try:
-    #     prompt = message.text.split("/videogen ")[1]    
-    # except:
-    #     app.send_message(message.chat.id,'__Send Prompt with Command,\nUsage__ : **/videogen a man climbing up a mountain**', reply_to_message_id=message.id)
-    #     return	
-
-	# # threding
-    # vi = threading.Thread(target=lambda:genratevideos(message,prompt),daemon=True)
-    # vi.start()
 
 
 # read command
@@ -979,95 +970,44 @@ def makecmd(client: pyrogram.client.Client, message: pyrogram.types.messages_and
     mf.start()
 
 
-# play command
-@app.on_message(filters.command(['play']))
-def startgame(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+# Tic Tac Toe Game
+@app.on_message(filters.command("tictactoe"))
+def startTTT(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+	if message.chat.id == message.from_user.id: 
+		return tictactoe.TTTgame(app,None,message,1)
+
+	else:
+		msg = app.send_message(message.chat.id, f'__Player 1 (X) : **{message.from_user.first_name}**__',
+		reply_markup=InlineKeyboardMarkup(
+		[[ InlineKeyboardButton( text='🤵 Player 2', callback_data="TTT P2")],
+		 [ InlineKeyboardButton( text='🤖 v/s AI', callback_data="TTT AI")]]))
+		tictactoe.TTTstoredata(msg.id, p1=message.from_user.id)
+
+
+# Guess Game
+@app.on_message(filters.command(['guess']))
+def startG(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
 
     try:
-        N = int(message.text.split("/play ")[1])
+        N = int(message.text.split("/guess ")[1])
         if N > 1000:
             app.send_message(message.chat.id,"**Not more than 1000**",reply_to_message_id=message.id)
             return
-    except:
-        N = 100
+    except: N = 100
 
     size = len(bin(N).replace("0b", ""))
     app.send_message(message.chat.id,f"__Take a Number between__ **1 - {N}**\n__I will guess it in__ **{size} steps**\n__are you__ **ready ?**",reply_to_message_id=message.id,
         reply_markup=InlineKeyboardMarkup(
                 [[
-                    InlineKeyboardButton( text='Yes', callback_data='ready'),
-                    InlineKeyboardButton( text='No', callback_data='not')
+                    InlineKeyboardButton( text='Yes', callback_data='G ready'),
+                    InlineKeyboardButton( text='No', callback_data='G not')
                 ]]))
     
-
 # callback
 @app.on_callback_query()
-def answer(client: pyrogram.client.Client, call: pyrogram.types.CallbackQuery):
-    app.answer_callback_query(call.id)
-
-    # not callback
-    if call.data == "not":
-        app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'**OK, No Problem.**')
-
-    # game start callback
-    elif call.data == "ready":
-        N = int(call.message.text.split(" - ")[1].split("\n")[0])
-        size = len(bin(N).replace("0b", ""))
-        binary = "0".zfill(size+1)
-
-        nlist = list(range(0,size))
-        random.shuffle(nlist)
-        slist = ""
-        for ele in nlist:
-            slist = slist + str(ele)
-
-        text = guess.generateNumbers(int(slist[0])+1, N, size)
-
-        ydata = f'{N} {binary} {slist} 1'
-        ndata = f'{N} {binary} {slist} 0'
-
-        app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'**{text}**\n__is your number there ?__ **(1 / {size})**',
-        reply_markup=InlineKeyboardMarkup(
-                    [[
-                        InlineKeyboardButton( text='Yes', callback_data=ydata),
-                        InlineKeyboardButton( text='No', callback_data=ndata)
-                    ]]))
-    
-    # game callback
-    else:
-        data = call.data.split(" ")
-        N = int(data[0])
-        size = len(bin(N).replace("0b", ""))
-        binary = data[1]
-        slist = data[2]
-        res = data[3]
-
-        pos = int(slist[0])+1
-        slist = slist[1:]
-        binary = list(binary)
-        binary[pos] = res
-        binary = "".join(binary)
-
-        if len(slist) != 0:
-
-            text = guess.generateNumbers(int(slist[0])+1, N, size)
-            ydata = f'{N} {binary} {slist} 1'
-            ndata = f'{N} {binary} {slist} 0'
-
-            app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'**{text}**\n__is your number there ?__ **({size-len(slist)+1} / {size})**',
-                    reply_markup=InlineKeyboardMarkup(
-                            [[
-                                InlineKeyboardButton( text='Yes', callback_data=ydata),
-                                InlineKeyboardButton( text='No', callback_data=ndata)
-                            ]]))
-        
-        else:
-
-            number = guess.finalize(binary,N)
-            if number == 0:
-                app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'__I said in between__ **1 - {N}**')
-            else:
-                app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'__Your number is__ **{number}**')
+def inbtwn(client: pyrogram.client.Client, call: pyrogram.types.CallbackQuery):
+	if call.data[:4] == "TTT ": return tictactoe.TTTgame(app,call,call.message)
+	elif call.data[:2] == "G ": return guess.Ggame(app,call)
 
 
 # document

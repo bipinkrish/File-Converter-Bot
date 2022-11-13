@@ -93,4 +93,73 @@ def main(): # main function
     return finalize(binary,N) # calling the final function
 
 
-#print(main())
+#############################################################################################
+
+from pyrogram.types import InlineKeyboardMarkup,InlineKeyboardButton
+
+def Ggame(app,call):
+	app.answer_callback_query(call.id)
+	call.data = call.data[2:]
+
+    # not callback
+	if call.data == "not":
+		app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'**OK, No Problem.**')
+
+    # game start callback
+	elif call.data == "ready":
+		N = int(call.message.text.split(" - ")[1].split("\n")[0])
+		size = len(bin(N).replace("0b", ""))
+		binary = "0".zfill(size+1)
+		
+		nlist = list(range(0,size))
+		random.shuffle(nlist)
+		slist = ""
+		for ele in nlist:
+			slist = slist + str(ele)
+		
+		text = generateNumbers(int(slist[0])+1, N, size)
+		ydata = f'{N} {binary} {slist} 1'
+		ndata = f'{N} {binary} {slist} 0'
+		
+		app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'**{text}**\n__is your number there ?__ **(1 / {size})**',
+        reply_markup=InlineKeyboardMarkup(
+                    [[
+                        InlineKeyboardButton( text='Yes', callback_data=f'G {ydata}'),
+                        InlineKeyboardButton( text='No', callback_data=f'G {ndata}')
+                    ]]))
+    
+    # game callback
+	else:
+		data = call.data.split(" ")
+		N = int(data[0])
+		size = len(bin(N).replace("0b", ""))
+		binary = data[1]
+		slist = data[2]
+		res = data[3]
+		
+		pos = int(slist[0])+1
+		slist = slist[1:]
+		binary = list(binary)
+		binary[pos] = res
+		binary = "".join(binary)
+		
+		if len(slist) != 0:
+			text = generateNumbers(int(slist[0])+1, N, size)
+			ydata = f'{N} {binary} {slist} 1'
+			ndata = f'{N} {binary} {slist} 0'
+			
+			app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'**{text}**\n__is your number there ?__ **({size-len(slist)+1} / {size})**',
+                    reply_markup=InlineKeyboardMarkup(
+                            [[
+                                InlineKeyboardButton( text='Yes', callback_data=f'G {ydata}'),
+                                InlineKeyboardButton( text='No', callback_data=f'G {ndata}')
+                            ]]))
+						
+		else:
+			number = finalize(binary,N)
+			if number == 0:
+				app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'__I said in between__ **1 - {N}**')
+			else:
+				app.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=f'__Your number is__ **{number}**')
+
+################################################################################################
