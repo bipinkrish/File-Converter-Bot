@@ -10,7 +10,7 @@
 - `HASH` **_Your API Hash from my.telegram.org_**
 - `ID` **_Your API ID from my.telegram.org_**
 - `TOKEN` **_Your bot token from @BotFather_**
-
+- `Session_Token` (optional) **_Your chatGPT Session Token_**
 ---
 ## Supported Formats
 

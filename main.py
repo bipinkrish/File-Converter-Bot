@@ -20,6 +20,7 @@ import tormag
 import progconv
 import others
 import tictactoe
+from chatGPT import *
 
 
 # env
@@ -968,6 +969,26 @@ def makecmd(client: pyrogram.client.Client, message: pyrogram.types.messages_and
     oldm = app.send_message(message.chat.id,'__Making File__', reply_to_message_id=message.id)
     mf = threading.Thread(target=lambda:makefile(message,text,oldm),daemon=True)
     mf.start()
+
+
+# chatGpt
+@app.on_message(filters.command(["chatgpt"]))
+def send_gpt(client: pyrogram.client.Client,message: pyrogram.types.messages_and_media.message.Message,):
+    try: qes = message.text.split("/chatGPT ")[1]
+    except:
+        message.reply_text("__use like this : __ **/chatGPT question**", reply_to_message_id=message.id)
+        return
+
+    try: replied = message.reply_to_message.id
+    except: replied = None
+
+    if replied == None: lastQes = None
+    else: lastQes = GPT.get(replied)
+
+    msg = message.reply_text("__answering__", reply_to_message_id=message.id)
+    ans = chatGPTget(qes, lastQes)
+    GPT[msg.id] = ans
+    app.edit_message_text(message.chat.id, msg.id, ans["message"], disable_web_page_preview=True)
 
 
 # Tic Tac Toe Game
