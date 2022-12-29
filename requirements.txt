@@ -18,4 +18,5 @@ pyzbar
 pyinstaller
 asteval
 arrow
-revChatGPT
+pyChatGPT
+chromedriver-autoinstaller

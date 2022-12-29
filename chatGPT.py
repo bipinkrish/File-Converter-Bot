@@ -1,20 +1,14 @@
-from revChatGPT.ChatGPT import Chatbot
 from os import environ
+from pyChatGPT import ChatGPT
+import chromedriver_autoinstaller
+chromedriver_autoinstaller.install()
 
 Session_Token = environ.get("Session_Token", None)
-if Session_Token != None: chatbot = Chatbot({"session_token": Session_Token})
-GPT = {}
+if Session_Token != None: api = ChatGPT(Session_Token) 
 
-def chatGPTget(question, prevResp=None):
-    if Session_Token == None: return {"message":"__chatGPT session is not set__"}
+def chatGPTget(question):
+    if Session_Token == None: return "__chatGPT session is not set__"
 
-    if prevResp == None:
-        response = chatbot.ask(question, conversation_id=None, parent_id=None)
-    else:
-        response = chatbot.ask(
-            question,
-            conversation_id=prevResp["conversation_id"],
-            parent_id=prevResp["parent_id"],
-        )
+    resp = api.send_message(question)
+    return resp["message"]
 
-    return response
