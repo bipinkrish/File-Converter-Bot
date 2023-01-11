@@ -18,5 +18,5 @@ pyzbar
 pyinstaller
 asteval
 arrow
-pyChatGPT
-chromedriver-autoinstaller
+plotly
+kaleido

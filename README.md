@@ -116,7 +116,7 @@
 
 - for generating **AI Images** it uses **[Craiyon](https://www.craiyon.com/)** (also know as min-Dalle)
 
-- for generating **AI Videos** it uses **[CogVideo](https://github.com/THUDM/CogVideo/)** hosted on **[Hugging Face](https://huggingface.co/spaces/THUDM/CogVideo/)**
+- for generating **3D Models** it uses **[Point-E](https://github.com/openai/point-e/)** hosted on **[Hugging Face](https://huggingface.co/spaces/openai/point-e)**
 
 - for generating **Positive Images** it uses **[C41lab or C41](https://gist.github.com/stollcri/1aaec353a0e883888920c1b501cc1484/)**, **[Open-CV](https://opencv.org/)** and **[Negfix8](https://github.com/chrishunt/negfix8/)**
 
@@ -131,5 +131,3 @@
 - for **Date and Time** it uses **[Arrow](https://github.com/arrow-py/arrow)**
 
 - for **Maths** and **RUN** it uses **[ASTeval](https://github.com/newville/asteval)**
-
-- for **chatGPT** it uses **[pyChatGPT](https://github.com/terry3041/pyChatGPT)**

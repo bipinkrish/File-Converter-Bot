@@ -20,7 +20,7 @@ import tormag
 import progconv
 import others
 import tictactoe
-from chatGPT import *
+import pointe
 
 
 # env
@@ -304,20 +304,26 @@ def negetivetopostive(message,oldmessage):
     file = app.download_media(message)
     output = file.split("/")[-1]
 
-    print("using c41lab")
-    os.system(f'./c41lab.py "{file}" "{output}"')
-    app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **c41lab**", reply_to_message_id=message.id)
-    os.remove(output)
+    try:
+        print("using c41lab")
+        os.system(f'./c41lab.py "{file}" "{output}"')
+        app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **c41lab**", reply_to_message_id=message.id)
+        os.remove(output)
+    except: pass
+
+    try: 
+        print("using simple tool")
+        aifunctions.positiver(file,output)
+        app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **openCV**", reply_to_message_id=message.id)
+        os.remove(output)
+    except: pass
     
-    print("using simple tool")
-    aifunctions.positiver(file,output)
-    app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **simple tool**", reply_to_message_id=message.id)
-    os.remove(output)
-    
-    print("using negfix8")
-    os.system(f'./negfix8 "{file}" "{output}"')
-    app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **negfix8**", reply_to_message_id=message.id)
-    os.remove(output)
+    try:
+        print("using negfix8")
+        os.system(f'./negfix8 "{file}" "{output}"')
+        app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **negfix8**", reply_to_message_id=message.id)
+        os.remove(output)
+    except: pass
 
     os.remove(file)
     app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
@@ -333,7 +339,7 @@ def colorizeimage(message,oldmessage):
     os.remove(output)
 
     aifunctions.colorize_image(output,file)
-    app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **simple tool**", reply_to_message_id=message.id)
+    app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **Local Model**", reply_to_message_id=message.id)
     os.remove(output)
 
     os.remove(file)
@@ -659,10 +665,13 @@ def transcript(message,oldmessage):
     os.remove(file)
     
 
-# chat gpt
-def chatai(qes,message,msg):
-    ans = chatGPTget(qes)
-    app.edit_message_text(message.chat.id, msg.id, ans, disable_web_page_preview=True)
+# text to 3d
+def textTo3d(prompt,message,msg):
+    htmlfile,thumbfile = pointe.pointE(prompt)
+    app.send_document(message.chat.id, htmlfile, thumbfile, reply_to_message_id=message.id)
+    app.delete_messages(message.chat.id, message_ids=msg.id)
+    os.remove(htmlfile)
+    os.remove(thumbfile)
 
 
 # text to speech 
@@ -868,7 +877,7 @@ def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id,
-                     "**/start - To Check Availabe Conversions\n/help - This Message\n/imagegen - Text to Image\n/videogen - Text to Video\n/cancel - To Cancel\n/rename - To Rename File\n/read - To Read File\n/make - To Make File\n/chatGPT - Interact with chatGPT\n/guess - To Guess\n/tictactoe - To Play Tic Tac Toe\n/source - Github Source Code\n**", reply_to_message_id=message.id)
+        "__Available Commands__\n\n**/start - To Check Availabe Conversions\n/help - This Message\n/imagegen - Text to Image\n/3dgen - Text to 3D\n/cancel - To Cancel\n/rename - To Rename File\n/read - To Read File\n/make - To Make File\n/chatGPT - Interact with chatGPT\n/guess - To Guess\n/tictactoe - To Play Tic Tac Toe\n/source - Github Source Code\n**", reply_to_message_id=message.id)
     dm = threading.Thread(target=lambda:dltmsg(message,oldm),daemon=True)
     dm.start() 
 
@@ -932,14 +941,6 @@ def getpompt(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 	ai.start()
 
 
-# videogen command
-@app.on_message(filters.command(["videogen"]))
-def videocog(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    
-    app.send_message(message.chat.id,'__Currently Not Working__', reply_to_message_id=message.id)
-    return
-
-
 # read command
 @app.on_message(filters.command(['read']))
 def readcmd(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
@@ -977,17 +978,17 @@ def makecmd(client: pyrogram.client.Client, message: pyrogram.types.messages_and
     mf.start()
 
 
-# chatGpt
-@app.on_message(filters.command(["chatgpt"]))
+# Point E
+@app.on_message(filters.command(["3dgen"]))
 def send_gpt(client: pyrogram.client.Client,message: pyrogram.types.messages_and_media.message.Message,):
-    try: qes = message.text.split("/chatGPT ")[1]
+    try: prompt = message.text.split("/3dgen ")[1]
     except:
-        message.reply_text("__use like this : __ **/chatGPT question**", reply_to_message_id=message.id)
-        return
+        app.send_message(message.chat.id,'__Send Prompt with Command,\nUsage :__ **/3dgen a red motorcycle**', reply_to_message_id=message.id)
+        return	
 
-    msg = message.reply_text("__answering__", reply_to_message_id=message.id)
-    cgpt = threading.Thread(target=lambda:chatai(qes,message,msg),daemon=True)
-    cgpt.start()
+    msg = message.reply_text("__3Dizing__", reply_to_message_id=message.id)
+    pnte = threading.Thread(target=lambda:textTo3d(prompt,message,msg),daemon=True)
+    pnte.start()
 
 
 # Tic Tac Toe Game
