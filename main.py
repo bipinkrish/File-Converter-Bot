@@ -667,11 +667,10 @@ def transcript(message,oldmessage):
 
 # text to 3d
 def textTo3d(prompt,message,msg):
-    htmlfile,thumbfile = pointe.pointE(prompt)
-    app.send_document(message.chat.id, htmlfile, thumbfile, reply_to_message_id=message.id)
+    htmlfile = pointe.pointE(prompt)
+    app.send_document(message.chat.id, htmlfile, reply_to_message_id=message.id)
     app.delete_messages(message.chat.id, message_ids=msg.id)
     os.remove(htmlfile)
-    os.remove(thumbfile)
 
 
 # text to speech 

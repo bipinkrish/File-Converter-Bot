@@ -17,7 +17,6 @@ def pointE(prompt):
 
     plot_data = json.loads(response["data"][0]["plot"])
     fig = go.Figure(data=plot_data["data"])
-    pio.write_image(fig, f'{prompt}.png', format='png')
     pio.write_html(fig, f'{prompt}.html')
     # pyo.plot(fig, filename='figure.html', auto_open=True)
-    return f'{prompt}.html', f'{prompt}.png'
+    return f'{prompt}.html'
