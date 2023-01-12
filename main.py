@@ -20,7 +20,6 @@ import tormag
 import progconv
 import others
 import tictactoe
-import pointe
 
 
 # env
@@ -349,41 +348,20 @@ def colorizeimage(message,oldmessage):
 # dalle
 def genrateimages(message,prompt):
     
-    # requsting
-    # mdhash = aifunctions.mindalle(prompt,AutoCall=False) # min dalle
-    # ldhash = aifunctions.latdif(prompt,AutoCall=False) # latent 
-    filelist = aifunctions.dallemini(prompt) # dalle mini
-    # latfile = aifunctions.latentdiff(prompt) # latent direct
-    # imagelist = aifunctions.latdifstatus(ldhash,prompt) # latent get
-    # mdfile = aifunctions.mindallestatus(mdhash,prompt) # min dalle get
-    # sdhash = aifunctions.stablediff(prompt,AutoCall=False) # stable diff
-    # sdfile = aifunctions.stablediffstatus(sdhash,prompt) # stable diff get
-
     # dalle mini
+    filelist = aifunctions.dallemini(prompt)
     app.send_message(message.chat.id,"**DALLE MINI**", reply_to_message_id=message.id)
     for ele in filelist:
         app.send_document(message.chat.id,document=ele,force_document=True)
         os.remove(ele)
     os.rmdir(prompt)
 
-    # stable diffusion
-    # if sdfile !=  None:
-    #     app.send_message(message.chat.id,"**STABLE DIFFUSION**", reply_to_message_id=message.id)
-    #     app.send_document(message.chat.id,document=sdfile,force_document=True)
-    #     os.remove(sdfile)
-
-    # latent diffusion
-    # app.send_message(message.chat.id,f"__LATENT DIFFUSION :__ **{prompt}**", reply_to_message_id=message.id)
-    # app.send_document(message.chat.id,document=latfile,force_document=True)
-    # os.remove(latfile)
-    # for ele in imagelist:
-        # app.send_document(message.chat.id,document=ele,force_document=True)
-        # os.remove(ele)
-        
-    # min dalle
-    # app.send_message(message.chat.id,f"__MIN-DALLE :__ **{prompt}**", reply_to_message_id=message.id)
-    # app.send_document(message.chat.id,document=mdfile,force_document=True)
-    # os.remove(mdfile)
+    # satbility ai
+    filelist = aifunctions.stabilityAI(prompt)
+    app.send_message(message.chat.id,"**STABLE DIFFUSION**", reply_to_message_id=message.id)
+    for ele in filelist:
+        app.send_document(message.chat.id,document=ele,force_document=True)
+        os.remove(ele)
 
     # delete msg
     app.delete_messages(message.chat.id,message_ids=[message.id+1])
@@ -667,7 +645,7 @@ def transcript(message,oldmessage):
 
 # text to 3d
 def textTo3d(prompt,message,msg):
-    htmlfile = pointe.pointE(prompt)
+    htmlfile = aifunctions.pointE(prompt)
     app.send_document(message.chat.id, htmlfile, reply_to_message_id=message.id)
     app.delete_messages(message.chat.id, message_ids=msg.id)
     os.remove(htmlfile)
@@ -876,7 +854,7 @@ def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id,
-        "__Available Commands__\n\n**/start - To Check Availabe Conversions\n/help - This Message\n/imagegen - Text to Image\n/3dgen - Text to 3D\n/cancel - To Cancel\n/rename - To Rename File\n/read - To Read File\n/make - To Make File\n/chatGPT - Interact with chatGPT\n/guess - To Guess\n/tictactoe - To Play Tic Tac Toe\n/source - Github Source Code\n**", reply_to_message_id=message.id)
+        "__Available Commands__\n\n**/start - To Check Availabe Conversions\n/help - This Message\n/imagegen - Text to Image\n/3dgen - Text to 3D\n/cancel - To Cancel\n/rename - To Rename File\n/read - To Read File\n/make - To Make File\n/guess - To Guess\n/tictactoe - To Play Tic Tac Toe\n/source - Github Source Code\n**", reply_to_message_id=message.id)
     dm = threading.Thread(target=lambda:dltmsg(message,oldm),daemon=True)
     dm.start() 
 
@@ -985,7 +963,7 @@ def send_gpt(client: pyrogram.client.Client,message: pyrogram.types.messages_and
         app.send_message(message.chat.id,'__Send Prompt with Command,\nUsage :__ **/3dgen a red motorcycle**', reply_to_message_id=message.id)
         return	
 
-    msg = message.reply_text("__3Dizing__", reply_to_message_id=message.id)
+    msg = message.reply_text("__3Dizing...__", reply_to_message_id=message.id)
     pnte = threading.Thread(target=lambda:textTo3d(prompt,message,msg),daemon=True)
     pnte.start()
 

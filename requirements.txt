@@ -20,3 +20,4 @@ asteval
 arrow
 plotly
 kaleido
+websocket-client

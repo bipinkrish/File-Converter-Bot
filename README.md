@@ -113,7 +113,7 @@
 
 - for **Colorizing Images** it uses **[DeOldify](https://github.com/jantic/DeOldify/)** hosted on **[Hugging Face](https://huggingface.co/spaces/PaddlePaddle/deoldify/)** and **[Photo-Colorizer](https://github.com/PySimpleGUI/PySimpleGUI-Photo-Colorizer)**
 
-- for generating **AI Images** it uses **[Craiyon](https://www.craiyon.com/)** (also know as min-Dalle)
+- for generating **AI Images** it uses **[Craiyon](https://www.craiyon.com/)** (also know as Dalle-Mini) and **[Stable Diffusion](https://github.com/Stability-AI/stablediffusion)** hosted on **[Hugging Face](https://huggingface.co/spaces/stabilityai/stable-diffusion)**
 
 - for generating **3D Models** it uses **[Point-E](https://github.com/openai/point-e/)** hosted on **[Hugging Face](https://huggingface.co/spaces/openai/point-e)**
 

@@ -12,6 +12,66 @@ import speech_recognition as sr
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
 from gtts import gTTS
+from websocket import create_connection
+
+
+############################################################################################################
+# stabilty AI
+
+def stabilityAI(prompt):
+    ws = create_connection("wss://stabilityai-stable-diffusion.hf.space/queue/join")
+    ws.recv()
+    ws.send('{"session_hash":"nothing","fn_index":3}')
+    #print("started")
+
+    # waiting for queue
+    while True:
+        result =  json.loads(ws.recv())
+        #print("in Queue")
+        if result["msg"] == "queue_full":
+            time.sleep(3)
+            continue
+        if result["msg"] != "estimation": break
+    
+    #print("processing")
+    ws.send('{"fn_index":3,"data":["' + prompt + '","",9],"session_hash":"nothing"}')
+    result =  ws.recv()
+    print(result)
+    result =  json.loads(ws.recv())
+    ws.close()
+
+    imgs = result['output']['data'][0]
+    final = []
+    for i, img in enumerate(imgs):
+        image = base64.b64decode(img.split(",")[1])
+        with open(f"{i+1}-{prompt}.jpeg","wb") as file:
+            file.write(image)
+        final.append(f"{i+1}-{prompt}.jpeg")
+    return final
+
+
+############################################################################################################
+# point e
+
+import plotly.io as pio
+import plotly.graph_objects as go
+
+
+def pointE(prompt):
+
+    reqUrl = "https://openai-point-e.hf.space/run/predict"
+    headersList = {
+    "Accept": "*/*",
+    "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+    "Content-Type": "application/json" 
+    }
+    payload = json.dumps({"data": [prompt]})
+    response = requests.post(reqUrl, data=payload,  headers=headersList).json()
+
+    plot_data = json.loads(response["data"][0]["plot"])
+    fig = go.Figure(data=plot_data["data"])
+    pio.write_html(fig, f'{prompt}.html')
+    return f'{prompt}.html'
 
 
 ############################################################################################################
