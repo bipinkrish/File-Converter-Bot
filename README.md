@@ -55,6 +55,8 @@
 
 **RUN** - *Run a Python Program*
 
+**Chat with AI** - *Converse with The Sarcastic Chatbot*
+
 ---
 
 ## Extra Features
