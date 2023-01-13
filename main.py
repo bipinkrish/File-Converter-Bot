@@ -702,6 +702,17 @@ def saverec(message):
     app.copy_message(message.chat.id, msg.chat.id, msg.id)
 
 
+# AI chat
+def handleAIChat(message):
+    hash = str(message.chat.id)
+    if hash[0] == "-": hash = str(hash)[1:]
+
+    app.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
+    reply = aifunctions.chatWithAI(message.text, hash)
+    if reply != None: app.send_message(message.chat.id, reply, reply_to_message_id=message.id)
+    else: app.send_chat_action(message.chat.id, enums.ChatAction.CANCEL)
+
+
 # others
 def other(message):
 
@@ -728,7 +739,12 @@ def other(message):
         info = others.maths(message.text)
         if info != None:
             app.send_message(message.chat.id, info, reply_to_message_id=message.id)
-
+        else:
+            handleAIChat(message)
+    
+    # AI chat
+    else:
+        handleAIChat(message)
 
 # download with progress
 def down(message):

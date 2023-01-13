@@ -130,3 +130,5 @@
 - for **Date and Time** it uses **[Arrow](https://github.com/arrow-py/arrow)**
 
 - for **Maths** and **RUN** it uses **[ASTeval](https://github.com/newville/asteval)**
+
+- for **Chat with AI** it uses **Chatbot_OpenAI hosted on [Hugging Face](https://huggingface.co/spaces/Shad0ws/Chatbot_OpenAI)**

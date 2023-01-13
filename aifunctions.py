@@ -16,6 +16,37 @@ from websocket import create_connection
 
 
 ############################################################################################################
+# chat with ai
+
+def chatWithAI(msg,hash, rec_count=0):
+	while 1:
+		try:
+			ws = create_connection("wss://shad0ws-chatbot-openai.hf.space/queue/join")
+			break
+		except: pass
+	
+	ws.recv()
+	ws.send('{"session_hash":"'+ hash +'","fn_index":0}')
+	
+	while True:
+		result =  json.loads(ws.recv())
+		if result["msg"] != "estimation": break
+	
+	ws.send('{"fn_index":0,"data":["'+ msg +'",null],"session_hash":"' + hash +'"}')
+	ws.recv()
+	result =  json.loads(ws.recv())
+	ws.close()
+
+	final = result["output"]["data"][0][-1][-1]
+	if final == "":
+		if rec_count == 3: return None
+		else: return chatWithAI(msg, hash, rec_count+1)
+	else:
+		final = final.replace("Marv: ","",1)
+		return final
+
+
+############################################################################################################
 # stabilty AI
 
 def stabilityAI(prompt):
