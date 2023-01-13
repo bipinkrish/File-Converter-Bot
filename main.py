@@ -530,7 +530,7 @@ def compile(message,oldm):
         
 
     # python compile
-    if ext.upper() == "PY":
+    elif ext.upper() == "PY":
         file = app.download_media(message)
         cmd, output, ofold, tfold, temp = helperfunctions.pyinstallcommand(message,file)
         os.system(cmd)
