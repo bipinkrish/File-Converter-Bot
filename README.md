@@ -57,6 +57,8 @@
 
 **Chat with AI** - *Converse with The Sarcastic Chatbot*
 
+**AI Article Writter** - *Finish your Airticle with AI*
+
 ---
 
 ## Extra Features
@@ -134,3 +136,5 @@
 - for **Maths** and **RUN** it uses **[ASTeval](https://github.com/newville/asteval)**
 
 - for **Chat with AI** it uses **V23 CHATBOT hosted on [Hugging Face](https://huggingface.co/spaces/VISION23/V23ChatBot)**
+
+- for **AI Article Writter** it uses **Bloom hosted on [Hugging Face](https://huggingface.co/spaces/huggingface/bloom_demo)**
