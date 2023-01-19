@@ -21,7 +21,7 @@ from websocket import create_connection
 def chatWithAI(msg,hash, rec_count=0):
 	while 1:
 		try:
-			ws = create_connection("wss://shad0ws-chatbot-openai.hf.space/queue/join")
+			ws = create_connection("wss://vision23-v23chatbot.hf.space/queue/join")
 			break
 		except: pass
 	
@@ -36,13 +36,12 @@ def chatWithAI(msg,hash, rec_count=0):
 	ws.recv()
 	result =  json.loads(ws.recv())
 	ws.close()
-
+    
 	final = result["output"]["data"][0][-1][-1]
-	if final == "":
+	if final in ["",'<p>.</p>\n']:
 		if rec_count == 3: return None
 		else: return chatWithAI(msg, hash, rec_count+1)
 	else:
-		final = final.replace("Marv: ","",1)
 		return final
 
 
