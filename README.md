@@ -133,4 +133,4 @@
 
 - for **Maths** and **RUN** it uses **[ASTeval](https://github.com/newville/asteval)**
 
-- for **Chat with AI** it uses **Chatbot_OpenAI hosted on [Hugging Face](https://huggingface.co/spaces/Shad0ws/Chatbot_OpenAI)**
+- for **Chat with AI** it uses **V23 CHATBOT hosted on [Hugging Face](https://huggingface.co/spaces/VISION23/V23ChatBot)**
