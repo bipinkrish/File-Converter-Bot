@@ -16,6 +16,65 @@ from websocket import create_connection
 
 
 ############################################################################################################
+# bloom para writter
+
+def bloom(para,AutoCall=True):
+    headers = {
+        'authority': 'huggingface-bloom-demo.hf.space',
+        'accept': '*/*',
+        'accept-language': 'en-US,en;q=0.9',
+        'content-type': 'application/json',
+        'dnt': '1',
+        'origin': 'https://huggingface-bloom-demo.hf.space',
+        'referer': 'https://huggingface-bloom-demo.hf.space/?__theme=light',
+        'sec-ch-ua': '"Not_A Brand";v="99", "Google Chrome";v="109", "Chromium";v="109"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
+    }
+
+    json_data = {
+            'fn_index': 2,
+            'data': [para,64,'Greedy','Sample 1',],
+            'action': 'predict',
+            'session_hash': 'nothing',
+        }
+
+    response = requests.post('https://huggingface-bloom-demo.hf.space/api/queue/push/',headers=headers,json=json_data,).json()
+    hash = response["hash"]
+    #queue_position = str(response["queue_position"])
+	
+    if AutoCall: return bloomstatus(hash, headers)
+    else: return hash
+
+
+def bloomstatus(hash, headers):
+
+    json_data = {'hash': hash,}
+    response = requests.post('https://huggingface-bloom-demo.hf.space/api/queue/status/',headers=headers,json=json_data,).json()
+    status = response["status"]
+    #print("Status : " + status)
+    
+    while status != "COMPLETE":
+        if status == "QUEUED":
+            queue_position = str(response["data"])
+            #print("Queue Position : " + queue_position)
+        if status == "PENDING":
+            pass
+            #print("Your job is processing")
+        
+        time.sleep(5)
+        response = requests.post('https://huggingface-bloom-demo.hf.space/api/queue/status/',headers=headers,json=json_data,).json()
+        status = response["status"]
+		#print("Status : " + status)
+    
+    return response["data"]["data"][1]
+	
+
+############################################################################################################
 # chat with ai
 
 def chatWithAI(msg,hash, rec_count=0):

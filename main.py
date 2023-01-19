@@ -713,6 +713,13 @@ def handleAIChat(message):
     else: app.send_chat_action(message.chat.id, enums.ChatAction.CANCEL)
 
 
+# bloom
+def handelbloom(para,message,msg):
+    ans = aifunctions.bloom(para)
+    app.send_message(message.chat.id, f'__{ans}__', reply_to_message_id=message.id)
+    app.delete_messages(message.chat.id, message_ids=msg.id)
+
+
 # others
 def other(message):
 
@@ -861,16 +868,22 @@ def downstatus(statusfile,message):
 # app messages
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    oldm = app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a **File** first and then **Extension**\n\n{START_TEXT}", reply_to_message_id=message.id)
+    app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a **File** first and then you can choose **Extension**\n\n__want to know more about me ?\nuse /detail - to get List of Supported Extensions\nuse /help - to get List of Commands\n\nI also have Special AI features including ChatBot, you don't believe me? ask me anything__", reply_to_message_id=message.id)
+                     
+
+# detail
+@app.on_message(filters.command(['detail']))
+def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    oldm = app.send_message(message.chat.id, START_TEXT, reply_to_message_id=message.id)
     dm = threading.Thread(target=lambda:dltmsg(message,oldm,30),daemon=True)
-    dm.start()                        
+    dm.start()  
 
 
 # help
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id,
-        "__Available Commands__\n\n**/start - To Check Availabe Conversions\n/help - This Message\n/imagegen - Text to Image\n/3dgen - Text to 3D\n/cancel - To Cancel\n/rename - To Rename File\n/read - To Read File\n/make - To Make File\n/guess - To Guess\n/tictactoe - To Play Tic Tac Toe\n/source - Github Source Code\n**", reply_to_message_id=message.id)
+        "__Available Commands__\n\n**/start - To Check Availabe Conversions\n/help - Help Message\n/detail - Supported Extensions\n/imagegen - Text to Image\n/3dgen - Text to 3D\n/bloom - AI Article Writter\n/cancel - To Cancel\n/rename - To Rename File\n/read - To Read File\n/make - To Make File\n/guess - To Guess\n/tictactoe - To Play Tic Tac Toe\n/source - Github Source Code\n**", reply_to_message_id=message.id)
     dm = threading.Thread(target=lambda:dltmsg(message,oldm),daemon=True)
     dm.start() 
 
@@ -901,7 +914,6 @@ def rename(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
         os.remove(f'{message.from_user.id}.json')
     else:
         app.send_message(message.chat.id, "__You need to send me a File first__", reply_to_message_id=message.id)   
-
 
 
 # cancel
@@ -1017,6 +1029,22 @@ def startG(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
                     InlineKeyboardButton( text='No', callback_data='G not')
                 ]]))
     
+
+# bloom 
+@app.on_message(filters.command("bloom"))
+def bloomcmd(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    try: para = message.reply_to_message.text
+    except:
+        try: para = message.text.split("/bloom ")[1]
+        except:
+            app.send_message(message.chat.id,'__Send Para with Command or Reply to it,\nUsage :__ **/bloom A poem about the beauty of science by Alfred Edgar Brittle\nTitle: The Magic Craft\nIn the old times**', reply_to_message_id=message.id)
+            return	
+    
+    msg = message.reply_text("__Blooming...__", reply_to_message_id=message.id)
+    blm = threading.Thread(target=lambda:handelbloom(para,message,msg),daemon=True)
+    blm.start()
+
+
 # callback
 @app.on_callback_query()
 def inbtwn(client: pyrogram.client.Client, call: pyrogram.types.CallbackQuery):
