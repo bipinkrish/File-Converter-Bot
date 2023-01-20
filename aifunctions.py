@@ -16,6 +16,38 @@ from websocket import create_connection
 
 
 ############################################################################################################
+# riffusin music generator
+
+def riffusion(prompt): 
+
+    while 1:
+        try:
+            ws = create_connection("wss://fffiloni-spectrogram-to-music.hf.space/queue/join")
+            break
+        except: pass
+        
+    ws.recv()
+    ws.send('{"session_hash":"'+ "nothing" +'","fn_index":0}')
+
+    while True:
+            result =  json.loads(ws.recv())
+            if result["msg"] != "estimation": break
+        
+    ws.send('{"fn_index":0,"data":["' + prompt + '","",null,10],"session_hash":"nothing"}')
+    result = ws.recv()
+    result =  json.loads(ws.recv())
+    ws.close()
+
+    name = "".join( x for x in prompt if (x.isalnum() or x in " "))
+    image = base64.b64decode(result["output"]["data"][0].split(",")[1])
+    with open(name + ".jpeg","wb") as f: f.write(image)
+    music = requests.get("https://fffiloni-spectrogram-to-music.hf.space/file=" + result["output"]["data"][1]["name"])
+    with open(name + ".wav","wb") as f: f.write(music.content)
+
+    return name+".wav", name+".jpeg"
+	
+
+############################################################################################################
 # bloom para writter
 
 def bloom(para,AutoCall=True):

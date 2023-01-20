@@ -59,6 +59,8 @@
 
 **AI Article Writter** - *Finish your Airticle with AI*
 
+**TEXT-to-MUSIC** - *Generate Music from a Text*
+
 ---
 
 ## Extra Features
@@ -138,3 +140,5 @@
 - for **Chat with AI** it uses **V23 CHATBOT hosted on [Hugging Face](https://huggingface.co/spaces/VISION23/V23ChatBot)**
 
 - for **AI Article Writter** it uses **Bloom hosted on [Hugging Face](https://huggingface.co/spaces/huggingface/bloom_demo)**
+
+- for **TEXT-to-MUSIC** it uses **[Riffusion](https://github.com/riffusion/riffusion) hosted on [HuggingFace](https://huggingface.co/spaces/fffiloni/spectrogram-to-music)**

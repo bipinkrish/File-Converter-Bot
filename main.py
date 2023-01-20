@@ -346,7 +346,7 @@ def colorizeimage(message,oldmessage):
 
 
 # dalle
-def genrateimages(message,prompt):
+def genrateimages(message,prompt,msg):
     
     # dalle mini
     filelist = aifunctions.dallemini(prompt)
@@ -364,7 +364,17 @@ def genrateimages(message,prompt):
         os.remove(ele)
 
     # delete msg
-    app.delete_messages(message.chat.id,message_ids=[message.id+1])
+    app.delete_messages(message.chat.id,message_ids=msg.id)
+
+
+# riffusion
+def genratemusic(message,prompt,msg):
+    musicfile, thumbfile = aifunctions.riffusion(prompt)
+    app.send_audio(message.chat.id, musicfile, duration=10, performer="Riffusion", title=prompt, thumb=thumbfile, reply_to_message_id=message.id)
+    
+    os.remove(musicfile)
+    os.remove(thumbfile)
+    app.delete_messages(message.chat.id,message_ids=msg.id)
 
 
 # cog video
@@ -877,13 +887,13 @@ def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_m
     oldm = app.send_message(message.chat.id, START_TEXT, reply_to_message_id=message.id)
     dm = threading.Thread(target=lambda:dltmsg(message,oldm,30),daemon=True)
     dm.start()  
-
+    
 
 # help
 @app.on_message(filters.command(['help']))
 def help(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
     oldm = app.send_message(message.chat.id,
-        "__Available Commands__\n\n**/start - To Check Availabe Conversions\n/help - Help Message\n/detail - Supported Extensions\n/imagegen - Text to Image\n/3dgen - Text to 3D\n/bloom - AI Article Writter\n/cancel - To Cancel\n/rename - To Rename File\n/read - To Read File\n/make - To Make File\n/guess - To Guess\n/tictactoe - To Play Tic Tac Toe\n/source - Github Source Code\n**", reply_to_message_id=message.id)
+        "__Available Commands__\n\n**/start - To Check Availabe Conversions\n/help - Help Message\n/detail - Supported Extensions\n/imagegen - Text to Image\n/musicgen - Text to Music\n/3dgen - Text to 3D\n/bloom - AI Article Writter\n/cancel - To Cancel\n/rename - To Rename File\n/read - To Read File\n/make - To Make File\n/guess - Bot will Guess\n/tictactoe - To Play Tic Tac Toe\n/source - Github Source Code\n**", reply_to_message_id=message.id)
     dm = threading.Thread(target=lambda:dltmsg(message,oldm),daemon=True)
     dm.start() 
 
@@ -941,9 +951,26 @@ def getpompt(client: pyrogram.client.Client, message: pyrogram.types.messages_an
 		return	
 
 	# threding	
-	app.send_message(message.chat.id,"__Prompt received and Request is sent. Waiting time is 1-2 mins__", reply_to_message_id=message.id)
-	ai = threading.Thread(target=lambda:genrateimages(message,prompt),daemon=True)
+	msg = app.send_message(message.chat.id,"__Prompt received and Request is sent. Waiting time is 1-2 mins__", reply_to_message_id=message.id)
+	ai = threading.Thread(target=lambda:genrateimages(message,prompt,msg),daemon=True)
 	ai.start()
+
+
+# music gen
+@app.on_message(filters.command(["musicgen"]))
+def getpompt(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
+    
+	# getting prompt from the text
+	try:
+		prompt = message.text.split("/musicgen ")[1]
+	except:
+		app.send_message(message.chat.id,'__Send Prompt with Command,\nUsage :__ **/musicgen a slow, emotional piano ballad in the key of C Major with a tempo of 60 BPM and a time signature of 4/4.**', reply_to_message_id=message.id)
+		return	
+
+	# threding	
+	msg = app.send_message(message.chat.id,"__Prompt received and Request is sent. Waiting time is 1 minute__", reply_to_message_id=message.id)
+	mai = threading.Thread(target=lambda:genratemusic(message,prompt,msg),daemon=True)
+	mai.start()
 
 
 # read command
