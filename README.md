@@ -142,3 +142,5 @@
 - for **AI Article Writter** it uses **Bloom hosted on [Hugging Face](https://huggingface.co/spaces/huggingface/bloom_demo)**
 
 - for **TEXT-to-MUSIC** it uses **[Riffusion](https://github.com/riffusion/riffusion) hosted on [HuggingFace](https://huggingface.co/spaces/fffiloni/spectrogram-to-music)**
+
+- for **BG REMOVE** it uses **[MODNet](https://github.com/ZHKKKe/MODNet) hosted on [HuggingFace](https://huggingface.co/spaces/nateraw/background-remover)**

@@ -16,6 +16,27 @@ from websocket import create_connection
 
 
 ############################################################################################################
+# bg remove
+
+def bg_remove(file):
+
+    url = "https://nateraw-background-remover.hf.space/api/predict/"
+    splits = file.split("/")[-1]
+    name = splits.split(".")[0]
+    ext = splits.split(".")[1]
+
+    with open(file, "rb") as byte: rdata = f"data:image/{ext};base64," + base64.b64encode(byte.read()).decode('utf-8')
+    payload = json.dumps({"data": [rdata, 140]})
+
+    response = requests.post(url, data=payload).json()
+    data = response["data"][0].split(",")[1]
+    image = base64.b64decode(data)
+    with open(name + "_bg_removed." + ext, "wb") as f: f.write(image)
+
+    return name + "_bg_removed." + ext
+
+
+############################################################################################################
 # riffusin music generator
 
 def riffusion(prompt): 

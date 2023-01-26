@@ -587,6 +587,16 @@ def runpro(message,oldm):
         app.send_message(message.chat.id,"__At this time Running only supports from PY Files__", reply_to_message_id=message.id)
 
 
+# bg remove
+def bgremove(message,oldm):
+    file = app.download_media(message)
+    ofile = aifunctions.bg_remove(file)
+    os.remove(file)
+    app.send_document(message.chat.id, ofile, reply_to_message_id=message.id)
+    app.delete_messages(message.chat.id,message_ids=[oldm.id])
+    os.remove(ofile)
+
+
 # scanning
 def scan(message,oldm):
     file = app.download_media(message)
@@ -878,7 +888,7 @@ def downstatus(statusfile,message):
 # app messages
 @app.on_message(filters.command(['start']))
 def start(client: pyrogram.client.Client, message: pyrogram.types.messages_and_media.message.Message):
-    app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a **File** first and then you can choose **Extension**\n\n__want to know more about me ?\nuse /detail - to get List of Supported Extensions\nuse /help - to get List of Commands\n\nI also have Special AI features including ChatBot, you don't believe me? ask me anything__", reply_to_message_id=message.id)
+    app.send_message(message.chat.id, f"Welcome {message.from_user.mention}\nSend a **File** first and then you can choose **Extension**\n\n__want to know more about me ?\nuse /help - to get List of Commands\nuse /detail - to get List of Supported Extensions\n\nI also have Special AI features including ChatBot, you don't believe me? ask me anything__", reply_to_message_id=message.id)
                      
 
 # detail
@@ -1279,98 +1289,91 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             nmessage = pickle.loads(handle.read())
         os.remove(f'{message.from_user.id}.json')
 
-        if "COLOR" == message.text or "POSITIVE" == message.text:
-
+        if "COLOR" == message.text:
             oldm = app.send_message(message.chat.id,'__Processing__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id) 
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            col = threading.Thread(target=lambda:colorizeimage(nmessage,oldm),daemon=True)
+            col.start()
 
-            if "COLOR" in message.text:
-                col = threading.Thread(target=lambda:colorizeimage(nmessage,oldm),daemon=True)
-                col.start()
-                return
-            else:
-                pos = threading.Thread(target=lambda:negetivetopostive(nmessage,oldm),daemon=True)
-                pos.start() 
-                return
+        elif "POSITIVE" == message.text:
+            oldm = app.send_message(message.chat.id,'__Processing__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id) 
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            pos = threading.Thread(target=lambda:negetivetopostive(nmessage,oldm),daemon=True)
+            pos.start() 
 
-        if "READ" == message.text:
+        elif "READ" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'__Reading File__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             rf = threading.Thread(target=lambda:readf(nmessage,oldm),daemon=True)
             rf.start()
-            return
 
-        if "SENDPHOTO" == message.text:
+        elif "SENDPHOTO" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'__Sending in Photo Format__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             sp = threading.Thread(target=lambda:sendphoto(nmessage,oldm),daemon=True)
             sp.start()
-            return
 
-        if "SENDDOC" == message.text:
+        elif "SENDDOC" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'__Sending in Document Format__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             sd = threading.Thread(target=lambda:senddoc(nmessage,oldm),daemon=True)
-            sd.start()
-            return    
+            sd.start()  
 
-        if "SENDVID" == message.text:
+        elif "SENDVID" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'__Sending in Stream Format__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             sv = threading.Thread(target=lambda:sendvideo(nmessage,oldm),daemon=True)
             sv.start()
-            return
 
-        if "SpeechToText" == message.text:
+        elif "SpeechToText" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'__Transcripting, takes long time for Long Files__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             stt = threading.Thread(target=lambda:transcript(nmessage,oldm),daemon=True)
             stt.start()
-            return
 
-        if "TextToSpeech" == message.text:
+        elif "TextToSpeech" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'__Generating Speech__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             tts = threading.Thread(target=lambda:speak(nmessage,oldm),daemon=True)
             tts.start()
-            return
 
-        if "UPSCALE" == message.text:
+        elif "UPSCALE" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'__Upscaling Your Image__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             upscl = threading.Thread(target=lambda:increaseres(nmessage,oldm),daemon=True)
             upscl.start()
-            return
 
-        if "EXTRACT" == message.text:
+        elif "EXTRACT" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'__Extracting File__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             ex = threading.Thread(target=lambda:extract(nmessage,oldm),daemon=True)
             ex.start()
-            return 
 
-        if "COMPILE" == message.text:
+        elif "COMPILE" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'__Compiling__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             cmp = threading.Thread(target=lambda:compile(nmessage,oldm),daemon=True)
             cmp.start()
-            return
 
-        if "SCAN" == message.text:
+        elif "SCAN" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'__Scanning__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             scn = threading.Thread(target=lambda:scan(nmessage,oldm),daemon=True)
             scn.start()
-            return
 
-        if "RUN" == message.text:
+        elif "RUN" == message.text:
             app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
             oldm = app.send_message(message.chat.id,'__Running__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
             rpro = threading.Thread(target=lambda:runpro(nmessage,oldm),daemon=True)
             rpro.start()
-            return
 
-        if "document" in str(nmessage):
+        elif "BG REMOVE" == message.text:
+            app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+            oldm = app.send_message(message.chat.id,'__Background Removing__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id)
+            bgrm = threading.Thread(target=lambda:bgremove(nmessage,oldm),daemon=True)
+            bgrm.start()
+
+        elif "document" in str(nmessage):
             inputt = nmessage.document.file_name
             print("File is a Document")
         else:
@@ -1415,9 +1418,6 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
 
         newext = message.text.lower()
         oldext = inputt.split(".")[-1]
-
-        #if newext == "ico":
-            #app.send_message(message.chat.id, "Warning: for ICO, image will be resized and made multi-resolution", reply_to_message_id=message.id)
         
         if oldext.upper() == newext.upper():
             app.send_message(message.chat.id, "__Nice try, Don't choose same Extension__", reply_to_message_id=nmessage.id, reply_markup=ReplyKeyboardRemove())
