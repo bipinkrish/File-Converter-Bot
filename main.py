@@ -1376,6 +1376,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
         elif "document" in str(nmessage):
             inputt = nmessage.document.file_name
             print("File is a Document")
+            
         else:
             if "audio" in str(nmessage) or "voice" in str(nmessage):
                 try:
