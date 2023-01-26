@@ -400,7 +400,7 @@ def readf(message,oldmessage):
     file = app.download_media(message)
     
     try:
-        with open(file,"r") as rf:
+        with open(file,"r",encoding="utf-8") as rf:
             txt = rf.read()
         n = 4096
         split = [txt[i:i+n] for i in range(0, len(txt), n)]
@@ -575,7 +575,7 @@ def runpro(message,oldm):
     # python run
     if ext.upper() == "PY":
         file = app.download_media(message)
-        code = open(file,"r").read()
+        code = open(file,"r",encoding="utf-8").read()
         os.remove(file)
         info = others.pyrun(code)
         app.send_message(message.chat.id, info, reply_to_message_id=message.id)
