@@ -8,7 +8,7 @@ RUN apt install libssl-dev libtesseract-dev libicu-dev libicu-dev libcairo2-dev 
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Kolkata
-RUN apt install -y tzdata wget zip unzip
+RUN apt install tzdata wget zip unzip -y
 
 RUN apt install libreoffice -y
 RUN apt install default-jre libreoffice-java-common -y
@@ -25,8 +25,8 @@ RUN apt-get install software-properties-common -y
 RUN apt update && apt-get upgrade -y
 RUN add-apt-repository universe -y
 RUN apt update && apt-get upgrade -y
-RUN apt install -y p7zip-full p7zip-rar
-RUN apt-get install -y python3-numpy python3-pydot python3-matplotlib python3-opencv python3-graphviz python3-toolz
+RUN apt install p7zip-full p7zip-rar -y
+RUN apt-get install python3-numpy python3-pydot python3-matplotlib python3-opencv python3-graphviz python3-toolz -y
 RUN wget https://github.com/bipinkrish/Colorize-Positive-Bot/releases/download/Model/model.zip && unzip model.zip && rm model.zip
 
 RUN pip install --no-cache-dir bs4 ttconv py2many pyzbar
@@ -35,7 +35,7 @@ RUN apt install curl -y
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 RUN apt-get update -y
 RUN apt-get install -y cargo clang-format z3 clang
-RUN apt -y install rustfmt golang-go
+RUN apt install rustfmt golang-go -y
 RUN apt-get install openctm-tools libzbar0 -y
 
 RUN curl -fsSL -o /tmp/warp-packer \
@@ -50,3 +50,20 @@ RUN curl -fsSL -o /tmp/warp-packer \
 COPY warp4j /usr/local/bin/
 RUN chmod 777 /usr/local/bin/warp4j
 RUN wget https://www.jflap.org/jflaptmp/july27-18/JFLAP7.1.jar && warp4j JFLAP7.1.jar  && rm -r warped/ && warp4j JFLAP7.1.jar --no-optimize && rm -r warped/ && rm JFLAP7.1.jar
+
+RUN apt update && apt-get upgrade -y
+RUN apt install build-essential -y
+RUN curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt-get install ./google-chrome-stable_current_amd64.deb -y
+RUN rm google-chrome-stable_current_amd64.deb
+RUN CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
+    mkdir -p /opt/chromedriver-$CHROMEDRIVER_VERSION && \
+    curl -sS -o /tmp/chromedriver_linux64.zip http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip && \
+    unzip -qq /tmp/chromedriver_linux64.zip -d /opt/chromedriver-$CHROMEDRIVER_VERSION && \
+    rm /tmp/chromedriver_linux64.zip && \
+    chmod +x /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver && \
+    ln -fs /opt/chromedriver-$CHROMEDRIVER_VERSION/chromedriver /usr/local/bin/chromedriver
+RUN apt install chromium-browser xvfb -y
+RUN apt update && apt-get upgrade -y
+
+RUN pip install --no-cache-dir pyinstaller asteval arrow plotly kaleido websocket-client
