@@ -307,7 +307,7 @@ def follow(message,inputt,new,old,oldmessage):
 
 
     # deleting message    
-    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    app.delete_messages(message.chat.id,message_ids=oldmessage.id)
 
 
 # negative to positive
@@ -337,7 +337,7 @@ def negetivetopostive(message,oldmessage):
     except: pass
 
     os.remove(file)
-    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    app.delete_messages(message.chat.id,message_ids=oldmessage.id)
 
 
 # color image
@@ -354,7 +354,7 @@ def colorizeimage(message,oldmessage):
     os.remove(output)
 
     os.remove(file)
-    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    app.delete_messages(message.chat.id,message_ids=oldmessage.id)
 
 
 # dalle
@@ -398,7 +398,7 @@ def genratevideos(message,prompt):
     file = aifunctions.cogvideostatus(hash,prompt)
     app.send_video(message.chat.id, video=file, reply_to_message_id=message.id) #,caption=f"COGVIDEO : {prompt}")
     os.remove(file)
-    app.delete_messages(message.chat.id,message_ids=[msg.id])
+    app.delete_messages(message.chat.id,message_ids=msg.id)
 
 
 # delete msg
@@ -428,7 +428,7 @@ def readf(message,oldmessage):
             app.send_message(message.chat.id, f"__Error in Reading File : {e}__", reply_to_message_id=message.id)
 
     os.remove(file)
-    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    app.delete_messages(message.chat.id,message_ids=oldmessage.id)
 
 
 # send video
@@ -437,7 +437,7 @@ def sendvideo(message,oldmessage):
     thumb,duration,width,height = mediainfo.allinfo(file)
     up(message, file, msg, video=True, capt=f'**{file.split("/")[-1]}**' ,thumb=thumb, duration=duration, height=height, widht=width)
 
-    app.delete_messages(message.chat.id, message_ids=[oldmessage.id])
+    app.delete_messages(message.chat.id, message_ids=oldmessage.id)
     os.remove(file)
 
 
@@ -446,7 +446,7 @@ def senddoc(message,oldmessage):
     file, msg = down(message)
     up(message, file, msg)
 
-    app.delete_messages(message.chat.id, message_ids=[oldmessage.id])
+    app.delete_messages(message.chat.id, message_ids=oldmessage.id)
     os.remove(file)
 
 
@@ -454,7 +454,7 @@ def senddoc(message,oldmessage):
 def sendphoto(message,oldmessage):
     file = app.download_media(message)
     app.send_photo(message.chat.id, photo=file, reply_to_message_id=message.id)
-    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    app.delete_messages(message.chat.id,message_ids=oldmessage.id)
     os.remove(file)
 
 
@@ -476,7 +476,7 @@ def extract(message,oldm):
         dir_list = helperfunctions.absoluteFilePaths(foldername)
         if len(dir_list) > 30:
             if msg != None:
-                app.delete_messages(message.chat.id,message_ids=[msg.id])
+                app.delete_messages(message.chat.id,message_ids=msg.id)
             app.send_message(message.chat.id, f"__Number of files is **{len(dir_list)}** which is more than the limit of **30**__", reply_to_message_id=message.id)     
         else:
             for ele in dir_list:
@@ -486,14 +486,14 @@ def extract(message,oldm):
                 else:
                     app.send_message(message.chat.id, f'**{ele.split("/")[-1]}** __is Skipped because it is 0 bytes__', reply_to_message_id=message.id)
             
-            app.delete_messages(message.chat.id,message_ids=[msg.id])
+            app.delete_messages(message.chat.id,message_ids=msg.id)
             app.send_message(message.chat.id, f'__{last}__', reply_to_message_id=message.id)
 
         shutil.rmtree(foldername)
     else:
         app.send_message(message.chat.id, "**Unable to Extract**", reply_to_message_id=message.id)
 
-    app.delete_messages(message.chat.id, message_ids=[oldm.id])
+    app.delete_messages(message.chat.id, message_ids=oldm.id)
 
 
 # getting magnet
@@ -501,7 +501,7 @@ def getmag(message,oldm):
     file = app.download_media(message)
     maglink = tormag.getMagnet(file)
     app.send_message(message.chat.id, f'__{maglink}__', reply_to_message_id=message.id)
-    app.delete_messages(message.chat.id,message_ids=[oldm.id])
+    app.delete_messages(message.chat.id,message_ids=oldm.id)
     os.remove(file)
 
 
@@ -509,7 +509,7 @@ def getmag(message,oldm):
 def gettorfile(message,oldm):
     file = tormag.getTorFile(message.text)
     app.send_document(message.chat.id, file, reply_to_message_id=message.id)
-    app.delete_messages(message.chat.id,message_ids=[oldm.id])
+    app.delete_messages(message.chat.id,message_ids=oldm.id)
     os.remove(file)
 
 
@@ -577,7 +577,7 @@ def compile(message,oldm):
 
 
     # delete message
-    app.delete_messages(message.chat.id,message_ids=[oldm.id])
+    app.delete_messages(message.chat.id,message_ids=oldm.id)
 
 
 # running a program
@@ -591,7 +591,7 @@ def runpro(message,oldm):
         os.remove(file)
         info = others.pyrun(code)
         app.send_message(message.chat.id, info, reply_to_message_id=message.id)
-        app.delete_messages(message.chat.id,message_ids=[oldm.id])
+        app.delete_messages(message.chat.id,message_ids=oldm.id)
         
 
     # not supported yet
@@ -605,7 +605,7 @@ def bgremove(message,oldm):
     ofile = aifunctions.bg_remove(file)
     os.remove(file)
     app.send_document(message.chat.id, ofile, reply_to_message_id=message.id)
-    app.delete_messages(message.chat.id,message_ids=[oldm.id])
+    app.delete_messages(message.chat.id,message_ids=oldm.id)
     os.remove(ofile)
 
 
@@ -614,7 +614,7 @@ def scan(message,oldm):
     file = app.download_media(message)
     info = helperfunctions.scanner(file)
     app.send_message(message.chat.id,f"__{info}__", reply_to_message_id=message.id)
-    app.delete_messages(message.chat.id,message_ids=[oldm.id])
+    app.delete_messages(message.chat.id,message_ids=oldm.id)
     os.remove(file)
 
 
@@ -641,7 +641,7 @@ def makefile(message,mtext,oldmessage):
     else:
         app.send_message(message.chat.id, "__Error while making file__", reply_to_message_id=message.id)
 
-    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    app.delete_messages(message.chat.id,message_ids=oldmessage.id)
     os.remove(firstline)      	    
 
 
@@ -671,7 +671,7 @@ def transcript(message,oldmessage):
         app.send_document(message.chat.id, document=temp,caption="**OpenAI Engine** __(whisper)__", reply_to_message_id=message.id)
     os.remove(temp)
 
-    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    app.delete_messages(message.chat.id,message_ids=oldmessage.id)
     os.remove(file)
     
 
@@ -693,7 +693,7 @@ def speak(message,oldmessage):
     os.remove(file)
 
     app.send_document(message.chat.id, document=output, reply_to_message_id=message.id)
-    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    app.delete_messages(message.chat.id,message_ids=oldmessage.id)
     os.remove(output)
 
 
@@ -702,21 +702,24 @@ def increaseres(message,oldmessage):
     file = app.download_media(message)
     inputt = file.split("/")[-1]
    
-    aifunctions.upscale(file,inputt)
-    os.remove(file)
-
-    app.send_document(message.chat.id, document=inputt, reply_to_message_id=message.id)
-    app.delete_messages(message.chat.id,message_ids=[oldmessage.id])
+    try:
+        aifunctions.upscale(file,inputt)
+        os.remove(file)
+        app.send_document(message.chat.id, document=inputt, reply_to_message_id=message.id)
+    except Exception as e:
+        app.send_message(message.chat.id, f"__Error : {e}__", reply_to_message_id=message.id)
+        
+    app.delete_messages(message.chat.id,message_ids=oldmessage.id)
     os.remove(inputt)
 
 
 # renaming
 def rname(message,newname,oldm):
-    app.delete_messages(message.chat.id,message_ids=[message.id+1])
+    app.delete_messages(message.chat.id,message_ids=message.id+1)
     file, msg = down(message)
     os.rename(file,newname)
     up(message, newname, msg)
-    app.delete_messages(message.chat.id,message_ids=[oldm.id])
+    app.delete_messages(message.chat.id,message_ids=oldm.id)
     os.remove(newname)
 
 
@@ -832,7 +835,7 @@ def up(message, file, msg, video=False, capt="", thumb=None, duration=0, widht=0
         os.remove(f'{message.id}upstatus.txt')
 
     if msg != None and not multi:
-        app.delete_messages(message.chat.id,message_ids=[msg.id])
+        app.delete_messages(message.chat.id,message_ids=msg.id)
 
 
 # up progress
@@ -953,7 +956,7 @@ def cancel(client: pyrogram.client.Client, message: pyrogram.types.messages_and_
     nmessage, msg_type = getSavedMsg(message)
     if nmessage:
         removeSavedMsg(message)
-        app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+        app.delete_messages(message.chat.id,message_ids=nmessage.id+1)
         app.send_message(message.chat.id,"__Your job was **Canceled**__",reply_markup=ReplyKeyboardRemove(), reply_to_message_id=message.id)
     else:
         app.send_message(message.chat.id,"__No job to Cancel__", reply_to_message_id=message.id)     
@@ -1287,7 +1290,7 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
     nmessage, msg_type = getSavedMsg(message)
     if nmessage:
         removeSavedMsg(message)
-        app.delete_messages(message.chat.id,message_ids=[nmessage.id+1])
+        app.delete_messages(message.chat.id,message_ids=nmessage.id+1)
 
         if "COLOR" == message.text:
             oldm = app.send_message(message.chat.id,'__Processing__',reply_markup=ReplyKeyboardRemove(), reply_to_message_id=nmessage.id) 
