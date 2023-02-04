@@ -39,10 +39,10 @@ def saveMsg(msg, msg_type):
     MESGS[msg.from_user.id] = [msg, msg_type]
 
 def getSavedMsg(msg):
-    return MESGS.get(message.from_user.id, [None, None])
+    return MESGS.get(msg.from_user.id, [None, None])
 
 def removeSavedMsg(msg):
-    del MESGS[msg]
+    del MESGS[msg.from_user.id]
 
 
 # main function to follow
