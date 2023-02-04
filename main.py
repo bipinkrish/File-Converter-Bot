@@ -486,7 +486,8 @@ def extract(message,oldm):
                 else:
                     app.send_message(message.chat.id, f'**{ele.split("/")[-1]}** __is Skipped because it is 0 bytes__', reply_to_message_id=message.id)
             
-            app.delete_messages(message.chat.id,message_ids=msg.id)
+            if msg != None:
+                app.delete_messages(message.chat.id,message_ids=msg.id)
             app.send_message(message.chat.id, f'__{last}__', reply_to_message_id=message.id)
 
         shutil.rmtree(foldername)
