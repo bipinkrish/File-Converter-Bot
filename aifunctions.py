@@ -91,7 +91,7 @@ def bloom(para,AutoCall=True):
 
     json_data = {
             'fn_index': 2,
-            'data': [para,64,'Greedy','Sample 1',],
+            'data': [para,64,'Sample','Sample 1',],
             'action': 'predict',
             'session_hash': 'nothing',
         }
