@@ -10,7 +10,23 @@
 - `HASH` **_Your API Hash from my.telegram.org_**
 - `ID` **_Your API ID from my.telegram.org_**
 - `TOKEN` **_Your bot token from @BotFather_**
+
 ---
+
+## Run Locally
+
+You have to install Docker or Docker Compose.
+Set the Environment Variables after the clone, or you can directly change it on [Line 26 - 29 in main.py](https://github.com/bipinkrish/File-Converter-Bot/blob/main/main.py?plain=1#L26) file
+
+```
+git clone https://github.com/bipinkrish/File-Converter-Bot.git
+cd File-Converter-Bot
+docker build . -t File-Converter
+docker run File-Converter
+```
+
+---
+
 ## Supported Formats
 
 **Images**:  *OCR, ICO, GIF, TIFF, BMP, WEBP, JP2, JPEG, JPG, PNG*
