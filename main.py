@@ -1405,7 +1405,8 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             print("File is a Photo")
 
         else:
-            app.send_message(message.chat.id, '__Not is any Supported Format, Contact the Developer__', reply_to_message_id=nmessage.id, reply_markup=ReplyKeyboardRemove())
+            if str(message.from_user.id) == str(message.chat.id):
+                app.send_message(message.chat.id, '__Not in any Supported Format, Contact the Developer__', reply_to_message_id=nmessage.id, reply_markup=ReplyKeyboardRemove())
             return
 
         newext = message.text.lower()
