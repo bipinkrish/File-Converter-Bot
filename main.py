@@ -1085,7 +1085,7 @@ def bloomcmd(client: pyrogram.client.Client, message: pyrogram.types.messages_an
     except:
         try: para = message.text.split("/bloom ")[1]
         except:
-            app.send_message(message.chat.id,'__Send Para with Command or Reply to it,\nUsage :__ **/bloom A poem about the beauty of science by Alfred Edgar Brittle\nTitle: The Magic Craft\nIn the old times**', reply_to_message_id=message.id)
+            app.send_message(message.chat.id,'__Send Para with Command or Reply to it\n\nUsage :__ **/bloom A poem about the beauty of science**', reply_to_message_id=message.id)
             return	
     
     msg = message.reply_text("__Blooming...__", reply_to_message_id=message.id)
