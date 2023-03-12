@@ -752,7 +752,7 @@ def handleAIChat(message):
 # bloom
 def handelbloom(para,message,msg):
     ans = aifunctions.bloom(para)
-    app.send_message(message.chat.id, f'__{ans}__', reply_to_message_id=message.id)
+    if ans is not None: app.send_message(message.chat.id, f'__{ans}__', reply_to_message_id=message.id)
     app.delete_messages(message.chat.id, message_ids=msg.id)
 
 
@@ -1421,15 +1421,13 @@ def text(client: pyrogram.client.Client, message: pyrogram.types.messages_and_me
             conv.start()
 
     else:
-        saveMsg(message, "TEXT")
         if str(message.from_user.id) == str(message.chat.id):
             if len(message.text.split("\n")) == 1:
-                removeSavedMsg(message)
                 ots = threading.Thread(target=lambda: other(message), daemon=True)
                 ots.start()
-            else:    
+            else: 
+                saveMsg(message, "TEXT")  
                 app.send_message(message.chat.id, '__for Text messages, You can use **/make** to Create a File from it.\n(first line of text will be trancated and used as filename)__', reply_to_message_id=message.id)
-            
 
 #apprun
 print("Bot Started")

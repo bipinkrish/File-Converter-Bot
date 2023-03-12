@@ -112,12 +112,13 @@ def bloomstatus(hash, headers):
     #print("Status : " + status)
     
     while status != "COMPLETE":
+        if status == "FAILED": return None
         if status == "QUEUED":
             queue_position = str(response["data"])
-            #print("Queue Position : " + queue_position)
+            # print("Queue Position : " + queue_position)
         if status == "PENDING":
             pass
-            #print("Your job is processing")
+            # print("Your job is processing")
         
         time.sleep(5)
         response = requests.post('https://huggingface-bloom-demo.hf.space/api/queue/status/',headers=headers,json=json_data,).json()
@@ -131,30 +132,31 @@ def bloomstatus(hash, headers):
 # chat with ai
 
 def chatWithAI(msg,hash, rec_count=0):
-	while 1:
-		try:
-			ws = create_connection("wss://vision23-v23chatbot.hf.space/queue/join")
-			break
-		except: pass
-	
-	ws.recv()
-	ws.send('{"session_hash":"'+ hash +'","fn_index":0}')
-	
-	while True:
-		result =  json.loads(ws.recv())
-		if result["msg"] != "estimation": break
-	
-	ws.send('{"fn_index":0,"data":["'+ msg +'",null],"session_hash":"' + hash +'"}')
-	ws.recv()
-	result =  json.loads(ws.recv())
-	ws.close()
+    while 1:
+        try:
+            ws = create_connection("wss://vision23-v23chatbot.hf.space/queue/join")
+            break
+        except: pass
     
-	final = result["output"]["data"][0][-1][-1]
-	if final in ["",'<p>.</p>\n']:
-		if rec_count == 3: return None
-		else: return chatWithAI(msg, hash, rec_count+1)
-	else:
-		return final
+    ws.recv()
+    ws.send('{"session_hash":"'+ hash +'","fn_index":0}')
+    
+    while True:
+        result =  json.loads(ws.recv())
+        if result["msg"] != "estimation": break
+    
+    ws.send('{"fn_index":0,"data":["'+ msg +'",null],"session_hash":"' + hash +'"}')
+    ws.recv()
+    result =  json.loads(ws.recv())
+    ws.close()
+    
+    if not result["success"]: return None
+    final = result["output"]["data"][0][-1][-1]
+    if final in ["",'<p>.</p>\n']:
+        if rec_count == 3: return None
+        else: return chatWithAI(msg, hash, rec_count+1)
+    else:
+        return final
 
 
 ############################################################################################################
