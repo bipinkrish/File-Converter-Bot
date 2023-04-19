@@ -131,33 +131,31 @@ def bloomstatus(hash, headers):
 ############################################################################################################
 # chat with ai
 
-def chatWithAI(msg,hash, rec_count=0):
+def chatWithAI(msg, hash, rec_count=0):
     while 1:
         try:
-            ws = create_connection("wss://vision23-v23chatbot.hf.space/queue/join")
+            ws = create_connection("wss://tloen-alpaca-lora.hf.space/queue/join")
             break
         except: pass
     
     ws.recv()
-    ws.send('{"session_hash":"'+ hash +'","fn_index":0}')
+    ws.send('{"fn_index":0,"session_hash":"' + hash +'"}')
     
     while True:
         result =  json.loads(ws.recv())
         if result["msg"] != "estimation": break
     
-    ws.send('{"fn_index":0,"data":["'+ msg +'",null],"session_hash":"' + hash +'"}')
+    ws.send('{"fn_index":0,"data":["","' + msg + '",0.1,0.75,40,4,512],"event_data":null,"session_hash":"' + hash + '"}')
     ws.recv()
     result =  json.loads(ws.recv())
     ws.close()
     
     if not result["success"]: return None
-    final = result["output"]["data"][0][-1][-1]
-    if final in ["",'<p>.</p>\n']:
+    final = result["output"]["data"][0]
+    if final in ["",'<p>.</p>\n',None]:
         if rec_count == 3: return None
         else: return chatWithAI(msg, hash, rec_count+1)
-    else:
-        return final
-
+    else: return final
 
 ############################################################################################################
 # stabilty AI
