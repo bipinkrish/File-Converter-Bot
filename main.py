@@ -666,11 +666,12 @@ def transcript(message,oldmessage):
     os.remove(temp)
 
     data = aifunctions.whisper(file)
-    with open(temp,"w") as wfile:
-        wfile.write(data)
-    if os.path.getsize(temp) > 0:
-        app.send_document(message.chat.id, document=temp,caption="**OpenAI Engine** __(whisper)__", reply_to_message_id=message.id)
-    os.remove(temp)
+    if data is not None:
+        with open(temp,"w") as wfile:
+            wfile.write(data)
+        if os.path.getsize(temp) > 0:
+            app.send_document(message.chat.id, document=temp,caption="**OpenAI Engine** __(whisper)__", reply_to_message_id=message.id)
+        os.remove(temp)
 
     app.delete_messages(message.chat.id,message_ids=oldmessage.id)
     os.remove(file)
