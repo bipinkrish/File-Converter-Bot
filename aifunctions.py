@@ -132,6 +132,10 @@ def bloomstatus(hash, headers):
 # chat with ai
 
 def chatWithAI(msg, hash, rec_count=0):
+	response = requests.post("https://tloen-alpaca-lora.hf.space/run/predict", 
+			    json={"data": ["",msg,0.1,0.75,40,4,512,]}).json()
+	if response["error"] is not None: return response["data"]
+
 	while 1:
 		try:
 			ws = create_connection("wss://tloen-alpaca-lora.hf.space/queue/join")
