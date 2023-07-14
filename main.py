@@ -6,10 +6,9 @@ from pyrogram.types import InlineKeyboardMarkup,InlineKeyboardButton
 
 import os
 import shutil
+import subprocess
 import threading
-# import pickle
 import time
-import random
 
 from buttons import *
 import aifunctions
@@ -30,7 +29,6 @@ api_id = os.environ.get("ID", "")
 
 # bot
 app = Client("my_bot",api_id=api_id, api_hash=api_hash,bot_token=bot_token)
-os.system("chmod 777 c41lab.py negfix8 tgsconverter")
 MESGS = {}
 
 
@@ -165,7 +163,8 @@ def follow(message,inputt,new,old,oldmessage):
         print("It is LibreOffice option")
         file = app.download_media(message)
         cmd = helperfunctions.libreofficecommand(file,new)
-        os.system(cmd)
+        # os.system(cmd)
+        subprocess.run([cmd],env={"HOME": "."},)
         os.remove(file)
 
         if os.path.exists(output) and os.path.getsize(output) > 0:
@@ -345,13 +344,17 @@ def colorizeimage(message,oldmessage):
     file = app.download_media(message)
     output = file.split("/")[-1]
 
-    aifunctions.deoldify(file,output)
-    app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **Deoldify**", reply_to_message_id=message.id)
-    os.remove(output)
+    try:
+        aifunctions.deoldify(file,output)
+        app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **Deoldify**", reply_to_message_id=message.id)
+        os.remove(output)
+    except: pass
 
-    aifunctions.colorize_image(output,file)
-    app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **Local Model**", reply_to_message_id=message.id)
-    os.remove(output)
+    try:
+        aifunctions.colorize_image(output,file)
+        app.send_document(message.chat.id,document=output, force_document=True,caption="used tool -> **Local Model**", reply_to_message_id=message.id)
+        os.remove(output)
+    except: pass
 
     os.remove(file)
     app.delete_messages(message.chat.id,message_ids=oldmessage.id)

@@ -1,14 +1,8 @@
 import requests
-import json
 import os
 
 # setting
-currentFile = __file__
-realPath = os.path.realpath(currentFile)
-dirPath = os.path.dirname(realPath)
-dirName = os.path.basename(dirPath)
-c4go = dirPath + "/c4go"
-os.system(f"chmod 777 {c4go}")
+c4go = 'c4go'
 
 
 def c2Go(cfile):
