@@ -1,4 +1,4 @@
-pyrogram==2.0.35
+pyrogram==2.0.106
 tgcrypto==1.2.3
 pickle5==0.0.11
 telegraph==2.1.0
